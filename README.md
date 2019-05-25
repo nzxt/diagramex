@@ -1,22 +1,25 @@
-# VieteIO
+# DiagrameX
 
 > My priceless Nuxt.js project
 
 ## Build Setup
 
 ``` bash
-# install dependencies
-$ yarn install
+# install project dependencies
+$ yarn
+
+# lint your project code
+$ yarn lint
 
 # serve with hot reload at localhost:3000
-$ yarn run dev
+$ yarn dev
 
 # build for production and launch server
-$ yarn run build
+$ yarn build
 $ yarn start
 
 # generate static project
-$ yarn run generate
+$ yarn generate
 ```
 
 For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).

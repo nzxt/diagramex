@@ -105,12 +105,17 @@ export default {
           icon: 'bubble_chart',
           title: 'Inspire',
           to: '/inspire'
+        },
+        {
+          icon: 'mdi-star',
+          title: 'Stars',
+          to: '/stars'
         }
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'DiagrameX'
     }
   }
 }
