@@ -4,6 +4,7 @@
       v-model="drawer"
       :mini-variant="miniVariant"
       :clipped="clipped"
+      stateless
       fixed
       app
     >
@@ -102,7 +103,7 @@ export default {
           to: '/'
         },
         {
-          icon: 'bubble_chart',
+          icon: 'mdi-sheep',
           title: 'Inspire',
           to: '/inspire'
         },
@@ -110,6 +111,11 @@ export default {
           icon: 'mdi-star',
           title: 'Stars',
           to: '/stars'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Bubbles',
+          to: '/bubbles'
         }
       ],
       miniVariant: false,

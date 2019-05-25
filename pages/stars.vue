@@ -11,7 +11,7 @@ v-layout.justify-center
           :config='configKonva'
           @contextmenu='onRClickCanvas'
         )
-          v-layer(ref='layer' draggable=true)
+          v-layer(ref='layer')
             v-star.pointer(
               v-for='item in list'
               :key='item.id'
