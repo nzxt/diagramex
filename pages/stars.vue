@@ -1,41 +1,48 @@
 <template lang="pug">
-  div
-    v-stage(
-      v-if='!loading'
-      ref='stage'
-      :config='configKonva'
-      @contextmenu='onRClickCanvas'
-      @dragstart='handleDragstart'
-      @dragend='handleDragend'
-    )
-      v-layer(ref='layer')
-        v-star.pointer(v-for='item in list' :key='item.id' :config='item')
-      v-layer(ref='dragLayer')
+v-layout.justify-center
+  v-flex.xs12
+    v-card#editor.fill-height(v-resize='calcSize')
+      v-card-title.title.grey.white--text.font-weight-thin
+        | Viete.io
+        | Drag ended in: [{{ dragEndX }}, {{ dragEndY }} ]
+      v-card-text.pa-0(v-show='!loading')
+        v-stage(
+          ref='stage'
+          :config='configKonva'
+          @contextmenu='onRClickCanvas'
+        )
+          v-layer(ref='layer' draggable=true)
+            v-star.pointer(
+              v-for='item in list'
+              :key='item.id'
+              :config='item'
+              @dragstart='handleDragstart'
+              @dragend='handleDragend'
+            )
+          v-layer(ref='dragLayer')
 
-    v-layout(v-else)
-      v-flex(xs12)
-        v-icon.mdi-18px(:class='loading ? "mdi-spin warning--text" : "success--text"') {{ loading ? 'mdi-camera-iris' : 'mdi-check-circle-outline' }}
-        span.ml-1.subheaing {{ loading ? loadingMsg : readyMsg }}
+      v-card-text(v-show='loading')
+        v-layout.justify-center.align-center
+          v-flex(xs12)
+            v-icon.mdi-18px(:class='loading ? "mdi-spin warning--text" : "success--text"') {{ loading ? 'mdi-camera-iris' : 'mdi-check-circle-outline' }}
+            span.ml-1.subheaing {{ loading ? loadingMsg : readyMsg }}
 
-    v-menu(
-      v-model="showMenu"
-      :position-x="menuX"
-      :position-y="menuY"
-      absolute
-      offset-y
-    )
-      v-list(dense)
-        v-list-tile(@click="reset")
-          v-list-tile-title {{ 'Clear Stage' }}
-        v-list-tile(@click="randomize")
-          v-list-tile-title {{ 'Randomize Stars' }}
+  v-menu(
+    v-model="showMenu"
+    :position-x="menuX"
+    :position-y="menuY"
+    absolute
+    offset-y
+  )
+    v-list(dense)
+      v-list-tile(@click="reset")
+        v-list-tile-title {{ 'Reset Stage' }}
+      v-list-tile(@click="randomize")
+        v-list-tile-title {{ 'Randomize Stars' }}
 </template>
 
 <script>
 import Konva from 'konva'
-
-const width = window.innerWidth - 96
-const height = window.innerHeight - 144
 
 export default {
   data() {
@@ -48,22 +55,39 @@ export default {
       loading: false,
       list: [],
       configKonva: {
-        width: width,
-        height: height
-      }
+        width: null,
+        height: null,
+        draggable: true
+      },
+      dragEndX: 0,
+      dragEndY: 0
     }
   },
 
   mounted() {
-    this.randomize()
+    this.calcSize()
+    this.$nextTick(() => {
+      this.randomize()
+    })
   },
 
   methods: {
+    calcSize() {
+      const { clientWidth, clientHeight } = document.getElementById('editor')
+      this.configKonva.width = clientWidth
+      this.configKonva.height = clientHeight - 52
+    },
+
     reset() {
       this.loading = true
-      const stage = this.$refs.stage.getStage()
-      stage.clear()
+
+      const layer = this.$refs.layer.getNode()
+
+      layer.destroyChildren()
+      // layer.draw()
+
       this.randomize()
+
       setTimeout(() => {
         this.loading = false
       }, 618)
@@ -73,6 +97,7 @@ export default {
       for (let n = 0; n < 30; n++) {
         const scale = Math.random()
         const stage = this.$refs.stage.getStage()
+
         this.list.push({
           x: Math.random() * stage.width(),
           y: Math.random() * stage.height(),
@@ -98,7 +123,7 @@ export default {
     handleDragstart(e) {
       const shape = e.target
       const dragLayer = this.$refs.dragLayer.getNode()
-      const stage = this.$refs.stage.getNode()
+      const stage = this.$refs.stage.getStage()
       // moving to another layer will improve dragging performance
       shape.moveTo(dragLayer)
       stage.draw()
@@ -113,7 +138,7 @@ export default {
     handleDragend(e) {
       const shape = e.target
       const layer = this.$refs.layer.getNode()
-      const stage = this.$refs.stage.getNode()
+      const stage = this.$refs.stage.getStage()
       shape.moveTo(layer)
       stage.draw()
       shape.to({
@@ -124,6 +149,8 @@ export default {
         shadowOffsetX: 5,
         shadowOffsetY: 5
       })
+      this.dragEndX = shape.attrs.x.toFixed()
+      this.dragEndY = shape.attrs.y.toFixed()
     },
 
     onRClickCanvas(ctx) {
