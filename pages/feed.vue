@@ -1,0 +1,27 @@
+<!-- pages/feed.vue -->
+<template lang='pug'>
+  div
+    PostPreview(v-for='post in posts' :key='post.id' :post='post')
+</template>
+
+<script lang="ts">
+import axios from 'axios'
+import { Component, Vue } from 'vue-property-decorator'
+
+import Post from '~/models/Post'
+
+@Component({
+  components: {
+    PostPreview: () => import('~/components/PostPreview.vue')
+  },
+  async asyncData() {
+    const { data } = await axios.get(`https://my-api/posts`)
+    return {
+      posts: data
+    }
+  }
+})
+export default class FeedPage extends Vue {
+  posts: Post[] = []
+}
+</script>
