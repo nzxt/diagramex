@@ -3,7 +3,6 @@ v-layout.justify-center
   v-flex.xs12
     v-card#editor.fill-height(v-resize='calcSize')
       v-card-title.title.grey.white--text.font-weight-thin
-        | Viete.io
         | Drag ended in: [{{ dragEndX }}, {{ dragEndY }} ]
       v-card-text.pa-0(v-show='!loading')
         v-stage(
@@ -12,7 +11,7 @@ v-layout.justify-center
           @contextmenu='onRClickCanvas'
         )
           v-layer(ref='layer')
-            v-star.pointer(
+            v-star(
               v-for='item in list'
               :key='item.id'
               :config='item'

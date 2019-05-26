@@ -81,10 +81,14 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer
-      :fixed="fixed"
+      class="justify-center grey--text"
+      :inset="fixed"
       app
     >
-      <span>&copy; 2019</span>
+      <span class="caption font-weight-bold">
+        {{ title }} &copy; 2019.
+        <span class="font-weight-thin"> {{ powered }}</span>
+      </span>
     </v-footer>
   </v-app>
 </template>
@@ -121,7 +125,8 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'DiagrameX'
+      title: 'DiagrameX',
+      powered: 'powered by molfarDevs'
     }
   }
 }
