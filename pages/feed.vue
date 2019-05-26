@@ -8,7 +8,7 @@
 import axios from 'axios'
 import { Component, Vue } from 'vue-property-decorator'
 
-import Post from '~/models/Post'
+import IPost from '~/models/Post'
 
 @Component({
   components: {
@@ -22,6 +22,6 @@ import Post from '~/models/Post'
   }
 })
 export default class FeedPage extends Vue {
-  posts: Post[] = []
+  posts: IPost[] = []
 }
 </script>
