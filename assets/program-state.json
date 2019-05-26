@@ -1,0 +1,77 @@
+{
+  "useCases": [
+    {
+    "id": "4b9583cc-78a4-45eb-9f05-3219c94bac55",
+    "identifier": "FormatMethod",
+    "position": {
+      "x": 50,
+      "y": 50
+    },
+    "vertices": [{
+      "id": "stringWithId",
+      "identifier": "stringWith",
+      "position": {
+        "x": 120,
+        "y": 20
+      }
+    }, {
+      "id": "prefixId",
+      "identifier": "prefix",
+      "position": {
+        "x": 20,
+        "y": 100
+      }
+    }, {
+      "id": "suffixId",
+      "identifier": "suffix",
+      "position": {
+        "x": 80,
+        "y": 100
+      }
+    }, {
+      "id": "objectStringId",
+      "identifier": "objectString",
+      "position": {
+        "x": 120,
+        "y": 160
+      }
+    }, {
+      "id": "formattedStringId",
+      "identifier": "formattedString",
+      "position": {
+        "x": 160,
+        "y": 200
+      }
+    }],
+    "constants": [{
+      "id": "stringDelimiterId",
+      "literal": "{0}",
+      "position": {
+        "x": 20,
+        "y": 60
+      }
+    }]
+  }, {
+    "id": "testUseCaseId2",
+    "identifier": "FormatMethodFormatMethod",
+    "position": {
+      "x": 350,
+      "y": 220
+    },
+    "vertices": [{
+      "id": "objectStringId2",
+      "identifier": "objectString2",
+      "position": {
+        "x": 180,
+        "y": 60
+      }
+    }, {
+      "id": "06211a32-0f44-44c2-8418-6a5b0b793861",
+      "identifier": "formattedString2",
+      "position": {
+        "x": 16,
+        "y": 200
+      }
+    }]
+  }]
+}
