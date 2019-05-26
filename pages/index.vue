@@ -4,37 +4,52 @@
       v-card#editor.fill-height(v-resize='calcStageSize')
         v-card-title.py-1.title.grey.white--text.font-weight-thin
           | Viete.io
-          | from [ {{ dragStart.x }}, {{ dragStart.y }} ] to [ {{ dragEnd.x }}, {{ dragEnd.y }} ]
+          .caption.ml-5.blue-grey--text from [ {{ dragStart.x }}, {{ dragStart.y }} ] to [ {{ dragEnd.x }}, {{ dragEnd.y }} ]
           v-spacer
-          v-chip(dark small) {{ scaleConfig.scaleX.toFixed(2) }} * {{ scaleConfig.scaleY.toFixed(2) }}
-          v-spacer
-          v-btn(icon small @click='scaleIn')
+          v-chip(dark small)
+            .body-1 Scale: {{ scaleConfig.scaleX.toFixed(2) }} * {{ scaleConfig.scaleY.toFixed(2) }}
+          v-divider.mx-3(vertical)
+          v-btn.grey.lighten-1(icon small @click='scaleIn')
             v-icon.mdi-24px(color='white') mdi-magnify-plus-outline
-          v-btn(icon small @click='scaleReset')
+          v-btn.grey.lighten-1(icon small @click='scaleReset')
             v-icon.mdi-24px(color='white') mdi-magnify-close
-          v-btn(icon small @click='scaleOut')
+          v-btn.grey.lighten-1(icon small @click='scaleOut')
             v-icon.mdi-24px(color='white') mdi-magnify-minus-outline
+          v-divider.mx-3(vertical)
+          v-btn.grey.lighten-1(icon @click='showBorder')
+            v-icon.mdi-24px(color='white') mdi-tab-unselected
 
         v-card-text.pa-0
-          v-stage.bordered(ref='stage' :config='stageConfig')
+          v-stage(ref='stage' :config='stageConfig' :class='bordered ? "bordered" : ""')
             v-layer(ref='layer' :config='{...scaleConfig}')
-              v-circle(
-                :config='circleConfig'
-                @mouseenter='handleMouseEnter'
-                @mouseleave='handleMouseLeave'
-                @dragstart='handleDragStart'
-                @dragend='handleDragEnd'
+              //- v-circle(
+              //-   :config='circleConfig'
+              //-   @mouseenter='handleMouseEnter'
+              //-   @mouseleave='handleMouseLeave'
+              //-   @dragstart='handleDragStart'
+              //-   @dragend='handleDragEnd'
+              //- )
+              //- v-arrow(:config='arrowConfig')
+              UseCase(
+                :ref='`uc-${item.id}`'
+                v-for='item in programState.useCases'
+                :key='item.id'
+                :useCase='item'
+                @uc::mouseenter='handleMouseEnter'
+                @uc::mouseleave='handleMouseLeave'
+                @uc::dragstart='handleDragStart'
+                @uc::dragend='handleDragEnd'
               )
-              UseCase
             v-layer(ref='dragLayer')
 </template>
 
 <script lang='ts'>
-import Konva from 'konva'
 import { Component, Vue } from 'vue-property-decorator'
 import LayerScaleMixin from '~/mixins/scale-config'
-import ScaleConfigMixin from '~/mixins/cursor-pointer'
-import IPosition from '~/models/Position'
+import CursorPointerMixin from '~/mixins/cursor-pointer'
+import DragHandlersMixin from '~/mixins/drag-handlers'
+
+import programState from '~/assets/program-state.json'
 
 let vm: any = {}
 
@@ -42,20 +57,19 @@ let vm: any = {}
   components: {
     UseCase: () => import('~/components/UseCase.vue')
   },
-  mixins: [LayerScaleMixin, ScaleConfigMixin]
+  mixins: [
+    LayerScaleMixin,
+    CursorPointerMixin,
+    DragHandlersMixin
+  ]
 })
 export default class IndexPage extends Vue {
-  dragStart: IPosition = {
-    x: 0,
-    y: 0
-  }
-  dragEnd: IPosition = {
-    x: 0,
-    y: 0
-  }
+  programState: any = programState
+  bordered: boolean = false
+
   stageConfig: any = {
-    width: 10,
-    height: 10,
+    width: null,
+    height: null,
     draggable: true
   }
   circleConfig: any = {
@@ -78,6 +92,21 @@ export default class IndexPage extends Vue {
       return { x: x, y: y }
     }
   }
+  // arrowConfig: any = {
+  // x: this.programState.useCases[0].position.x,
+  // y: this.programState.useCases[0].position.y,
+  //   points: [
+  //     this.programState.useCases[0].position.x,
+  //     this.programState.useCases[0].position.y,
+  //     this.programState.useCases[1].position.x,
+  //     this.programState.useCases[1].position.y
+  //   ],
+  //   pointerLength: 20,
+  //   pointerWidth: 20,
+  //   fill: 'black',
+  //   stroke: 'black',
+  //   strokeWidth: 4
+  // }
 
   created() {
     vm = this
@@ -87,49 +116,11 @@ export default class IndexPage extends Vue {
     const editor = document.getElementById('editor')
     const { clientWidth, clientHeight } = editor as any // TODO!
     this.stageConfig.width = clientWidth
-    this.stageConfig.height = clientHeight - 74
+    this.stageConfig.height = clientHeight - 76
   }
 
-  handleDragStart(e): void {
-    const shape = e.target
-    const dragLayer = this.$refs.dragLayer.getNode()
-    const stage = this.$refs.stage.getStage()
-
-    // moving to another layer will improve dragging performance
-    shape.moveTo(dragLayer)
-    stage.draw()
-
-    shape.setAttrs({
-      shadowOffsetX: 15,
-      shadowOffsetY: 15,
-      scaleX: shape.getAttr('scaleX') * 1.2,
-      scaleY: shape.getAttr('scaleY') * 1.2
-    })
-
-    this.dragStart.x = shape.attrs.x.toFixed()
-    this.dragStart.y = shape.attrs.y.toFixed()
-  }
-
-  handleDragEnd(e): void {
-    const shape = e.target
-    const layer = this.$refs.layer.getNode()
-    const stage = this.$refs.stage.getStage()
-
-    // move back to the main layer
-    shape.moveTo(layer)
-    stage.draw()
-
-    shape.to({
-      duration: 0.5,
-      easing: Konva.Easings.ElasticEaseOut,
-      scaleX: shape.getAttr('scaleX') / 1.2,
-      scaleY: shape.getAttr('scaleY') / 1.2,
-      shadowOffsetX: 5,
-      shadowOffsetY: 5
-    })
-
-    this.dragEnd.x = shape.attrs.x.toFixed()
-    this.dragEnd.y = shape.attrs.y.toFixed()
+  showBorder(): void {
+    this.bordered = !this.bordered
   }
 }
 </script>
