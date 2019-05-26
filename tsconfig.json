@@ -24,7 +24,9 @@
     },
     "types": [
       "@types/node",
-      "@nuxt/vue-app"
+      "@nuxt/vue-app",
+      "vuetify",
+      "konva"
     ]
   }
 }
