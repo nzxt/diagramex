@@ -42,7 +42,8 @@ export default {
   */
   plugins: [
     '@/plugins/vuetify',
-    '@/plugins/konva'
+    '@/plugins/konva',
+    { src: '~/plugins/vuex-persist', ssr: false }
   ],
 
   /*

@@ -7,7 +7,7 @@
       "x": 50,
       "y": 50
     },
-    "vertices": [{
+    "variables": [{
       "id": "stringWithId",
       "identifier": "stringWith",
       "position": {
@@ -58,7 +58,7 @@
       "x": 350,
       "y": 220
     },
-    "vertices": [{
+    "variables": [{
       "id": "objectStringId2",
       "identifier": "objectString2",
       "position": {
@@ -72,6 +72,7 @@
         "x": 16,
         "y": 200
       }
-    }]
+    }],
+    "constants": []
   }]
 }

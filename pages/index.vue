@@ -31,8 +31,7 @@
               //- )
               //- v-arrow(:config='arrowConfig')
               UseCase(
-                :ref='`uc-${item.id}`'
-                v-for='item in programState.useCases'
+                v-for='item in vuexProgramState.useCases'
                 :key='item.id'
                 :useCase='item'
                 @uc::mouseenter='handleMouseEnter'
@@ -45,11 +44,12 @@
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 import LayerScaleMixin from '~/mixins/scale-config'
 import CursorPointerMixin from '~/mixins/cursor-pointer'
 import DragHandlersMixin from '~/mixins/drag-handlers'
 
-import programState from '~/assets/program-state.json'
+// import programState from '~/assets/program-state.json'
 
 let vm: any = {}
 
@@ -64,7 +64,8 @@ let vm: any = {}
   ]
 })
 export default class IndexPage extends Vue {
-  programState: any = programState
+  @State('programState') vuexProgramState
+  // programState: programState
   bordered: boolean = false
 
   stageConfig: any = {
