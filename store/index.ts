@@ -5,7 +5,7 @@ import programState from '~/assets/program-state.json'
 export const strict = false
 
 export interface IState {
-  programState: IProgramState | null;
+  programState: IProgramState;
 }
 
 export const state = (): IState => ({
@@ -13,5 +13,10 @@ export const state = (): IState => ({
 })
 
 export const mutations: MutationTree<IState> = {
-  setProgramState: (state, value: IProgramState) => { state.programState = value }
+  updateUCPosition: (state, value: any) => {
+    const { id, position: { x, y } } = value
+    const index = state.programState.useCases.findIndex(x => x.id === id)
+    state.programState.useCases[index].position.x = x
+    state.programState.useCases[index].position.y = y
+  }
 }

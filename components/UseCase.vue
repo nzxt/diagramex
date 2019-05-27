@@ -3,7 +3,7 @@
     :id='`usecase-${useCase.id}`'
     :config='{ ...groupConfig, ...scaleConfig }'
     @dragstart='emitDragStart'
-    @dragend='emitDragEnd'
+    @dragend='handleDragEnd'
     @mouseenter='emitMouseEnter'
     @mouseleave='emitMouseLeave'
   )
@@ -14,6 +14,7 @@
 
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Mutation } from 'vuex-class'
 
 import LayerScaleMixin from '~/mixins/scale-config'
 
@@ -23,6 +24,8 @@ import LayerScaleMixin from '~/mixins/scale-config'
 export default class UseCase extends Vue {
   @Prop({ default: {} })
   useCase!: any // IUseCase
+
+  @Mutation('updateUCPosition') mutationUpdateUCPosition
 
   groupConfig: any = {
     x: this.useCase.position.x,
@@ -82,6 +85,16 @@ export default class UseCase extends Vue {
   }
   emitDragEnd(evt) {
     this.$emit('uc::dragend', evt)
+  }
+  handleDragEnd(evt) {
+    this.emitDragEnd(evt)
+    this.mutationUpdateUCPosition({
+      id: this.useCase.id,
+      position: {
+        x: evt.target.attrs.x,
+        y: evt.target.attrs.y
+      }
+    })
   }
 }
 </script>
