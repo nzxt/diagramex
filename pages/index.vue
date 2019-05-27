@@ -20,16 +20,15 @@
             v-icon.mdi-24px(color='white') mdi-tab-unselected
 
         v-card-text.pa-0
-          v-stage(ref='stage' :config='stageConfig' :class='bordered ? "bordered" : ""')
-            v-layer(ref='layer' :config='{...scaleConfig}')
-              //- v-circle(
-              //-   :config='circleConfig'
-              //-   @mouseenter='handleMouseEnter'
-              //-   @mouseleave='handleMouseLeave'
-              //-   @dragstart='handleDragStart'
-              //-   @dragend='handleDragEnd'
-              //- )
-              //- v-arrow(:config='arrowConfig')
+          v-stage(
+            ref='stage'
+            :config='stageConfig'
+            :class='bordered ? "bordered" : ""'
+          )
+            v-layer(
+              ref='layer'
+              :config='{name: "MainLayer", ...scaleConfig}'
+            )
               UseCase(
                 v-for='item in vuexProgramState.useCases'
                 :key='item.id'
@@ -39,7 +38,10 @@
                 @uc::dragstart='handleDragStart'
                 @uc::dragend='handleDragEnd'
               )
-            v-layer(ref='dragLayer')
+            v-layer(
+              ref='dragLayer'
+              :config='configDragLayer'
+            )
 </template>
 
 <script lang='ts'>
@@ -48,10 +50,6 @@ import { State } from 'vuex-class'
 import LayerScaleMixin from '~/mixins/scale-config'
 import CursorPointerMixin from '~/mixins/cursor-pointer'
 import DragHandlersMixin from '~/mixins/drag-handlers'
-
-// import programState from '~/assets/program-state.json'
-
-let vm: any = {}
 
 @Component({
   components: {
@@ -65,52 +63,22 @@ let vm: any = {}
 })
 export default class IndexPage extends Vue {
   @State('programState') vuexProgramState
-  // programState: programState
   bordered: boolean = false
 
   stageConfig: any = {
+    name: 'Stage',
     width: null,
     height: null,
     draggable: true
   }
-  circleConfig: any = {
-    x: 35,
-    y: 35,
-    radius: 35,
-    fill: '#00C081',
-    stroke: '#1789C3',
-    strokeWidth: 5,
-    opacity: 0.75,
-    draggable: true,
-    dragBoundFunc: function (pos) {
-      const stage = vm.$refs.stage.getStage()
-      const x1 = 0 + this.width() / 2
-      const y1 = 0 + this.height() / 2
-      const x2 = stage.width() - this.width() / 2
-      const y2 = stage.height() - this.height() / 2
-      const x = (pos.x < x1) ? x1 : (pos.x > x2 ? x2 : pos.x)
-      const y = (pos.y < y1) ? y1 : (pos.y > y2 ? y2 : pos.y)
-      return { x: x, y: y }
-    }
+  configDragLayer: any = {
+    name: 'DragLayer',
+    listening: false
   }
-  // arrowConfig: any = {
-  // x: this.programState.useCases[0].position.x,
-  // y: this.programState.useCases[0].position.y,
-  //   points: [
-  //     this.programState.useCases[0].position.x,
-  //     this.programState.useCases[0].position.y,
-  //     this.programState.useCases[1].position.x,
-  //     this.programState.useCases[1].position.y
-  //   ],
-  //   pointerLength: 20,
-  //   pointerWidth: 20,
-  //   fill: 'black',
-  //   stroke: 'black',
-  //   strokeWidth: 4
-  // }
-
-  created() {
-    vm = this
+  mounted() {
+    window.$stage = this.$refs.stage.getStage()
+    window.$layer = this.$refs.layer.getNode()
+    window.$dragLayer = this.$refs.dragLayer.getNode()
   }
 
   calcStageSize(): void {

@@ -120,6 +120,11 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Bubbles',
           to: '/bubbles'
+        },
+        {
+          icon: 'mdi-settings-outline',
+          title: 'Draggable',
+          to: '/draggable'
         }
       ],
       miniVariant: false,

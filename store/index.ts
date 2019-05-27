@@ -9,7 +9,7 @@ export interface IState {
 }
 
 export const state = (): IState => ({
-  programState: programState
+  programState: programState || {}
 })
 
 export const mutations: MutationTree<IState> = {

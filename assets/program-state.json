@@ -2,49 +2,49 @@
   "useCases": [
     {
     "id": "4b9583cc-78a4-45eb-9f05-3219c94bac55",
-    "identifier": "FormatMethod",
+    "identifier": "FormatMethod #1",
     "position": {
       "x": 50,
       "y": 50
     },
     "variables": [{
-      "id": "stringWithId",
-      "identifier": "stringWith",
+      "id": "stringWithId01",
+      "identifier": "Variable #1",
       "position": {
         "x": 120,
         "y": 20
       }
     }, {
-      "id": "prefixId",
-      "identifier": "prefix",
+      "id": "stringWithId02",
+      "identifier": "Variable #2",
       "position": {
         "x": 20,
         "y": 100
       }
     }, {
-      "id": "suffixId",
-      "identifier": "suffix",
+      "id": "stringWithId03",
+      "identifier": "Variable #3",
       "position": {
         "x": 80,
         "y": 100
       }
     }, {
-      "id": "objectStringId",
-      "identifier": "objectString",
+      "id": "stringWithId04",
+      "identifier": "Variable #4",
       "position": {
         "x": 120,
         "y": 160
       }
     }, {
-      "id": "formattedStringId",
-      "identifier": "formattedString",
+      "id": "stringWithId05",
+      "identifier": "Variable #5",
       "position": {
         "x": 160,
         "y": 200
       }
     }],
     "constants": [{
-      "id": "stringDelimiterId",
+      "id": "stringDelimiterId1",
       "literal": "{0}",
       "position": {
         "x": 20,
@@ -52,22 +52,22 @@
       }
     }]
   }, {
-    "id": "testUseCaseId2",
-    "identifier": "FormatMethodFormatMethod",
+    "id": "5b22d0a3-6929-4dfb-a72c-37ae9d65173c",
+    "identifier": "FormatMethod #2",
     "position": {
       "x": 350,
       "y": 220
     },
     "variables": [{
-      "id": "objectStringId2",
-      "identifier": "objectString2",
+      "id": "stringWithId08",
+      "identifier": "ObjectString #2",
       "position": {
         "x": 180,
         "y": 60
       }
     }, {
-      "id": "06211a32-0f44-44c2-8418-6a5b0b793861",
-      "identifier": "formattedString2",
+      "id": "stringWithId09",
+      "identifier": "FormattedString #2",
       "position": {
         "x": 16,
         "y": 200
