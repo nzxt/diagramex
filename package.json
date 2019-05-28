@@ -8,9 +8,7 @@
     "vue",
     "vuetify",
     "typescript",
-    "canvas",
-    "vue-konva",
-    "konva"
+    "snapsvg"
   ],
   "scripts": {
     "dev": "nuxt",
@@ -26,10 +24,10 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/pwa": "^2.6.0",
     "cross-env": "^5.2.0",
-    "konva": "^3.2.6",
     "nuxt": "^2.4.0",
+    "snap.svg.zpd": "^0.0.11",
+    "snapsvg-cjs": "^0.0.6",
     "ts-node": "^8.1.1",
-    "vue-konva": "^2.0.6",
     "vue-property-decorator": "^8.1.1",
     "vuetify": "^1.5.5",
     "vuetify-loader": "^1.2.1",
@@ -39,6 +37,7 @@
   "devDependencies": {
     "@nuxt/typescript": "^2.7.1",
     "@nuxtjs/eslint-config": "^0.0.1",
+    "@types/snapsvg": "^0.5.0",
     "@typescript-eslint/eslint-plugin": "^1.9.0",
     "@vue/test-utils": "^1.0.0-beta.27",
     "babel-core": "7.0.0-bridge.0",

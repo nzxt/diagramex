@@ -50,36 +50,13 @@
         <v-icon>remove</v-icon>
       </v-btn>
       <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>menu</v-icon>
-      </v-btn>
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
         <nuxt />
       </v-container>
     </v-content>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon light>
-              compare_arrows
-            </v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
+
     <v-footer
       class="justify-center grey--text"
       :inset="fixed"
@@ -102,29 +79,9 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'apps',
-          title: 'Welcome',
+          icon: 'mdi-graphql',
+          title: 'graph',
           to: '/'
-        },
-        {
-          icon: 'mdi-sheep',
-          title: 'Inspire',
-          to: '/inspire'
-        },
-        {
-          icon: 'mdi-star',
-          title: 'Stars',
-          to: '/stars'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Bubbles',
-          to: '/bubbles'
-        },
-        {
-          icon: 'mdi-settings-outline',
-          title: 'Draggable',
-          to: '/draggable'
         }
       ],
       miniVariant: false,

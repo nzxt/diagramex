@@ -42,7 +42,7 @@ export default {
   */
   plugins: [
     '@/plugins/vuetify',
-    '@/plugins/konva',
+    '@/plugins/snapsvg',
     { src: '~/plugins/vuex-persist', ssr: false }
   ],
 
