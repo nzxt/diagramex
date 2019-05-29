@@ -3,12 +3,11 @@
     :id='`uc-${useCase.id}`'
     :transform='`translate(${useCase.position.x},${useCase.position.y})`'
   )
-
     rect.uc-title(
       x='0'
       y='0'
-      :width='155'
-      :height='35'
+      :width='identifierWidth'
+      height='35'
       rx='5'
       ry='5'
       :style='UCTitleStyle'
@@ -36,7 +35,7 @@
 </template>
 
 <script lang='ts'>
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 // import { Mutation } from 'vuex-class'
 
 // import UseCase from '~/models/UseCase'
@@ -54,6 +53,8 @@ export default class UseCaseComponent extends Vue {
     type: Object as () => IUseCase
   })
   readonly useCase!: IUseCase
+
+  identifierWidth: number = 150
 
   UCTitleStyle: any = {
     fill: '#03A9F4',
@@ -75,6 +76,16 @@ export default class UseCaseComponent extends Vue {
   mounted() {
     const uc = this.$snap.select(`#uc-${this.useCase.id}`)
     uc.drag(onMove, onStart, onEnd)
+  }
+
+  @Watch('useCase.identifier', { immediate: true, deep: false })
+  onIdentifierChange(value: string) {
+    if (!value.length) return
+    this.$nextTick(() => {
+      const text = this.$snap.select(`#uc-${this.useCase.id} .uc-text`)
+      const bb = text.getBBox()
+      this.identifierWidth = bb.width + 10
+    })
   }
 }
 </script>
