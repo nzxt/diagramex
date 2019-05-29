@@ -1,8 +1,14 @@
 <template lang="pug">
-  g(
+  g.variable(
     :id='`vr-${variable.id}`'
     :transform='`translate(${variable.position.x},${variable.position.y})`'
   )
+    text.vr-pos(
+      :x='identifierWidth - 52'
+      y='35'
+      fill='#777'
+      font-size="10px"
+    ) x:{{ variable.position.x.toFixed() }} y:{{ variable.position.y.toFixed() }}
     rect.vr-body(
       x='0'
       y='0'
@@ -45,10 +51,12 @@ export default class VariableComponent extends Vue {
     opacity: 0.75
   }
 
+  /* eslint-disable */
   mounted() {
     const vr = this.$snap.select(`#vr-${this.variable.id}`)
     vr.drag(onMove, onStart, onEnd)
   }
+  /* eslint-enable */
 
   @Watch('variable.identifier', { immediate: true, deep: false })
   onIdentifierChange(value: string) {

@@ -43,6 +43,7 @@ export default {
   plugins: [
     '@/plugins/vuetify',
     '@/plugins/snapsvg',
+    '@/plugins/eventbus',
     { src: '~/plugins/vuex-persist', ssr: false }
   ],
 

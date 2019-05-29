@@ -4,7 +4,6 @@
       v-card#editor.fill-height(flat v-resize='calcStageSize')
         v-card-title.py-1.title.grey.white--text.font-weight-thin
           | Viete.io
-          //- .caption.ml-5.blue-grey--text from [ {{ dragStart.x }}, {{ dragStart.y }} ] to [ {{ dragEnd.x }}, {{ dragEnd.y }} ]
           v-spacer
           //- v-chip(dark small)
             //- .body-1 Scale: {{ scaleConfig.scaleX.toFixed(2) }} * {{ scaleConfig.scaleY.toFixed(2) }}
@@ -19,26 +18,23 @@
           v-btn.grey.lighten-1(icon @click='showBorder')
             v-icon.mdi-24px(color='white') mdi-tab-unselected
 
-        v-card-text.ma-0.pa-0
+        v-responsive#field
           svg#canvas(
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="xMidYMid meet"
             :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
             :class='{ bordered }'
-            @mousedown.shift='onShiftClickCanvas'
+            preserveAspectRatio='xMidYMid meet'
           )
-            //- @mouseover='onMouseOver'
-            //- @mouseout='onMouseOut'
-            UseCase(
-              v-for='item in vuexProgramState.useCases'
-              :key='item.id'
-              :useCase='item'
-            )
+            g
+              UseCase(
+                v-for='item in vuexProgramState.useCases'
+                :key='item.id'
+                :useCase='item'
+              )
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { State, Mutation } from 'vuex-class'
 
 @Component({
   components: {
@@ -48,6 +44,8 @@ import { State } from 'vuex-class'
 })
 export default class IndexPage extends Vue {
   @State('programState') vuexProgramState
+  @Mutation('updateUCPosition') mutationUpdateUCPosition
+  @Mutation('updateVRPosition') mutationUpdateVRPosition
 
   bordered: boolean = true
   viewBox: any = {
@@ -56,24 +54,50 @@ export default class IndexPage extends Vue {
   }
 
   mounted() {
+    this.$nextTick(() => {
+      this.calcStageSize()
+    })
     /* eslint-disable */
     const paper = this.$snap('#canvas')
 
     // ZPD with options and callback
-    // const options = {
-    //   zoom: true,
-    //   pan: false,
-    //   drag: true
-    // }
-    // paper.zpd(options, (error, paper) => {
-    //   console.log(`${paper} // ${error}`)
-    // })
+    const options = {
+      zoom: true,
+      pan: true,
+      drag: false
+    }
+
+    paper.zpd(options, (error, paper) => {
+      console.log(`${paper} // ${error}`)
+    })
     /* eslint-enable */
   }
 
+  created() {
+    this.$bus.$on('dragEnd', this.onDragEnd)
+  }
+  beforeDestroy() {
+    this.$bus.$off('dragEnd')
+  }
+
   /* eslint-disable */
-  onClickCanvas(evt): void {
-    console.log('Canvas shift-clicked...', parent)
+  onDragEnd ({ x, y, nodeId, nodeParentId }): void {
+    const type = nodeId.substring(0,2)
+    const id = nodeId.substring(3)
+    const pid = nodeParentId.substring(3)
+
+    switch(type){
+      case 'uc': {
+        this.mutationUpdateUCPosition({ x, y, id })
+        break
+      }
+      case 'vr': {
+        this.mutationUpdateVRPosition({ x, y, id, pid })
+        break
+      }
+      default: console.log('Unknown element..')
+    }
+
   }
   /* eslint-enable */
 
@@ -89,8 +113,3 @@ export default class IndexPage extends Vue {
   }
 }
 </script>
-
-<style lang="stylus" scoped>
-.bordered
-  border 1px dashed grey
-</style>

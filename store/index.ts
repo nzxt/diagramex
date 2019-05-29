@@ -14,9 +14,16 @@ export const state = (): IState => ({
 
 export const mutations: MutationTree<IState> = {
   updateUCPosition: (state, value: any) => {
-    const { id, position: { x, y } } = value
+    const { x, y, id } = value
     const index = state.programState.useCases.findIndex(x => x.id === id)
     state.programState.useCases[index].position.x = x
     state.programState.useCases[index].position.y = y
+  },
+  updateVRPosition: (state, value: any) => {
+    const { x, y, id, pid } = value
+    const pIndex = state.programState.useCases.findIndex(x => x.id === pid)
+    const index = state.programState.useCases[pIndex].variables.findIndex(x => x.id === id)
+    state.programState.useCases[pIndex].variables[index].position.x = x
+    state.programState.useCases[pIndex].variables[index].position.y = y
   }
 }

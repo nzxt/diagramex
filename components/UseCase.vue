@@ -1,8 +1,14 @@
 <template lang="pug">
-  g(
+  g.usecase(
     :id='`uc-${useCase.id}`'
     :transform='`translate(${useCase.position.x},${useCase.position.y})`'
   )
+    text.uc-pos(
+      :x='identifierWidth + 10'
+      y='18'
+      fill='#ccc'
+      font-size="12px"
+    ) x:{{ useCase.position.x }} y:{{ useCase.position.y }}
     rect.uc-title(
       x='0'
       y='0'
@@ -26,19 +32,16 @@
       y='18'
       :style='UCTextStyle'
     ) {{ useCase.identifier }}
-    g.variables
-      Variable(
-        v-for='item in useCase.variables'
-        :key='item.id'
-        :variable='item'
-      )
+    Variable(
+      v-for='item in useCase.variables'
+      :key='item.id'
+      :variable='item'
+    )
 </template>
 
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
-// import { Mutation } from 'vuex-class'
 
-// import UseCase from '~/models/UseCase'
 import { IUseCase } from '~/models/interfaces'
 import { onMove, onStart, onEnd } from '~/mixins/draggable'
 
