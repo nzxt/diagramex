@@ -6,8 +6,8 @@
     rect.vr-body(
       x='0'
       y='0'
-      :width='150'
-      :height='25'
+      :width='identifierWidth'
+      height='25'
       rx='5'
       ry='5'
       :style='VRBodyStyle'
@@ -20,7 +20,7 @@
 </template>
 
 <script lang='ts'>
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import { IVariable } from '~/models/interfaces'
 import { onMove, onStart, onEnd } from '~/mixins/draggable'
 
@@ -31,6 +31,8 @@ export default class VariableComponent extends Vue {
     type: Object as () => IVariable
   })
   readonly variable!: IVariable
+
+  identifierWidth: number = 150
 
   VRTextStyle: any = {
     fill: '#FAFAFA',
@@ -46,6 +48,16 @@ export default class VariableComponent extends Vue {
   mounted() {
     const vr = this.$snap.select(`#vr-${this.variable.id}`)
     vr.drag(onMove, onStart, onEnd)
+  }
+
+  @Watch('variable.identifier', { immediate: true, deep: false })
+  onIdentifierChange(value: string) {
+    if (!value.length) return
+    this.$nextTick(() => {
+      const text = this.$snap.select(`#vr-${this.variable.id} .vr-text`)
+      const bb = text.getBBox()
+      this.identifierWidth = bb.width + 10
+    })
   }
 }
 </script>
