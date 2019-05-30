@@ -23,6 +23,7 @@
             :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
             :class='{ bordered }'
             preserveAspectRatio='xMidYMid meet'
+            @contextmenu.stop.prevent='onContextMenu'
           )
             g
               UseCase(
@@ -30,11 +31,28 @@
                 :key='item.id'
                 :useCase='item'
               )
+    v-menu(
+      v-model='showMenu'
+      :position-x='menuX'
+      :position-y='menuY'
+      absolute
+      offset-y
+    )
+      v-list(dense)
+        v-list-tile(
+          v-for='(item, index) in menuItems[`${menuType}`]'
+          :key='index'
+          @click.stop.prevent='doStuff(item.value)'
+        )
+          v-list-tile-title {{ item.text }}
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
 import { State, Mutation } from 'vuex-class'
+
+import { UseCase } from '~/models/UseCase'
+// import { getOffset } from '~/mixins/helpers'
 
 @Component({
   components: {
@@ -44,13 +62,50 @@ import { State, Mutation } from 'vuex-class'
 })
 export default class IndexPage extends Vue {
   @State('programState') vuexProgramState
+  @Mutation('addUC') mutationAddUC
   @Mutation('updateUCPosition') mutationUpdateUCPosition
   @Mutation('updateVRPosition') mutationUpdateVRPosition
 
   bordered: boolean = true
+
+  showMenu: boolean = false
+  menuType: string = 'cn'
+  menuX: number = 0
+  menuY: number = 0
+
+  canvasX: number = 0
+  canvasY: number = 0
+
   viewBox: any = {
     width: 500,
     height: 350
+  }
+
+  menuItems: any = {
+    // Canvas
+    cn: [
+      { text: 'Create Usecase', value: 'createUsecase' }
+    ],
+    // Usecase
+    uc: [
+      { text: 'Create Variable', value: 'createUsecase' },
+      { text: 'Create Constant', value: 'createConstant' },
+      { text: 'Create Tuple', value: 'createTuple' },
+      { text: '---', value: '' },
+      { text: 'Delete Usecase', value: 'deleteUsecase' }
+    ],
+    // Variable
+    vr: [
+      { text: 'Delete Variable', value: 'deleteVariable' }
+    ],
+    // Constant
+    ct: [
+      { text: 'Delete Constant', value: 'deleteConstant' }
+    ],
+    // Tuple
+    tp: [
+      { text: 'Delete Tuple', value: 'deleteTuple' }
+    ]
   }
 
   mounted() {
@@ -59,6 +114,7 @@ export default class IndexPage extends Vue {
     })
     /* eslint-disable */
     const paper = this.$snap('#canvas')
+    // paper.click(() => { alert('Hey!') })
 
     // ZPD with options and callback
     const options = {
@@ -97,6 +153,39 @@ export default class IndexPage extends Vue {
       }
       default: console.log('Unknown element..')
     }
+
+  }
+
+  onContextMenu(evt): void {
+    const { clientX, clientY } = evt
+    const { layerX, layerY } = evt
+
+    const elem = this.$snap.getElementByPoint(clientX, clientY)
+    const parent = elem.parent()
+    const { id: nodeParentId } = parent.node
+    const type = nodeParentId.substring(0, 2) || 'cn'
+
+    this.menuType = type
+    this.menuX = clientX
+    this.menuY = clientY
+
+    this.canvasX = layerX
+    this.canvasY = layerY
+
+    this.$nextTick(() => {
+      this.showMenu = true
+    })
+  }
+
+  doStuff(value: string): void {
+    if(!value) return
+    this[`${value}`]()
+  }
+
+  createUsecase() {
+    const { canvasX: x, canvasY: y } = this
+    const usecase = new UseCase('UseCase', x, y)
+    this.mutationAddUC(usecase)
 
   }
   /* eslint-enable */
