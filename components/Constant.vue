@@ -1,27 +1,27 @@
 <template lang="pug">
   g.constant(
-    :id='`cn-${constant.id}`'
+    :id='`ct-${constant.id}`'
     :transform='`translate(${constant.position.x}, ${constant.position.y})`'
   )
-    text.cn-pos(
+    text.ct-pos(
       :x='identifierWidth - 20'
       y='35'
       fill='#555'
       font-size="10px"
     ) x:{{ constant.position.y.toFixed() }} y:{{ constant.position.y.toFixed()}}
-    rect.cn-body(
+    rect.ct-body(
       x='0'
       y='0'
       :width='identifierWidth'
       height='25'
       rx='5'
       ry='5'
-      :style='CNBodyStyle'
+      :style='CTBodyStyle'
     )
-    text.cn-text(
+    text.ct-text(
       x='5'
       y='17'
-      :style='CNTextStyle'
+      :style='CTTextStyle'
     ) {{ constant.identifier }}
 </template>
 <script lang="ts">
@@ -39,11 +39,11 @@ export default class ConstantComponent extends Vue {
 
   identifierWidth: number = 150
 
-  CNTextStyle: any = {
+  CTTextStyle: any = {
     fill: '#FAFAFA',
     fontSize: '14px'
   }
-  CNBodyStyle: any = {
+  CTBodyStyle: any = {
     fill: '#9E9D24',
     stroke: '#827717',
     strokeWidth: 1,
@@ -52,7 +52,7 @@ export default class ConstantComponent extends Vue {
 
   /* eslint-disable */
   mounted() {
-    const vr = this.$snap.select(`#cn-${this.constant.id}`)
+    const vr = this.$snap.select(`#ct-${this.constant.id}`)
     vr.drag(onMove, onStart, onEnd)
   }
   /* eslint-enable */
@@ -61,7 +61,7 @@ export default class ConstantComponent extends Vue {
   onIdentifierChange(value: string) {
     if (!value.length) return
     this.$nextTick(() => {
-      const text = this.$snap.select(`#cn-${this.constant.id} .cn-text`)
+      const text = this.$snap.select(`#ct-${this.constant.id} .ct-text`)
       const bb = text.getBBox()
       this.identifierWidth = bb.width + 10
     })

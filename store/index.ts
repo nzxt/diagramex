@@ -30,7 +30,7 @@ export const mutations: MutationTree<IState> = {
     state.programState.useCases[pIndex].variables[index].position.y = y
   },
 
-  updateCNPosition: (state, value: any) => {
+  updateCTPosition: (state, value: any) => {
     const { x, y, id, pid } = value
     const pIndex = state.programState.useCases.findIndex(x => x.id === pid)
     const index = state.programState.useCases[pIndex].constants.findIndex(x => x.id === id)

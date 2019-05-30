@@ -63,7 +63,7 @@ export default class IndexPage extends Vue {
   @State('programState') vuexProgramState
   @Mutation('updateUCPosition') mutationUpdateUCPosition
   @Mutation('updateVRPosition') mutationUpdateVRPosition
-  @Mutation('updateCNPosition') mutationUpdateCNPosition
+  @Mutation('updateCTPosition') mutationUpdateCTPosition
 
   bordered: boolean = true
 
@@ -115,8 +115,8 @@ export default class IndexPage extends Vue {
         this.mutationUpdateVRPosition({ x, y, id, pid })
         break
       }
-      case 'cn': {
-        this.mutationUpdateCNPosition({ x, y, id, pid })
+      case 'ct': {
+        this.mutationUpdateCTPosition({ x, y, id, pid })
         break
       }
       default: console.log('Unknown element..') // eslint-disable-line
