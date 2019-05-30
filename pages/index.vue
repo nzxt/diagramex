@@ -51,61 +51,24 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { State, Mutation } from 'vuex-class'
 
-import { UseCase } from '~/models/UseCase'
-// import { getOffset } from '~/mixins/helpers'
+import MenuMixin from '~/mixins/menu'
 
 @Component({
   components: {
     UseCase: () => import('~/components/UseCase.vue')
   },
-  mixins: []
+  mixins: [MenuMixin]
 })
 export default class IndexPage extends Vue {
   @State('programState') vuexProgramState
-  @Mutation('addUC') mutationAddUC
   @Mutation('updateUCPosition') mutationUpdateUCPosition
   @Mutation('updateVRPosition') mutationUpdateVRPosition
 
   bordered: boolean = true
 
-  showMenu: boolean = false
-  menuType: string = 'cn'
-  menuX: number = 0
-  menuY: number = 0
-
-  canvasX: number = 0
-  canvasY: number = 0
-
   viewBox: any = {
     width: 500,
     height: 350
-  }
-
-  menuItems: any = {
-    // Canvas
-    cn: [
-      { text: 'Create Usecase', value: 'createUsecase' }
-    ],
-    // Usecase
-    uc: [
-      { text: 'Create Variable', value: 'createUsecase' },
-      { text: 'Create Constant', value: 'createConstant' },
-      { text: 'Create Tuple', value: 'createTuple' },
-      { text: '---', value: '' },
-      { text: 'Delete Usecase', value: 'deleteUsecase' }
-    ],
-    // Variable
-    vr: [
-      { text: 'Delete Variable', value: 'deleteVariable' }
-    ],
-    // Constant
-    ct: [
-      { text: 'Delete Constant', value: 'deleteConstant' }
-    ],
-    // Tuple
-    tp: [
-      { text: 'Delete Tuple', value: 'deleteTuple' }
-    ]
   }
 
   mounted() {
@@ -132,17 +95,17 @@ export default class IndexPage extends Vue {
   created() {
     this.$bus.$on('dragEnd', this.onDragEnd)
   }
+
   beforeDestroy() {
     this.$bus.$off('dragEnd')
   }
 
-  /* eslint-disable */
-  onDragEnd ({ x, y, nodeId, nodeParentId }): void {
-    const type = nodeId.substring(0,2)
+  onDragEnd({ x, y, nodeId, nodeParentId }): void {
+    const type = nodeId.substring(0, 2)
     const id = nodeId.substring(3)
     const pid = nodeParentId.substring(3)
 
-    switch(type){
+    switch (type) {
       case 'uc': {
         this.mutationUpdateUCPosition({ x, y, id })
         break
@@ -151,44 +114,9 @@ export default class IndexPage extends Vue {
         this.mutationUpdateVRPosition({ x, y, id, pid })
         break
       }
-      default: console.log('Unknown element..')
+      default: console.log('Unknown element..') // eslint-disable-line
     }
-
   }
-
-  onContextMenu(evt): void {
-    const { clientX, clientY } = evt
-    const { layerX, layerY } = evt
-
-    const elem = this.$snap.getElementByPoint(clientX, clientY)
-    const parent = elem.parent()
-    const { id: nodeParentId } = parent.node
-    const type = nodeParentId.substring(0, 2) || 'cn'
-
-    this.menuType = type
-    this.menuX = clientX
-    this.menuY = clientY
-
-    this.canvasX = layerX
-    this.canvasY = layerY
-
-    this.$nextTick(() => {
-      this.showMenu = true
-    })
-  }
-
-  doStuff(value: string): void {
-    if(!value) return
-    this[`${value}`]()
-  }
-
-  createUsecase() {
-    const { canvasX: x, canvasY: y } = this
-    const usecase = new UseCase('UseCase', x, y)
-    this.mutationAddUC(usecase)
-
-  }
-  /* eslint-enable */
 
   calcStageSize(): void {
     const editor = document.getElementById('editor')
