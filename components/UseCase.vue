@@ -37,6 +37,11 @@
       :key='item.id'
       :variable='item'
     )
+    Constant(
+      v-for='item in useCase.constants'
+      :key='item.id'
+      :constant='item'
+    )
 </template>
 
 <script lang='ts'>
@@ -47,7 +52,8 @@ import { onMove, onStart, onEnd } from '~/mixins/draggable'
 
 @Component({
   components: {
-    Variable: () => import('~/components/Variable.vue')
+    Variable: () => import('~/components/Variable.vue'),
+    Constant: () => import('~/components/Constant.vue')
   }
 })
 export default class UseCaseComponent extends Vue {
