@@ -21,8 +21,8 @@
     rect.uc-body(
       x='0'
       y='27'
-      :width='450'
-      :height='250'
+      :width='bodyWidth'
+      :height='bodyHeight'
       rx='5'
       ry='5'
       :style='UCBodyStyle'
@@ -32,16 +32,17 @@
       y='18'
       :style='UCTextStyle'
     ) {{ useCase.identifier }}
-    Variable(
-      v-for='item in useCase.variables'
-      :key='item.id'
-      :variable='item'
-    )
-    Constant(
-      v-for='item in useCase.constants'
-      :key='item.id'
-      :constant='item'
-    )
+    g.uc-body-box
+      Variable(
+        v-for='item in useCase.variables'
+        :key='item.id'
+        :variable='item'
+      )
+      Constant(
+        v-for='item in useCase.constants'
+        :key='item.id'
+        :constant='item'
+      )
 </template>
 
 <script lang='ts'>
@@ -64,6 +65,8 @@ export default class UseCaseComponent extends Vue {
   readonly useCase!: IUseCase
 
   identifierWidth: number = 150
+  bodyWidth: number = 250
+  bodyHeight: number = 150
 
   UCTitleStyle: any = {
     fill: '#03A9F4',
@@ -82,13 +85,13 @@ export default class UseCaseComponent extends Vue {
     // opacity: 0.75
   }
 
-  mounted() {
+  mounted(): void {
     const uc = this.$snap.select(`#uc-${this.useCase.id}`)
     uc.drag(onMove, onStart, onEnd)
   }
 
   @Watch('useCase.identifier', { immediate: true, deep: false })
-  onIdentifierChange(value: string) {
+  onIdentifierChange(value: string): void {
     if (!value.length) return
     this.$nextTick(() => {
       const text = this.$snap.select(`#uc-${this.useCase.id} .uc-text`)
