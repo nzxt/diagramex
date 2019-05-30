@@ -1,5 +1,5 @@
-const uuidv5 = require('uuid/v5')
-import { IUseCase, IPosition, IVariable, IConstant } from "./interfaces"
+import { IUseCase, IPosition, IVariable, IConstant } from './interfaces'
+const uuidv4 = require('uuid/v4')
 
 export class UseCase implements IUseCase {
   constructor(
@@ -7,7 +7,7 @@ export class UseCase implements IUseCase {
     x: number,
     y: number
   ) {
-    this.id = uuidv5()
+    this.id = uuidv4()
     this.identifier = identifier
     this.position = { x, y }
     this.variables = []
