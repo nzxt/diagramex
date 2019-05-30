@@ -23,6 +23,7 @@
             :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
             :class='{ bordered }'
             preserveAspectRatio='xMidYMid meet'
+            @contextmenu.stop.prevent='onContextMenu'
           )
             g
               UseCase(
@@ -30,17 +31,33 @@
                 :key='item.id'
                 :useCase='item'
               )
+    v-menu(
+      v-model='showMenu'
+      :position-x='menuX'
+      :position-y='menuY'
+      absolute
+      offset-y
+    )
+      v-list(dense)
+        v-list-tile(
+          v-for='(item, index) in menuItems[`${menuType}`]'
+          :key='index'
+          @click.stop.prevent='doStuff(item.value)'
+        )
+          v-list-tile-title {{ item.text }}
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
 import { State, Mutation } from 'vuex-class'
 
+import MenuMixin from '~/mixins/menu'
+
 @Component({
   components: {
     UseCase: () => import('~/components/UseCase.vue')
   },
-  mixins: []
+  mixins: [MenuMixin]
 })
 export default class IndexPage extends Vue {
   @State('programState') vuexProgramState
@@ -48,6 +65,7 @@ export default class IndexPage extends Vue {
   @Mutation('updateVRPosition') mutationUpdateVRPosition
 
   bordered: boolean = true
+
   viewBox: any = {
     width: 500,
     height: 350
@@ -59,6 +77,7 @@ export default class IndexPage extends Vue {
     })
     /* eslint-disable */
     const paper = this.$snap('#canvas')
+    // paper.click(() => { alert('Hey!') })
 
     // ZPD with options and callback
     const options = {
@@ -76,17 +95,17 @@ export default class IndexPage extends Vue {
   created() {
     this.$bus.$on('dragEnd', this.onDragEnd)
   }
+
   beforeDestroy() {
     this.$bus.$off('dragEnd')
   }
 
-  /* eslint-disable */
-  onDragEnd ({ x, y, nodeId, nodeParentId }): void {
-    const type = nodeId.substring(0,2)
+  onDragEnd({ x, y, nodeId, nodeParentId }): void {
+    const type = nodeId.substring(0, 2)
     const id = nodeId.substring(3)
     const pid = nodeParentId.substring(3)
 
-    switch(type){
+    switch (type) {
       case 'uc': {
         this.mutationUpdateUCPosition({ x, y, id })
         break
@@ -95,11 +114,9 @@ export default class IndexPage extends Vue {
         this.mutationUpdateVRPosition({ x, y, id, pid })
         break
       }
-      default: console.log('Unknown element..')
+      default: console.log('Unknown element..') // eslint-disable-line
     }
-
   }
-  /* eslint-enable */
 
   calcStageSize(): void {
     const editor = document.getElementById('editor')

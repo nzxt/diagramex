@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { IProgramState } from '../models/interfaces'
+import { IProgramState, IUseCase } from '../models/interfaces'
 import programState from '~/assets/program-state.json'
 
 export const strict = false
@@ -13,6 +13,9 @@ export const state = (): IState => ({
 })
 
 export const mutations: MutationTree<IState> = {
+  addUC: (state, value: IUseCase) => {
+    state.programState.useCases.push(value)
+  },
   updateUCPosition: (state, value: any) => {
     const { x, y, id } = value
     const index = state.programState.useCases.findIndex(x => x.id === id)
