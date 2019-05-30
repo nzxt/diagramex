@@ -45,7 +45,7 @@
     }],
     "constants": [{
       "id": "stringDelimiterId1",
-      "literal": "{0}",
+      "identifier": "{#@)}",
       "position": {
         "x": 20,
         "y": 60
@@ -73,6 +73,13 @@
         "y": 200
       }
     }],
-    "constants": []
+    "constants": [{
+      "id": "stringDelimiterId2",
+      "identifier": "{#@)$}",
+      "position": {
+        "x": 20,
+        "y": 60
+      }
+    }]
   }]
 }
