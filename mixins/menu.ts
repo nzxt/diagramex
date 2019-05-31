@@ -26,7 +26,7 @@ export default class MenuMixin extends Vue {
   e: number = 0
   f: number = 0
 
-  menuItems: any = {
+  menuItems: Object = {
     // Canvas
     cn: [
       { text: 'Create Usecase', value: 'createUsecase' }
@@ -63,7 +63,9 @@ export default class MenuMixin extends Vue {
     const { id: nodeParentId } = parent.node
     const { id: mainParentId } = mainParent.node
 
-    const type = nodeParentId.substring(0, 2) || 'cn'
+    let type = nodeParentId.substring(0, 2)
+    const menuKeys = Object.keys(this.menuItems)
+    type = menuKeys.includes(type) ? type : 'cn'
 
     this.nodeParentId = nodeParentId.substring(3)
     this.mainNodeParentId = mainParentId.substring(3)
