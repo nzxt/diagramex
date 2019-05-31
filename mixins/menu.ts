@@ -3,11 +3,13 @@ import { Mutation } from 'vuex-class'
 
 import { UseCase } from '~/models/UseCase'
 import { Variable } from '~/models/Variable'
+import { Constant } from '~/models/Constant'
 
 @Component
 export default class MenuMixin extends Vue {
   @Mutation('addUC') mutationAddUC
   @Mutation('addVR') mutationAddVR
+  @Mutation('addCT') mutationAddCT
 
   showMenu: boolean = false
   menuType: string = 'cn'
@@ -53,18 +55,17 @@ export default class MenuMixin extends Vue {
 
     const elem = this.$snap.getElementByPoint(clientX, clientY)
     const parent = elem.parent()
-    const { e, f } = parent.matrix
-    this.e = e
-    this.f = f
+
     const { id: nodeParentId } = parent.node
     const type = nodeParentId.substring(0, 2) || 'cn'
     this.nodeParentId = nodeParentId.substring(3)
     this.menuType = type
     this.menuX = clientX
     this.menuY = clientY
-
-    if (['vr', 'ct', 'tp'].includes(type)) {
-      // const { ox, oy } = parent.transform().
+    if (type === 'uc') {
+      const { e, f } = parent.matrix
+      this.e = e
+      this.f = f
     }
     this.canvasX = layerX
     this.canvasY = layerY
@@ -92,5 +93,13 @@ export default class MenuMixin extends Vue {
     this.f > 0 ? y = y - this.f : y = y + this.f
     const variable = new Variable('Variable', x, y)
     this.mutationAddVR({ variable, useCaseId: this.nodeParentId })
+  }
+
+  createConstant() {
+    let { canvasX: x, canvasY: y } = this
+    this.e > 0 ? x = x - this.e : x = x + this.e
+    this.f > 0 ? y = y - this.f : y = y + this.f
+    const constant = new Constant('Constant', x, y)
+    this.mutationAddCT({ constant, useCaseId: this.nodeParentId })
   }
 }

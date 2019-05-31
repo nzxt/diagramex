@@ -1,4 +1,4 @@
-import { IConstant, IPosition} from './interfaces'
+import { IConstant, IPosition } from './interfaces'
 const uuidv4 = require('uuid/v4')
 
 export class Constant implements IConstant {
