@@ -17,6 +17,8 @@ export default class MenuMixin extends Vue {
 
   canvasX: number = 0
   canvasY: number = 0
+  e: number = 0
+  f: number = 0
 
   menuItems: any = {
     // Canvas
@@ -50,8 +52,10 @@ export default class MenuMixin extends Vue {
     const { layerX, layerY } = evt
 
     const elem = this.$snap.getElementByPoint(clientX, clientY)
-    debugger
     const parent = elem.parent()
+    const { e, f } = parent.matrix
+    this.e = e
+    this.f = f
     const { id: nodeParentId } = parent.node
     const type = nodeParentId.substring(0, 2) || 'cn'
     this.nodeParentId = nodeParentId.substring(3)
@@ -83,8 +87,9 @@ export default class MenuMixin extends Vue {
   }
 
   createVariable() {
-    debugger
-    const { canvasX: x, canvasY: y } = this
+    let { canvasX: x, canvasY: y } = this
+    this.e > 0 ? x = x - this.e : x = x + this.e
+    this.f > 0 ? y = y - this.f : y = y + this.f
     const variable = new Variable('Variable', x, y)
     this.mutationAddVR({ variable, useCaseId: this.nodeParentId })
   }
