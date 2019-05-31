@@ -2,15 +2,14 @@
   v-layout.justify-center
     v-flex.xs12
       v-card#editor.fill-height(v-resize='calcStageSize')
-        //- v-responsive
         svg#canvas(
           xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio='xMidYMid meet'
           @contextmenu.stop.prevent='onContextMenu'
           class='bordered'
           width='100%'
           height='100%'
         )
-          //- preserveAspectRatio='xMidYMid slice'
           //- :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
           //- :width='viewBox.width'
           //- :height='viewBox.height'
@@ -60,11 +59,11 @@ export default class IndexPage extends Vue {
   }
 
   mounted() {
-    // this.$nextTick(() => {
-    setTimeout(() => {
+    this.$nextTick(() => {
+    // setTimeout(() => {
       this.calcStageSize()
-    }, 1680)
-    // })
+    // }, 680)
+    })
     /* eslint-disable */
     const paper = this.$snap('#canvas')
 

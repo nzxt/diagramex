@@ -49,7 +49,15 @@
       >
         <v-icon>remove</v-icon>
       </v-btn>
-      <v-toolbar-title class="headline grey--text text--darken-3 font-weight-thin" v-text="title" />
+      <v-divider vertical inset class="ml-1" />
+      <v-toolbar-title class="grey--text font-weight-thin">
+        <div class="headline text--darken-1">
+          {{ title }}
+        </div>
+        <div class="caption text--lighten-1">
+          {{ description }}
+        </div>
+      </v-toolbar-title>
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
@@ -88,6 +96,7 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Viete.io',
+      description: 'Visual language for describing architecture repository',
       powered: 'powered by molfarDevs'
     }
   }
