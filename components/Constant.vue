@@ -4,7 +4,7 @@
     :transform='`translate(${constant.position.x}, ${constant.position.y})`'
   )
     text.ct-pos(
-      :x='identifierWidth - 20'
+      :x='identifierWidth - 52'
       y='35'
       fill='#555'
       font-size="10px"
