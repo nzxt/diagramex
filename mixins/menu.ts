@@ -10,6 +10,7 @@ export default class MenuMixin extends Vue {
   @Mutation('addUC') mutationAddUC
   @Mutation('addVR') mutationAddVR
   @Mutation('addCT') mutationAddCT
+  @Mutation('deleteUC') mutationDeleteUC
 
   showMenu: boolean = false
   menuType: string = 'cn'
@@ -101,5 +102,9 @@ export default class MenuMixin extends Vue {
     this.f > 0 ? y = y - this.f : y = y + this.f
     const constant = new Constant('Constant', x, y)
     this.mutationAddCT({ constant, useCaseId: this.nodeParentId })
+  }
+
+  deleteUsecase() {
+    this.mutationDeleteUC({ useCaseId: this.nodeParentId })
   }
 }
