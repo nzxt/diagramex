@@ -114,7 +114,7 @@ export default class MenuMixin extends Vue {
   }
 
   deleteUsecase() {
-    this.mutationDeleteUC({ useCaseId: this.nodeParentId })
+    this.mutationDeleteUC(this.nodeParentId)
   }
 
   deleteVariable() {
