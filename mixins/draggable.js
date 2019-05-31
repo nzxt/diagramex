@@ -12,6 +12,7 @@ const onEnd = function(evt) {
   const { x, y } = this.getBBox()
   const { id: nodeParentId } = this.parent().parent().node // Upward to Usecase <g>
   window.$nuxt.$bus.$emit('dragEnd', { x, y, nodeId, nodeParentId } )
+  window.$nuxt.$bus.$emit('resizeUCBody', nodeParentId.substring(3) )
   console.log('Drag ended..')
 }
 

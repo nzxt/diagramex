@@ -49,7 +49,7 @@
       >
         <v-icon>remove</v-icon>
       </v-btn>
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title class="headline grey--text text--darken-3 font-weight-thin" v-text="title" />
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
@@ -80,14 +80,14 @@ export default {
       items: [
         {
           icon: 'mdi-graphql',
-          title: 'graph',
+          title: 'Graffle Editor',
           to: '/'
         }
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'DiagrameX',
+      title: 'Viete.io',
       powered: 'powered by molfarDevs'
     }
   }

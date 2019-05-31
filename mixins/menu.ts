@@ -35,8 +35,7 @@ export default class MenuMixin extends Vue {
     uc: [
       { text: 'Create Variable', value: 'createVariable' },
       { text: 'Create Constant', value: 'createConstant' },
-      { text: 'Create Tuple', value: 'createTuple' },
-      { text: '---', value: '' },
+      // { text: 'Create Tuple', value: 'createTuple' },
       { text: 'Delete Usecase', value: 'deleteUsecase' }
     ],
     // Variable
@@ -59,7 +58,7 @@ export default class MenuMixin extends Vue {
 
     const elem = this.$snap.getElementByPoint(clientX, clientY)
     const parent = elem.parent()
-    const mainParent = parent.parent()
+    const mainParent = parent.parent().parent()
 
     const { id: nodeParentId } = parent.node
     const { id: mainParentId } = mainParent.node
@@ -72,13 +71,16 @@ export default class MenuMixin extends Vue {
     this.menuType = type
     this.menuX = clientX
     this.menuY = clientY
-    if (type === 'uc') {
-      const { e, f } = parent.matrix
-      this.e = e
-      this.f = f
-    }
     this.canvasX = layerX
     this.canvasY = layerY
+
+    if (type === 'uc') {
+      const paper = this.$snap('#canvas')
+      const matrixZPD = paper.zpd('save') // eslint-disable-line
+      const { e, f } = parent.matrix
+      this.e = e + matrixZPD.e
+      this.f = f + matrixZPD.f
+    }
 
     this.$nextTick(() => {
       this.showMenu = true
@@ -99,16 +101,16 @@ export default class MenuMixin extends Vue {
 
   createVariable() {
     let { canvasX: x, canvasY: y } = this
-    this.e > 0 ? x = x - this.e : x = x + this.e
-    this.f > 0 ? y = y - this.f : y = y + this.f
+    x -= this.e
+    y -= this.f
     const variable = new Variable('Variable', x, y)
     this.mutationAddVR({ variable, useCaseId: this.nodeParentId })
   }
 
   createConstant() {
     let { canvasX: x, canvasY: y } = this
-    this.e > 0 ? x = x - this.e : x = x + this.e
-    this.f > 0 ? y = y - this.f : y = y + this.f
+    x -= this.e
+    y -= this.f
     const constant = new Constant('Constant', x, y)
     this.mutationAddCT({ constant, useCaseId: this.nodeParentId })
   }

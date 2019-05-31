@@ -8,7 +8,7 @@
       y='18'
       fill='#ccc'
       font-size="12px"
-    ) x:{{ useCase.position.x }} y:{{ useCase.position.y }}
+    ) x:{{ useCase.position.x.toFixed() }} y:{{ useCase.position.y.toFixed() }}
     rect.uc-title(
       x='0'
       y='0'
@@ -21,8 +21,8 @@
     rect.uc-body(
       x='0'
       y='27'
-      :width='bodyWidth'
-      :height='bodyHeight'
+      width='100'
+      height='50'
       rx='5'
       ry='5'
       :style='UCBodyStyle'
@@ -47,6 +47,7 @@
 
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
+import { Mutation } from 'vuex-class'
 
 import { IUseCase } from '~/models/interfaces'
 import { onMove, onStart, onEnd } from '~/mixins/draggable'
@@ -58,15 +59,14 @@ import { onMove, onStart, onEnd } from '~/mixins/draggable'
   }
 })
 export default class UseCaseComponent extends Vue {
+  @Mutation('resizeUC') mutationResizeUC
   @Prop({
     default: () => {},
     type: Object as () => IUseCase
   })
   readonly useCase!: IUseCase
 
-  identifierWidth: number = 150
-  bodyWidth: number = 250
-  bodyHeight: number = 150
+  identifierWidth: number = 50
 
   UCTitleStyle: any = {
     fill: '#03A9F4',
@@ -85,9 +85,33 @@ export default class UseCaseComponent extends Vue {
     // opacity: 0.75
   }
 
+  unsubscribe: Function | null = null
+
+  created() {
+    this.$bus.$on('resizeUCBody', this.resizeBodyBox)
+    this.unsubscribe = this.$store.subscribe((mutation) => {
+      const { useCaseId } = mutation.payload
+      if (this.useCase.id === useCaseId && ['addVR', 'addCT', 'deleteVR', 'deleteCT'].includes(mutation.type)) {
+        this.$nextTick(() => {
+          this.resizeBodyBox(useCaseId)
+        })
+      }
+    })
+  }
+
+  beforeDestroy() {
+    this.$bus.$off('resizeUCBody')
+    this.unsubscribe && this.unsubscribe()
+  }
+
   mounted(): void {
     const uc = this.$snap.select(`#uc-${this.useCase.id}`)
     uc.drag(onMove, onStart, onEnd)
+
+    // TODO!
+    setTimeout(() => {
+      this.resizeBodyBox(this.useCase.id)
+    }, 680)
   }
 
   @Watch('useCase.identifier', { immediate: true, deep: false })
@@ -99,5 +123,28 @@ export default class UseCaseComponent extends Vue {
       this.identifierWidth = bb.width + 10
     })
   }
+
+  /* eslint-disable */
+  resizeBodyBox(ucId) {
+    if (this.useCase.id !== ucId) return
+
+    const body = this.$snap(`#uc-${this.useCase.id} .uc-body`)
+    const bodyBox = this.$snap(`#uc-${this.useCase.id} .uc-body-box`)
+    const bbBb = bodyBox.getBBox()
+    const { x: bbX1, y: bbY1, w: bbW, h: bbH } = bbBb
+
+    // 10 = padding from side borders // 27 = title height + 10 padding from border
+    if(bbX1-10 || bbY1-10-27) {
+      const dx = bbX1 - 10
+      const dy = bbY1 - 10 - 27
+      this.mutationResizeUC({ dx, dy, id: this.useCase.id })
+    }
+
+    body.stop().animate({
+      width: bbW ? bbW + 20 : 250,
+      height: bbH ? bbH + 20 : 150
+    }, 680, mina.elastic)
+  }
+  /* eslint-enable */
 }
 </script>
