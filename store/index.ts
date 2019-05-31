@@ -16,6 +16,11 @@ export const mutations: MutationTree<IState> = {
   addUC: (state, value: IUseCase) => {
     state.programState.useCases.push(value)
   },
+  addVR: (state, value: any) => {
+    const { variable, useCaseId } = value
+    const index = state.programState.useCases.findIndex(x => x.id === useCaseId)
+    state.programState.useCases[index].variables.push(variable)
+  },
   updateUCPosition: (state, value: any) => {
     const { x, y, id } = value
     const index = state.programState.useCases.findIndex(x => x.id === id)
