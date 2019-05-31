@@ -11,12 +11,15 @@ export default class MenuMixin extends Vue {
   @Mutation('addVR') mutationAddVR
   @Mutation('addCT') mutationAddCT
   @Mutation('deleteUC') mutationDeleteUC
+  @Mutation('deleteVR') mutationDeleteVR
+  @Mutation('deleteCT') mutationDeleteCT
 
   showMenu: boolean = false
   menuType: string = 'cn'
   menuX: number = 0
   menuY: number = 0
   nodeParentId: string = ''
+  mainNodeParentId: string = ''
 
   canvasX: number = 0
   canvasY: number = 0
@@ -56,10 +59,16 @@ export default class MenuMixin extends Vue {
 
     const elem = this.$snap.getElementByPoint(clientX, clientY)
     const parent = elem.parent()
+    const mainParent = parent.parent()
 
     const { id: nodeParentId } = parent.node
+    const { id: mainParentId } = mainParent.node
+
     const type = nodeParentId.substring(0, 2) || 'cn'
+
     this.nodeParentId = nodeParentId.substring(3)
+    this.mainNodeParentId = mainParentId.substring(3)
+
     this.menuType = type
     this.menuX = clientX
     this.menuY = clientY
@@ -106,5 +115,13 @@ export default class MenuMixin extends Vue {
 
   deleteUsecase() {
     this.mutationDeleteUC({ useCaseId: this.nodeParentId })
+  }
+
+  deleteVariable() {
+    this.mutationDeleteVR({ useCaseId: this.mainNodeParentId, variableId: this.nodeParentId })
+  }
+
+  deleteConstant() {
+    this.mutationDeleteCT({ useCaseId: this.mainNodeParentId, constantId: this.nodeParentId })
   }
 }
