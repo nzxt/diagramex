@@ -1,7 +1,7 @@
 // import { MutationTree, ActionContext, ActionTree } from 'vuex'
 import { MutationTree } from 'vuex'
 import { IProgramState, IUseCase } from '../models/interfaces'
-import programState from '~/assets/program-state.json'
+import programState from '~/assets/programState.json'
 
 export const strict = false
 

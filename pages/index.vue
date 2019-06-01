@@ -10,6 +10,7 @@
           width='100%'
           height='100%'
         )
+          //- xmlns:xlink="http://www.w3.org/1999/xlink"
           //- :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
           //- :width='viewBox.width'
           //- :height='viewBox.height'
@@ -19,6 +20,7 @@
               :key='item.id'
               :useCase='item'
             )
+
     v-menu(
       v-model='showMenu'
       :position-x='menuX'
@@ -33,9 +35,20 @@
           @click.stop.prevent='doStuff(item.value)'
         )
           v-list-tile-title {{ item.text }}
+
+    #thumbViewContainer
+      svg#scopeContainer.thumbViewClass
+        g
+          rect#scope(fill="red" fill-opacity="0.1" stroke="red" stroke-width="2px" x="0" y="0" width="0" height="0")
+          line#line1(stroke="red" stroke-width="2px" x1="0" y1="0" x2="0" y2="0")
+          line#line2(stroke="red" stroke-width="2px" x1="0" y1="0" x2="0" y2="0")
+      embed#thumbView.thumbViewClass(type="image/svg+xml" src="nuxtjs.svg")
 </template>
 
 <script lang='ts'>
+import svgPanZoom from 'svg-pan-zoom'
+import { thumbnailViewer } from '~/assets/thumbnailViewer'
+
 import { Component, Vue } from 'vue-property-decorator'
 import { State, Mutation } from 'vuex-class'
 
@@ -60,24 +73,31 @@ export default class IndexPage extends Vue {
 
   mounted() {
     this.$nextTick(() => {
-    // setTimeout(() => {
       this.calcStageSize()
-    // }, 680)
     })
-    /* eslint-disable */
+
     const paper = this.$snap('#canvas')
 
-    // ZPD with options and callback
-    const options = {
-      zoom: true,
-      pan: true,
-      drag: false
-    }
-
-    paper.zpd(options, (error, paper) => {
-      console.log(`${paper} // ${error}`)
+    const spz = svgPanZoom('#canvas', {
+      panEnabled: true,
+      controlIconsEnabled: false,
+      zoomEnabled: true,
+      dblClickZoomEnabled: true,
+      mouseWheelZoomEnabled: true,
+      preventMouseEventsDefault: true,
+      zoomScaleSensitivity: 0.2,
+      minZoom: 0.5,
+      maxZoom: 10,
+      fit: false,
+      contain: false,
+      center: false,
+      refreshRate: 'auto'
     })
-    /* eslint-enable */
+
+    thumbnailViewer({
+      mainViewId: 'canvas',
+      thumbViewId: 'thumbView'
+    })
   }
 
   created() {
@@ -118,3 +138,23 @@ export default class IndexPage extends Vue {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+  .thumbViewClass
+    border: 1px solid black
+    position: absolute
+    bottom: 5px
+    left: 5px
+    width: 20%
+    height: 30%
+    margin: 3px
+    padding: 3px
+    overflow: hidden
+
+  #thumbView
+    z-index: 110
+    background: white
+
+  #scopeContainer
+    z-index: 120
+</style>
