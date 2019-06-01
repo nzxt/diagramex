@@ -27,11 +27,20 @@
       ry='5'
       :style='UCBodyStyle'
     )
-    text.uc-text(
-      x='5'
-      y='18'
-      :style='UCTextStyle'
-    ) {{ useCase.identifier }}
+    //- text.uc-text(
+    //-   x='5'
+    //-   y='18'
+    //-   :style='UCTextStyle'
+    //- ) {{ useCase.identifier }}
+    foreignObject.uc-text(x="5" y="3" width="150" height="22")
+      v-text-field.pa-0.ma-0(
+        dark
+        height='24'
+        color='white'
+        hide-details
+        single-line
+        v-model='useCase.identifier'
+      )
     g.uc-body-box
       Variable(
         v-for='item in useCase.variables'
@@ -104,6 +113,7 @@ export default class UseCaseComponent extends Vue {
     this.unsubscribe && this.unsubscribe()
   }
 
+  /* eslint-disable */
   mounted(): void {
     const uc = this.$snap.select(`#uc-${this.useCase.id}`)
     uc.drag(onMove, onStart, onEnd)
@@ -113,6 +123,7 @@ export default class UseCaseComponent extends Vue {
       this.resizeBodyBox(this.useCase.id)
     }, 680)
   }
+  /* eslint-enable */
 
   @Watch('useCase.identifier', { immediate: true, deep: false })
   onIdentifierChange(value: string): void {
