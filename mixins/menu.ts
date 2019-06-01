@@ -76,13 +76,20 @@ export default class MenuMixin extends Vue {
     this.canvasX = layerX
     this.canvasY = layerY
 
+    if (type === 'cn') {
+      const { e, f } = elem.node.children[1].transform.baseVal[0].matrix
+      this.e = e
+      this.f = f
+    }
+
     if (type === 'uc') {
       // TODO!
       // const paper = this.$snap('#canvas')
       // const matrixZPD = paper.zpd('save') // eslint-disable-line
-      const { e, f } = parent.matrix
-      this.e = e
-      this.f = f
+      const { e, f } = mainParent.transform().totalMatrix
+      const { e: e1, f: f1 } = parent.matrix
+      this.e = e + e1
+      this.f = f + f1
       // this.e = e + matrixZPD.e
       // this.f = f + matrixZPD.f
     }
@@ -99,7 +106,9 @@ export default class MenuMixin extends Vue {
   }
 
   createUsecase() {
-    const { canvasX: x, canvasY: y } = this
+    let { canvasX: x, canvasY: y } = this
+    x -= this.e
+    y -= this.f
     const usecase = new UseCase('UseCase', x, y)
     this.mutationAddUC(usecase)
   }
