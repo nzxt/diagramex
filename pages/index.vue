@@ -145,8 +145,8 @@ export default class IndexPage extends Vue {
     position: absolute
     bottom: 5px
     left: 5px
-    width: 20%
-    height: 30%
+    width: 10%
+    height: 20%
     margin: 3px
     padding: 3px
     overflow: hidden
