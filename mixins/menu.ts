@@ -87,7 +87,7 @@ export default class MenuMixin extends Vue {
       // const paper = this.$snap('#canvas')
       // const matrixZPD = paper.zpd('save') // eslint-disable-line
       const { e, f } = mainParent.transform().totalMatrix
-      const { e: e1, f: f1 } = parent.matrix
+      const { e: e1, f: f1 } = parent.transform().totalMatrix // parent.matrix
       this.e = e + e1
       this.f = f + f1
       // this.e = e + matrixZPD.e
