@@ -32,13 +32,15 @@
     //-   y='18'
     //-   :style='UCTextStyle'
     //- ) {{ useCase.identifier }}
-    foreignObject.uc-text(x="5" y="3" width="150" height="22")
+    foreignObject.uc-text(x="5" y="3" :width='identifierLength' height="30")
       v-text-field.pa-0.ma-0(
+        :id="useCase.id"
         dark
         height='24'
         color='white'
-        hide-details
         single-line
+        :rules='textRule'
+        @input='updateIdentifier'
         v-model='useCase.identifier'
       )
     g.uc-body-box
@@ -69,6 +71,7 @@ import { onMove, onStart, onEnd } from '~/mixins/draggable'
 })
 export default class UseCaseComponent extends Vue {
   @Mutation('resizeUC') mutationResizeUC
+  @Mutation('updateUCIdent') mutationUpdateUCIdent
   @Prop({
     default: () => {},
     type: Object as () => IUseCase
@@ -76,6 +79,15 @@ export default class UseCaseComponent extends Vue {
   readonly useCase!: IUseCase
 
   identifierWidth: number = 50
+  identifierLength: number = 50
+
+  disabled: boolean = false
+
+  textRule: Array<any> = [ (value) => {
+    const pattern = /^[a-zA-Z][a-zA-Z0-9_]+$/
+    return pattern.test(value) || 'Invalid e-mail.'
+  }
+  ]
 
   UCTitleStyle: any = {
     fill: '#03A9F4',
@@ -131,9 +143,14 @@ export default class UseCaseComponent extends Vue {
     this.$nextTick(() => {
       const text = this.$snap.select(`#uc-${this.useCase.id} .uc-text`)
       const bb = text.getBBox()
-      this.identifierWidth = bb.width + 10
+      this.identifierWidth = value.length * 8 + 10
+      this.identifierLength = value.length * 8 + 2
     })
   }
+
+  // editIdentifiger() {
+  //   this.disabled = false
+  // }
 
   /* eslint-disable */
   resizeBodyBox(ucId) {
@@ -155,6 +172,10 @@ export default class UseCaseComponent extends Vue {
       width: bbW ? bbW + 20 : 250,
       height: bbH ? bbH + 20 : 150
     }, 680, mina.elastic)
+  }
+
+  updateIdentifier(identifier) {
+    this.mutationUpdateUCIdent({id: this.useCase.id, identifier})
   }
   /* eslint-enable */
 }

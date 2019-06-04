@@ -18,11 +18,20 @@
       ry='5'
       :style='CTBodyStyle'
     )
-    text.ct-text(
-      x='5'
-      y='17'
-      :style='CTTextStyle'
-    ) {{ constant.identifier }}
+    foreignObject.vr-text(
+      x="5"
+      y="3"
+      width="100"
+      height="22"
+    )
+      v-text-field.pa-0.ma-0(
+        dark
+        height='24'
+        color='white'
+        hide-details
+        single-line
+        v-model='constant.identifier'
+      )
 </template>
 <script lang="ts">
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'

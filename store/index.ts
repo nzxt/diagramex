@@ -55,6 +55,12 @@ export const mutations: MutationTree<IState> = {
     state.programState.useCases[index].constants[indexCT].position.y = y
   },
 
+  updateUCIdent: (state, value: any) => {
+    const { id, identifier } = value
+    const index = state.programState.useCases.findIndex(x => x.id === id)
+    state.programState.useCases[index].identifier = identifier
+  },
+
   deleteUC: (state, value: string) => {
     const index = state.programState.useCases.findIndex(x => x.id === value)
     state.programState.useCases.splice(index, 1)

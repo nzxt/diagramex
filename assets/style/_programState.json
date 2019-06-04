@@ -1,0 +1,87 @@
+{
+  "useCases": [
+    {
+    "id": "4b9583cc-78a4-45eb-9f05-3219c94bac55",
+    "identifier": "FormatMethod #1",
+    "position": {
+      "x": 50,
+      "y": 50
+    },
+    "variables": [{
+      "id": "stringWithId01",
+      "identifier": "Variable #1",
+      "position": {
+        "x": 120,
+        "y": 20
+      }
+    }, 
+    {
+      "id": "stringWithId02",
+      "identifier": "Variable #2",
+      "position": {
+        "x": 20,
+        "y": 100
+      }
+    }, {
+      "id": "stringWithId03",
+      "identifier": "Variable #3",
+      "position": {
+        "x": 80,
+        "y": 100
+      }
+    }, {
+      "id": "stringWithId04",
+      "identifier": "Variable #4",
+      "position": {
+        "x": 120,
+        "y": 160
+      }
+    }, {
+      "id": "stringWithId05",
+      "identifier": "Variable #5",
+      "position": {
+        "x": 160,
+        "y": 200
+      }
+    }
+  ],
+    "constants": [{
+      "id": "stringDelimiterId1",
+      "identifier": "{#@)}",
+      "position": {
+        "x": 20,
+        "y": 60
+      }
+    }]
+  }, {
+    "id": "5b22d0a3-6929-4dfb-a72c-37ae9d65173c",
+    "identifier": "FormatMethod #2",
+    "position": {
+      "x": 350,
+      "y": 220
+    },
+    "variables": [{
+      "id": "stringWithId08",
+      "identifier": "ObjectString #2",
+      "position": {
+        "x": 180,
+        "y": 60
+      }
+    }, {
+      "id": "stringWithId09",
+      "identifier": "FormattedString #2",
+      "position": {
+        "x": 16,
+        "y": 200
+      }
+    }],
+    "constants": [{
+      "id": "stringDelimiterId2",
+      "identifier": "{#@)$}",
+      "position": {
+        "x": 20,
+        "y": 60
+      }
+    }]
+  }]
+}

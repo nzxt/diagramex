@@ -18,11 +18,20 @@
       ry='5'
       :style='VRBodyStyle'
     )
-    text.vr-text(
-      x='5'
-      y='17'
-      :style='VRTextStyle'
-    ) {{ variable.identifier }}
+    foreignObject.vr-text(
+      x="5"
+      y="3"
+      width="100"
+      height="22"
+    )
+      v-text-field.pa-0.ma-0(
+        dark
+        height='24'
+        color='white'
+        hide-details
+        single-line
+        v-model='variable.identifier'
+      )
 </template>
 
 <script lang='ts'>

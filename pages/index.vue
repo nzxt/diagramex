@@ -82,7 +82,7 @@ export default class IndexPage extends Vue {
       panEnabled: true,
       controlIconsEnabled: false,
       zoomEnabled: true,
-      dblClickZoomEnabled: true,
+      dblClickZoomEnabled: false,
       mouseWheelZoomEnabled: true,
       preventMouseEventsDefault: true,
       zoomScaleSensitivity: 0.2,
