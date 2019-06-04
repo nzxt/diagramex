@@ -21,8 +21,8 @@
     foreignObject.vr-text(
       x="5"
       y="3"
-      width="100"
-      height="22"
+      :width='identifierLength'
+      height="30"
     )
       v-text-field.pa-0.ma-0(
         dark
@@ -30,17 +30,22 @@
         color='white'
         hide-details
         single-line
+        :rules='textRule'
+        @input='updateIdentifier'
         v-model='variable.identifier'
       )
 </template>
 
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
+import { Mutation } from 'vuex-class'
 import { IVariable } from '~/models/interfaces'
 import { onMove, onStart, onEnd } from '~/mixins/draggable'
+import { UseCase } from '../models/UseCase'
 
 @Component({})
 export default class VariableComponent extends Vue {
+  @Mutation('updateVRIdentifier') mutationUpdateVRIdentifier
   @Prop({
     default: () => {},
     type: Object as () => IVariable
@@ -48,6 +53,8 @@ export default class VariableComponent extends Vue {
   readonly variable!: IVariable
 
   identifierWidth: number = 150
+  identifierLength: number = 50
+  useCaseId: string = ''
 
   VRTextStyle: any = {
     fill: '#FAFAFA',
@@ -60,9 +67,16 @@ export default class VariableComponent extends Vue {
     opacity: 0.75
   }
 
+  textRule: Array<any> = [ (value) => {
+    const pattern = /^[a-zA-Z][a-zA-Z0-9_]+$/
+    return pattern.test(value) || 'Invalid e-mail.'
+  }
+  ]
+
   /* eslint-disable */
   mounted() {
     const vr = this.$snap.select(`#vr-${this.variable.id}`)
+    this.useCaseId = vr.parent().parent().node.id.substring(3)
     vr.drag(onMove, onStart, onEnd)
   }
   /* eslint-enable */
@@ -73,8 +87,13 @@ export default class VariableComponent extends Vue {
     this.$nextTick(() => {
       const text = this.$snap.select(`#vr-${this.variable.id} .vr-text`)
       const bb = text.getBBox()
-      this.identifierWidth = bb.width + 10
+      this.identifierWidth = value.length * 8 + 10
+      this.identifierLength = value.length * 8 + 2
     })
+  }
+
+  updateIdentifier(identifier) {
+    this.mutationUpdateVRIdentifier({ useCaseId: this.useCaseId, id: this.variable.id, identifier })
   }
 }
 </script>

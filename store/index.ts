@@ -42,9 +42,9 @@ export const mutations: MutationTree<IState> = {
   updateVRPosition: (state, value: any) => {
     const { x, y, id, useCaseId } = value
     const index = state.programState.useCases.findIndex(x => x.id === useCaseId)
-    const indexCT = state.programState.useCases[index].variables.findIndex(x => x.id === id)
-    state.programState.useCases[index].variables[indexCT].position.x = x
-    state.programState.useCases[index].variables[indexCT].position.y = y
+    const indexVR = state.programState.useCases[index].variables.findIndex(x => x.id === id)
+    state.programState.useCases[index].variables[indexVR].position.x = x
+    state.programState.useCases[index].variables[indexVR].position.y = y
   },
 
   updateCTPosition: (state, value: any) => {
@@ -55,10 +55,24 @@ export const mutations: MutationTree<IState> = {
     state.programState.useCases[index].constants[indexCT].position.y = y
   },
 
-  updateUCIdent: (state, value: any) => {
+  updateUCIdentifier: (state, value: any) => {
     const { id, identifier } = value
     const index = state.programState.useCases.findIndex(x => x.id === id)
     state.programState.useCases[index].identifier = identifier
+  },
+
+  updateVRIdentifier: (state, value: any) => {
+    const { useCaseId, id, identifier } = value
+    const index = state.programState.useCases.findIndex(x => x.id === useCaseId)
+    const indexVR = state.programState.useCases[index].variables.findIndex(x => x.id === id)
+    state.programState.useCases[index].variables[indexVR].identifier = identifier
+  },
+
+  updateCTIdentifier: (state, value: any) => {
+    const { useCaseId, id, identifier } = value
+    const index = state.programState.useCases.findIndex(x => x.id === useCaseId)
+    const indeCT = state.programState.useCases[index].constants.findIndex(x => x.id === id)
+    state.programState.useCases[index].constants[indeCT].identifier = identifier
   },
 
   deleteUC: (state, value: string) => {

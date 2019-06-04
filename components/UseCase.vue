@@ -32,9 +32,13 @@
     //-   y='18'
     //-   :style='UCTextStyle'
     //- ) {{ useCase.identifier }}
-    foreignObject.uc-text(x="5" y="3" :width='identifierLength' height="30")
+    foreignObject.uc-text(
+      x="5"
+      y="3"
+      :width='identifierLength'
+      height="30"
+      )
       v-text-field.pa-0.ma-0(
-        :id="useCase.id"
         dark
         height='24'
         color='white'
@@ -71,7 +75,7 @@ import { onMove, onStart, onEnd } from '~/mixins/draggable'
 })
 export default class UseCaseComponent extends Vue {
   @Mutation('resizeUC') mutationResizeUC
-  @Mutation('updateUCIdent') mutationUpdateUCIdent
+  @Mutation('updateVRIdentifier') mutationUpdateUCIdentifier
   @Prop({
     default: () => {},
     type: Object as () => IUseCase

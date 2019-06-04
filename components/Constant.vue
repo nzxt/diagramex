@@ -18,11 +18,11 @@
       ry='5'
       :style='CTBodyStyle'
     )
-    foreignObject.vr-text(
+    foreignObject.ct-text(
       x="5"
       y="3"
-      width="100"
-      height="22"
+      :width='identifierLength'
+      height="30"
     )
       v-text-field.pa-0.ma-0(
         dark
@@ -30,16 +30,20 @@
         color='white'
         hide-details
         single-line
+        :rules='textRule'
+        @input='updateIdentifier'
         v-model='constant.identifier'
       )
 </template>
 <script lang="ts">
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
+import { Mutation } from 'vuex-class'
 import { IConstant } from '~/models/interfaces'
 import { onMove, onStart, onEnd } from '~/mixins/draggable'
 
 @Component({})
 export default class ConstantComponent extends Vue {
+  @Mutation('updateCTIdentifier') mutationUpdateCTIdentifier
   @Prop({
     default: () => {},
     type: Object as () => IConstant
@@ -47,6 +51,8 @@ export default class ConstantComponent extends Vue {
   readonly constant!: IConstant
 
   identifierWidth: number = 150
+  identifierLength: number = 50
+  useCaseId: string = ''
 
   CTTextStyle: any = {
     fill: '#FAFAFA',
@@ -59,10 +65,17 @@ export default class ConstantComponent extends Vue {
     opacity: 0.75
   }
 
+  textRule: Array<any> = [ (value) => {
+    const pattern = /^[a-zA-Z][a-zA-Z0-9_]+$/
+    return pattern.test(value) || 'Invalid e-mail.'
+  }
+  ]
+
   /* eslint-disable */
   mounted() {
-    const vr = this.$snap.select(`#ct-${this.constant.id}`)
-    vr.drag(onMove, onStart, onEnd)
+    const ct = this.$snap.select(`#ct-${this.constant.id}`)
+    this.useCaseId = ct.parent().parent().node.id.substring(3)
+    ct.drag(onMove, onStart, onEnd)
   }
   /* eslint-enable */
 
@@ -72,8 +85,13 @@ export default class ConstantComponent extends Vue {
     this.$nextTick(() => {
       const text = this.$snap.select(`#ct-${this.constant.id} .ct-text`)
       const bb = text.getBBox()
-      this.identifierWidth = bb.width + 10
+      this.identifierWidth = value.length * 8 + 10
+      this.identifierLength = value.length * 8 + 2
     })
+  }
+
+  updateIdentifier(identifier) {
+    this.mutationUpdateCTIdentifier({ useCaseId: this.useCaseId, id: this.constant.id, identifier })
   }
 }
 </script>
