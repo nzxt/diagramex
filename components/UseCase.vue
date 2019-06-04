@@ -179,7 +179,7 @@ export default class UseCaseComponent extends Vue {
   }
 
   updateIdentifier(identifier) {
-    this.mutationUpdateUCIdent({id: this.useCase.id, identifier})
+    this.mutationUpdateUCIdentifier({id: this.useCase.id, identifier})
   }
   /* eslint-enable */
 }
