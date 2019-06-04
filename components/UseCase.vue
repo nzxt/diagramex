@@ -75,7 +75,7 @@ import { onMove, onStart, onEnd } from '~/mixins/draggable'
 })
 export default class UseCaseComponent extends Vue {
   @Mutation('resizeUC') mutationResizeUC
-  @Mutation('updateVRIdentifier') mutationUpdateUCIdentifier
+  @Mutation('updateUCIdentifier') mutationUpdateUCIdentifier
   @Prop({
     default: () => {},
     type: Object as () => IUseCase
