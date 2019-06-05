@@ -94,6 +94,7 @@ export default class VariableComponent extends Vue {
 
   updateIdentifier(identifier) {
     this.mutationUpdateVRIdentifier({ useCaseId: this.useCaseId, id: this.variable.id, identifier })
+    this.$bus.$emit('ResizeUC', this.useCaseId)
   }
 }
 </script>

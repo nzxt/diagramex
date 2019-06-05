@@ -84,6 +84,7 @@ export default class ConstantComponent extends Vue {
 
   updateIdentifier(identifier) {
     this.mutationUpdateCTIdentifier({ useCaseId: this.useCaseId, id: this.constant.id, identifier })
+    this.$bus.$emit('ResizeUC', this.useCaseId)
   }
 }
 </script>

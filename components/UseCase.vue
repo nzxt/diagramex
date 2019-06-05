@@ -134,6 +134,7 @@ export default class UseCaseComponent extends Vue {
 
   beforeDestroy() {
     this.$bus.$off('resizeUCBody')
+    this.$bus.$off('ResizeUC')
     this.unsubscribe && this.unsubscribe()
   }
 
@@ -146,6 +147,9 @@ export default class UseCaseComponent extends Vue {
     setTimeout(() => {
       this.resizeBodyBox(this.useCase.id)
     }, 680)
+
+    this.$bus.$on('ResizeUC', this.resizeBodyBox)
+  
   }
   /* eslint-enable */
 
