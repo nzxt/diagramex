@@ -76,6 +76,7 @@ export default class MenuMixin extends Vue {
     this.canvasX = layerX
     this.canvasY = layerY
 
+    debugger
     if (type === 'cn') {
       const { e, f } = elem.node.children[1].transform.baseVal[0].matrix
       this.e = e

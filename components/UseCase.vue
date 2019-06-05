@@ -47,6 +47,14 @@
         @input='updateIdentifier'
         v-model='useCase.identifier'
       )
+      v-tooltip(top)
+        template(v-slot:activator="{ on }")
+          v-icon(
+            color="primary"
+            dark
+            v-on="on"
+          ) mdi-select-drag
+        span Lorem ipsum dolor
     g.uc-body-box
       Variable(
         v-for='item in useCase.variables'
@@ -89,7 +97,7 @@ export default class UseCaseComponent extends Vue {
 
   textRule: Array<any> = [ (value) => {
     const pattern = /^[a-zA-Z][a-zA-Z0-9_]+$/
-    return pattern.test(value) || 'Invalid e-mail.'
+    return pattern.test(value) || 'Invalid range'
   }
   ]
 
@@ -147,8 +155,8 @@ export default class UseCaseComponent extends Vue {
     this.$nextTick(() => {
       const text = this.$snap.select(`#uc-${this.useCase.id} .uc-text`)
       const bb = text.getBBox()
-      this.identifierWidth = value.length * 8 + 10
-      this.identifierLength = value.length * 8 + 2
+      this.identifierWidth = value.length * 9 + 10
+      this.identifierLength = value.length * 9 + 2
     })
   }
 
@@ -159,7 +167,27 @@ export default class UseCaseComponent extends Vue {
   /* eslint-disable */
   resizeBodyBox(ucId) {
     if (this.useCase.id !== ucId) return
+    let index = this.$store.state.programState.useCases.findIndex( x=> x.id === ucId)
+    let useCase = Object.assign( {}, this.$store.state.programState.useCases[index])
+    // if (useCase.variables.length + useCase.constant.length === 1) {
+      // const body = this.$snap(`#uc-${this.useCase.id} .uc-body`)
+      // const bodyBox = this.$snap(`#uc-${this.useCase.id} .uc-body-box`)
+      // const bbBb = bodyBox.getBBox()
+      // const { x: bbX1, y: bbY1, w: bbW, h: bbH } = bbBb
 
+      // // 10 = padding from side borders // 27 = title height + 10 padding from border
+      // if(bbX1-10 || bbY1-10-27) {
+      //   const dx = bbX1 - 10
+      //   const dy = bbY1 - 10 - 27
+      //   this.mutationResizeUC({ dx, dy, id: this.useCase.id })
+      // }
+
+      // body.stop().animate({
+      //   width: bbW ? bbW + 20 : 250,
+      //   height: bbH ? bbH + 20 : 150
+      // }, 680, mina.elastic)
+    // } else {
+    //   }
     const body = this.$snap(`#uc-${this.useCase.id} .uc-body`)
     const bodyBox = this.$snap(`#uc-${this.useCase.id} .uc-body-box`)
     const bbBb = bodyBox.getBBox()

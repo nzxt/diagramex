@@ -20,14 +20,14 @@
     )
     foreignObject.vr-text(
       x="5"
-      y="3"
+      y="0"
       :width='identifierLength'
       height="30"
     )
       v-text-field.pa-0.ma-0(
         dark
-        height='24'
-        color='white'
+        height='22'
+        color='#4CAF50'
         hide-details
         single-line
         :rules='textRule'
@@ -69,7 +69,7 @@ export default class VariableComponent extends Vue {
 
   textRule: Array<any> = [ (value) => {
     const pattern = /^[a-zA-Z][a-zA-Z0-9_]+$/
-    return pattern.test(value) || 'Invalid e-mail.'
+    return pattern.test(value) || 'Invalid range'
   }
   ]
 

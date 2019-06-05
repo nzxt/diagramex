@@ -30,7 +30,6 @@
         color='white'
         hide-details
         single-line
-        :rules='textRule'
         @input='updateIdentifier'
         v-model='constant.identifier'
       )
@@ -64,13 +63,6 @@ export default class ConstantComponent extends Vue {
     strokeWidth: 1,
     opacity: 0.75
   }
-
-  textRule: Array<any> = [ (value) => {
-    const pattern = /^[a-zA-Z][a-zA-Z0-9_]+$/
-    return pattern.test(value) || 'Invalid e-mail.'
-  }
-  ]
-
   /* eslint-disable */
   mounted() {
     const ct = this.$snap.select(`#ct-${this.constant.id}`)
