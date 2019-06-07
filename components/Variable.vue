@@ -13,7 +13,7 @@
       x='0'
       y='0'
       :width='identifierWidth'
-      height='25'
+      height='24'
       rx='5'
       ry='5'
       :style='VRBodyStyle'
@@ -22,12 +22,11 @@
       x="5"
       y="0"
       :width='identifierLength'
-      height="30"
+      height="22"
     )
       v-text-field.pa-0.ma-0(
         dark
-        height='22'
-        color='#4CAF50'
+        height='24'
         hide-details
         single-line
         :rules='textRule'

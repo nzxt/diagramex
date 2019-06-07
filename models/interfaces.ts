@@ -25,6 +25,14 @@ export interface IConstant {
   comment?: string
 }
 
+export interface IEdge {
+  id?: string,
+  identifier: string,
+  sourceId: string,
+  targetId: string,
+  comment?: string
+}
+
 export interface IPosition {
   x: number
   y: number

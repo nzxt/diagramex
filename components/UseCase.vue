@@ -13,14 +13,14 @@
       x='0'
       y='0'
       :width='identifierWidth'
-      height='35'
+      height='38'
       rx='5'
       ry='5'
       :style='UCTitleStyle'
     )
     rect.uc-body(
       x='0'
-      y='27'
+      y='30'
       width='100'
       height='50'
       rx='5'
@@ -34,18 +34,18 @@
     //- ) {{ useCase.identifier }}
     foreignObject.uc-text(
       x="5"
-      y="3"
-      :width='identifierLength'
-      height="30"
-      )
+      y="2"
+      :width='identifierWidth-8'
+      height="24"
+    )
       v-text-field.pa-0.ma-0(
         dark
-        height='24'
-        color='white'
         single-line
         :rules='textRule'
         @input='updateIdentifier'
         v-model='useCase.identifier'
+        @dblclick.stop.prevent='onDblClickIdentifier'
+        prepend-icon='mdi-pen'
       )
       v-tooltip(top)
         template(v-slot:activator="{ on }")
@@ -66,6 +66,12 @@
         :key='item.id'
         :constant='item'
       )
+      Edge(
+        v-for='item in useCase.edges'
+        :key='item.id'
+        :edge='item'
+        :useCaseId='useCase.id'
+      )
 </template>
 
 <script lang='ts'>
@@ -78,7 +84,8 @@ import { onMove, onStart, onEnd } from '~/mixins/draggable'
 @Component({
   components: {
     Variable: () => import('~/components/Variable.vue'),
-    Constant: () => import('~/components/Constant.vue')
+    Constant: () => import('~/components/Constant.vue'),
+    Edge: () => import('~/components/Edge.vue')
   }
 })
 export default class UseCaseComponent extends Vue {
@@ -91,7 +98,6 @@ export default class UseCaseComponent extends Vue {
   readonly useCase!: IUseCase
 
   identifierWidth: number = 50
-  identifierLength: number = 50
 
   disabled: boolean = false
 
@@ -160,7 +166,6 @@ export default class UseCaseComponent extends Vue {
       const text = this.$snap.select(`#uc-${this.useCase.id} .uc-text`)
       const bb = text.getBBox()
       this.identifierWidth = value.length * 9 + 10
-      this.identifierLength = value.length * 9 + 2
     })
   }
 
@@ -208,6 +213,9 @@ export default class UseCaseComponent extends Vue {
       width: bbW ? bbW + 20 : 250,
       height: bbH ? bbH + 20 : 150
     }, 680, mina.elastic)
+  }
+
+  onDblClickIdentifier (evt) {
   }
 
   updateIdentifier(identifier) {

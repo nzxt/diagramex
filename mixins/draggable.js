@@ -4,6 +4,9 @@ const onMove = function(dx, dy, x, y, evt) {
 
   const tstr = this.data('ot') + `t${dx},${dy}`
   this.transform(tstr)
+  let { id: nodeId } = this.node
+  nodeId = nodeId.substring(3)
+  window.$nuxt.$bus.$emit('Element moving', nodeId)
 }
 const onStart = function(x, y, evt) {
   if(evt.button !== 0 || !evt.shiftKey) return

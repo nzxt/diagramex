@@ -10,6 +10,7 @@
           width='100%'
           height='100%'
         )
+          //- @click="newArrow"
           //- xmlns:xlink="http://www.w3.org/1999/xlink"
           //- :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
           //- :width='viewBox.width'
@@ -20,7 +21,14 @@
               :key='item.id'
               :useCase='item'
             )
-
+          defs
+            marker#arrow(
+              orient="auto"
+              markerWidth='4'
+              markerHeight='4'
+              refX='1' refY='2'
+            )
+              polyline(points='0,0 4,2 0,4 0,0' fill="grey")
     v-menu(
       v-model='showMenu'
       :position-x='menuX'
@@ -36,13 +44,13 @@
         )
           v-list-tile-title {{ item.text }}
 
-    #thumbViewContainer
-      svg#scopeContainer.thumbViewClass
-        g
-          rect#scope(fill="red" fill-opacity="0.1" stroke="red" stroke-width="2px" x="0" y="0" width="0" height="0")
-          line#line1(stroke="red" stroke-width="2px" x1="0" y1="0" x2="0" y2="0")
-          line#line2(stroke="red" stroke-width="2px" x1="0" y1="0" x2="0" y2="0")
-      embed#thumbView.thumbViewClass(type="image/svg+xml" src="nuxtjs.svg")
+    //- #thumbViewContainer
+    //-   svg#scopeContainer.thumbViewClass
+    //-     g
+    //-       rect#scope(fill="red" fill-opacity="0.1" stroke="red" stroke-width="2px" x="0" y="0" width="0" height="0")
+    //-       line#line1(stroke="red" stroke-width="2px" x1="0" y1="0" x2="0" y2="0")
+    //-       line#line2(stroke="red" stroke-width="2px" x1="0" y1="0" x2="0" y2="0")
+    //-   embed#thumbView.thumbViewClass(type="image/svg+xml" src="nuxtjs.svg")
 </template>
 
 <script lang='ts'>
@@ -94,10 +102,10 @@ export default class IndexPage extends Vue {
       refreshRate: 'auto'
     })
 
-    thumbnailViewer({
-      mainViewId: 'canvas',
-      thumbViewId: 'thumbView'
-    })
+    // thumbnailViewer({
+    //   mainViewId: 'canvas',
+    //   thumbViewId: 'thumbView'
+    // })
   }
 
   created() {
@@ -136,6 +144,11 @@ export default class IndexPage extends Vue {
     this.viewBox.width = clientWidth
     this.viewBox.height = clientHeight - 7
   }
+
+  // newArrow(evt) {
+  //   const { clientX, clientY } = evt
+  //   const elem = this.$snap.getElementByPoint(clientX, clientY)
+  // }
 }
 </script>
 

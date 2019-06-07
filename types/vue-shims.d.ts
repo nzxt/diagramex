@@ -9,8 +9,8 @@ import Vue, { ComponentOptions } from 'vue'
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $snap: any
-    $bus: any
+    $snap: any;
+    $bus: any;
     // $auth: any;
     // $noty: any;
  }

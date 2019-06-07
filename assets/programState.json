@@ -14,11 +14,53 @@
         "x": 120,
         "y": 20
       }
-    } 
+    }, 
+    {
+      "id": "stringWithId02",
+      "identifier": "Variable #2",
+      "position": {
+        "x": 20,
+        "y": 100
+      }
+    },
+    {
+      "id": "stringWithId03",
+      "identifier": "Variable #3",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    }, {
+      "id": "stringWithId04",
+      "identifier": "Variable #4",
+      "position": {
+        "x": 120,
+        "y": 160
+      }
+    }
   ],
-    "constants": [
-    ]
-  }
-  ]
-}
+    "constants": [{
+      "id": "stringDelimiterId1",
+      "identifier": "{#@)}",
+      "position": {
+        "x": 20,
+        "y": 60
+      }
+    }],
 
+    "edges": [{
+      "id": "arrowLine01",
+    	"identifier": "arrowIdentifier",
+      "comment": "arrow markdown comment",
+      "sourceId": "stringWithId01",
+      "targetId": "stringWithId02"
+    },
+    {
+      "id": "arrowLine02",
+    	"identifier": "arrowIdentifier",
+      "comment": "arrow markdown comment",
+      "sourceId": "stringWithId03",
+      "targetId": "stringWithId04"
+    }]
+  }]
+}
