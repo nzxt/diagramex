@@ -31,31 +31,44 @@ export default class EdgeComponent extends Vue {
 
   path: string = ''
 
+  created() {
+    this.$bus.$on('MovingElement', this.onElementMove)
+    this.$bus.$on('UseCaseResized', this.onUseCaseResized)
+  }
+
+  beforeDestroy() {
+    this.$bus.$off('MovingElement')
+    this.$bus.$off('UseCaseResized')
+  }
+
   mounted(): void {
+    this.drawConnection()
+  }
+
+  drawConnection() {
     const paper = this.$snap('#canvas')
     const { sourceId, targetId } = this.edge
     const elem1 = paper.select(`[id$="${sourceId}"]`)
     const elem2 = paper.select(`[id$="${targetId}"]`)
-    this.connection(elem1, elem2, 'grey')
-    this.$bus.$on('Element moving', this.verifyAffiliation)
-
-    // const connection = paper.connection(elem1, elem2, 'grey')
-    // const parent = paper.select(`[id$="${this.useCaseId}"]`)
-    // const tstr = parent.transform().local
-    // connection.line.transform(tstr)
+    this.calculatePath(elem1, elem2, 'grey')
   }
 
-  verifyAffiliation(elementId) {
+  onElementMove(elementId) {
     const paper = this.$snap('#canvas')
     const { sourceId, targetId } = this.edge
     if (sourceId === elementId || targetId === elementId) {
       const elem1 = paper.select(`[id$="${sourceId}"]`)
       const elem2 = paper.select(`[id$="${targetId}"]`)
-      this.connection(elem1, elem2, 'grey')
+      this.calculatePath(elem1, elem2, 'grey')
     }
   }
 
-  connection(obj1, obj2, line) {
+  onUseCaseResized({ dx, dy, useCaseId }) {
+    if (useCaseId !== this.useCaseId) return
+    this.drawConnection()
+  }
+
+  calculatePath(obj1, obj2, line) {
     if (obj1.line && obj1.from && obj1.to) {
       line = obj1
       obj1 = line.from
@@ -108,22 +121,6 @@ export default class EdgeComponent extends Vue {
     const x3 = [0, 0, 0, 0, x4, x4, x4 - dx, x4 + dx][res[1]].toFixed(3)
     const y3 = [0, 0, 0, 0, y1 + dy, y1 - dy, y4, y4][res[1]].toFixed(3)
     this.path = 'M' + x1.toFixed(3) + ',' + y1.toFixed(3) + 'C' + [x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join()
-
-    // const arrow = this.polyline(0, 0, 4, 2, 0, 4, 0, 0).attr({ fill: 'red' })
-    // const arrowMarker = arrow.marker(0, 0, 4, 4, 4, 2).attr({ markerUnits: 'strokeWidth', markerWidth: 10, markerHeight: 10, orient: 'auto' })
-
-    // if (line && line.line) {
-    //   line.bg && line.bg.attr({ path: path })
-    //   line.line.attr({ path: path })
-    // } else {
-    //   const color = typeof line === 'string' ? line : 'yellow'
-    //   return {
-    //     //   bg: bg && bg.split && this.path(path).attr({stroke: bg.split("|")[0], fill: "none", "stroke-width": bg.split("|")[1] || 3}),
-    //     line: this.path(path).attr({ stroke: color, fill: 'none', markerEnd: arrowMarker }),
-    //     from: obj1,
-    //     to: obj2
-    //   }
-    // }
   }
 }
 </script>

@@ -21,8 +21,8 @@
     rect.uc-body(
       x='0'
       y='30'
-      width='100'
-      height='50'
+      width='150'
+      height='100'
       rx='5'
       ry='5'
       :style='UCBodyStyle'
@@ -127,7 +127,9 @@ export default class UseCaseComponent extends Vue {
   unsubscribe: Function | null = null
 
   created() {
-    this.$bus.$on('resizeUCBody', this.resizeBodyBox)
+    this.$bus.$on('ChildDragEnded', this.resizeBodyBox)
+    this.$bus.$on('IdentifierUpdated', this.resizeBodyBox)
+
     this.unsubscribe = this.$store.subscribe((mutation) => {
       const { useCaseId } = mutation.payload
       if (this.useCase.id === useCaseId && ['addVR', 'addCT', 'deleteVR', 'deleteCT'].includes(mutation.type)) {
@@ -139,8 +141,8 @@ export default class UseCaseComponent extends Vue {
   }
 
   beforeDestroy() {
-    this.$bus.$off('resizeUCBody')
-    this.$bus.$off('ResizeUC')
+    this.$bus.$off('ChildDragEnded')
+    this.$bus.$off('IdentifierUpdated')
     this.unsubscribe && this.unsubscribe()
   }
 
@@ -153,9 +155,6 @@ export default class UseCaseComponent extends Vue {
     setTimeout(() => {
       this.resizeBodyBox(this.useCase.id)
     }, 680)
-
-    this.$bus.$on('ResizeUC', this.resizeBodyBox)
-  
   }
   /* eslint-enable */
 
@@ -176,8 +175,11 @@ export default class UseCaseComponent extends Vue {
   /* eslint-disable */
   resizeBodyBox(ucId) {
     if (this.useCase.id !== ucId) return
-    let index = this.$store.state.programState.useCases.findIndex( x=> x.id === ucId)
-    let useCase = Object.assign( {}, this.$store.state.programState.useCases[index])
+    
+    // TODO!
+    // let index = this.$store.state.programState.useCases.findIndex( x=> x.id === ucId)
+    // let useCase = Object.assign({}, this.$store.state.programState.useCases[index])
+    
     // if (useCase.variables.length + useCase.constant.length === 1) {
       // const body = this.$snap(`#uc-${this.useCase.id} .uc-body`)
       // const bodyBox = this.$snap(`#uc-${this.useCase.id} .uc-body-box`)
@@ -207,6 +209,10 @@ export default class UseCaseComponent extends Vue {
       const dx = bbX1 - 10
       const dy = bbY1 - 10 - 27
       this.mutationResizeUC({ dx, dy, id: this.useCase.id })
+      
+      this.$nextTick(() => {
+        this.$bus.$emit('UseCaseResized', { dx, dy, useCaseId: this.useCase.id })
+      })
     }
 
     body.stop().animate({

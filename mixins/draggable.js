@@ -6,7 +6,7 @@ const onMove = function(dx, dy, x, y, evt) {
   this.transform(tstr)
   let { id: nodeId } = this.node
   nodeId = nodeId.substring(3)
-  window.$nuxt.$bus.$emit('Element moving', nodeId)
+  window.$nuxt.$bus.$emit('MovingElement', nodeId)
 }
 const onStart = function(x, y, evt) {
   if(evt.button !== 0 || !evt.shiftKey) return
@@ -20,8 +20,8 @@ const onEnd = function(evt) {
   const { id: nodeId } = this.node
   const { x, y } = this.getBBox()
   const { id: nodeParentId } = this.parent().parent().node // Upward to Usecase <g>
-  window.$nuxt.$bus.$emit('dragEnd', { x, y, nodeId, nodeParentId } )
-  window.$nuxt.$bus.$emit('resizeUCBody', nodeParentId.substring(3) )
+  window.$nuxt.$bus.$emit('DragEnded', { x, y, nodeId, nodeParentId } )
+  window.$nuxt.$bus.$emit('ChildDragEnded', nodeParentId.substring(3) )
   console.log('Drag ended..')
 }
 

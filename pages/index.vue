@@ -109,11 +109,11 @@ export default class IndexPage extends Vue {
   }
 
   created() {
-    this.$bus.$on('dragEnd', this.onDragEnd)
+    this.$bus.$on('DragEnded', this.onDragEnd)
   }
 
   beforeDestroy() {
-    this.$bus.$off('dragEnd')
+    this.$bus.$off('DragEnded')
   }
 
   onDragEnd({ x, y, nodeId, nodeParentId }): void {
