@@ -44,7 +44,6 @@
         :rules='textRule'
         @input='updateIdentifier'
         v-model='useCase.identifier'
-        prepend-icon='mdi-pen'
       )
       v-tooltip(top)
         template(v-slot:activator="{ on }")
