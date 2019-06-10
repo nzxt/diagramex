@@ -9,14 +9,47 @@
       stroke='grey'
       :d="path"
     )
+    //- rect.ed-body(
+    //-   :x='x'
+    //-   :y='y'
+    //-   width='50'
+    //-   height='30'
+    //-   rx='5'
+    //-   ry='5'
+    //-   fill='blue'
+    //- )
+    foreignObject.identifier(
+      :x='x'
+      :y='y'
+      :width='identifierWidth+8'
+      height="24"
+    )
+      v-text-field.pa-0.ma-0(
+        :id='`${edge.id}`'
+        dense
+        dark
+        hide-details
+        clear
+        single-line
+        height='24'
+        background-color='#00897B'
+        @input='updateEDIdentifier'
+        v-model='edge.identifier'
+      )
+        span {{}}
+        //- :rules='textRule'
+        //- @input='updateIdentifier'
+        //- @dblclick.stop.prevent='onDblClickIdentifier'
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import { IEdge } from '~/models/interfaces'
+import { Mutation } from 'vuex-class'
 
 @Component({})
 export default class EdgeComponent extends Vue {
+  @Mutation('updateEDIdentifier') mutationUpdateEDIdentifier
   @Prop({
     default: '',
     type: String
@@ -28,6 +61,10 @@ export default class EdgeComponent extends Vue {
     type: Object as () => IEdge
   })
   readonly edge!: IEdge
+
+  x: any = undefined
+  y: any = undefined
+  identifierWidth: any = 100
 
   path: string = ''
 
@@ -43,6 +80,19 @@ export default class EdgeComponent extends Vue {
 
   mounted(): void {
     this.drawConnection()
+    const paper = this.$snap('#canvas')
+    const path = paper.select(`#ed-${this.edge.id} .edge`)
+    path.click((evt) => {
+      // this.createdEdgeIdentifier()
+    })
+  }
+
+  @Watch('edge.identifier', { immediate: true, deep: false })
+  onIdentifierChange(value: string): void {
+    if (!value.length) return
+    this.$nextTick(() => {
+      this.identifierWidth = value.length * 9 + 10
+    })
   }
 
   drawConnection() {
@@ -63,7 +113,7 @@ export default class EdgeComponent extends Vue {
     }
   }
 
-  onUseCaseResized({ dx, dy, useCaseId }) {
+  onUseCaseResized(useCaseId) {
     if (useCaseId !== this.useCaseId) return
     this.drawConnection()
   }
@@ -121,6 +171,20 @@ export default class EdgeComponent extends Vue {
     const x3 = [0, 0, 0, 0, x4, x4, x4 - dx, x4 + dx][res[1]].toFixed(3)
     const y3 = [0, 0, 0, 0, y1 + dy, y1 - dy, y4, y4][res[1]].toFixed(3)
     this.path = 'M' + x1.toFixed(3) + ',' + y1.toFixed(3) + 'C' + [x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join()
+    this.$nextTick(() => {
+      const paper = this.$snap('#canvas')
+      const path = paper.select(`#ed-${this.edge.id} .edge`)
+      const parentTransform = path.parent().transform()
+      const length = path.getTotalLength()
+      const coords = path.getPointAtLength(length / 2)
+      const { x, y } = coords
+      this.x = x - 50
+      this.y = y - 12
+    })
+  }
+
+  updateEDIdentifier() {
+    this.mutationUpdateEDIdentifier({ useCaseId: this.useCaseId, id: this.edge.id, identifier: this.edge.identifier })
   }
 }
 </script>

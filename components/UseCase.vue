@@ -44,7 +44,6 @@
         :rules='textRule'
         @input='updateIdentifier'
         v-model='useCase.identifier'
-        @dblclick.stop.prevent='onDblClickIdentifier'
         prepend-icon='mdi-pen'
       )
       v-tooltip(top)
@@ -162,15 +161,9 @@ export default class UseCaseComponent extends Vue {
   onIdentifierChange(value: string): void {
     if (!value.length) return
     this.$nextTick(() => {
-      const text = this.$snap.select(`#uc-${this.useCase.id} .uc-text`)
-      const bb = text.getBBox()
       this.identifierWidth = value.length * 9 + 10
     })
   }
-
-  // editIdentifiger() {
-  //   this.disabled = false
-  // }
 
   /* eslint-disable */
   resizeBodyBox(ucId) {
@@ -211,7 +204,7 @@ export default class UseCaseComponent extends Vue {
       this.mutationResizeUC({ dx, dy, id: this.useCase.id })
       
       this.$nextTick(() => {
-        this.$bus.$emit('UseCaseResized', { dx, dy, useCaseId: this.useCase.id })
+        this.$bus.$emit('UseCaseResized', this.useCase.id)
       })
     }
 
@@ -219,9 +212,6 @@ export default class UseCaseComponent extends Vue {
       width: bbW ? bbW + 20 : 250,
       height: bbH ? bbH + 20 : 150
     }, 680, mina.elastic)
-  }
-
-  onDblClickIdentifier (evt) {
   }
 
   updateIdentifier(identifier) {
