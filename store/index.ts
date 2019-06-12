@@ -38,13 +38,6 @@ export const mutations: MutationTree<IState> = {
     state.programState.useCases[index].edges.push(edge)
   },
 
-  addEDTarget: (state, value: any) => {
-    const { useCaseId, id, targetId } = value
-    const index = state.programState.useCases.findIndex(x => x.id === useCaseId)
-    const indexED = state.programState.useCases[index].edges.findIndex(x => x.id === id)
-    state.programState.useCases[index].edges[indexED].targetId = targetId
-  },
-
   updateUCPosition: (state, value: any) => {
     const { x, y, id } = value
     const index = state.programState.useCases.findIndex(x => x.id === id)
@@ -93,6 +86,13 @@ export const mutations: MutationTree<IState> = {
     const index = state.programState.useCases.findIndex(x => x.id === useCaseId)
     const indexED = state.programState.useCases[index].edges.findIndex(x => x.id === id)
     state.programState.useCases[index].edges[indexED].identifier = identifier
+  },
+
+  updateEDTarget: (state, value: any) => {
+    const { useCaseId, id, targetId } = value
+    const index = state.programState.useCases.findIndex(x => x.id === useCaseId)
+    const indexED = state.programState.useCases[index].edges.findIndex(x => x.id === id)
+    state.programState.useCases[index].edges[indexED].targetId = targetId
   },
 
   deleteUC: (state, value: string) => {

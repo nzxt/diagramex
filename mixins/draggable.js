@@ -22,7 +22,6 @@ const onEnd = function(evt) {
   const { id: nodeParentId } = this.parent().parent().node // Upward to Usecase <g>
   window.$nuxt.$bus.$emit('DragEnded', { x, y, nodeId, nodeParentId } )
   window.$nuxt.$bus.$emit('ChildDragEnded', nodeParentId.substring(3) )
-  window.$nuxt.$bus.$emit('CircleEndDrag', evt)
   console.log('Drag ended..')
 }
 

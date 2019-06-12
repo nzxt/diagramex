@@ -5,23 +5,25 @@
         svg#canvas(
           xmlns="http://www.w3.org/2000/svg"
           preserveAspectRatio='xMidYMid meet'
+          @mousedown.ctrl='onMouseDown'
+          @mouseup='onMouseUp'
+          @mousemove.ctrl='onMoveTarget'
           @contextmenu.stop.prevent='onContextMenu'
-          @mousedown.ctrl='createEdge'
-          @mouseup='onMouseup'
-          @mousemove='onMove'
           width='100%'
           height='100%'
         )
-          //- :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
+          //- @mousedown.ctrl='createEdge'
+          //- @mouseup='onMouseup'
+          //- @mousemove='onMove'
           //- @dragstart='() => false'
-          //- @click="newArrow"
+
+          //- :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
           //- xmlns:xlink="http://www.w3.org/1999/xlink"
           //- :width='viewBox.width'
           //- :height='viewBox.height'
-          circle#fake(
-            :cx='mouse.x' :cy='mouse.y' r='5'
+          circle#fake-target(
+            :cx='cursorPos.x' :cy='cursorPos.y' r='5' fill='orange'
           )
-
           g
             UseCase(
               v-for='item in vuexProgramState.useCases'
@@ -29,7 +31,6 @@
               :useCase='item'
             )
 
-            //- :transform='`translate(${0-useCase.position.x},${0-useCase.position.y})`'
           defs
             marker#arrow(
               orient="auto"
@@ -69,8 +70,11 @@ import { thumbnailViewer } from '~/assets/thumbnailViewer'
 import { Component, Vue } from 'vue-property-decorator'
 import { State, Mutation } from 'vuex-class'
 
-import MenuMixin from '~/mixins/menu'
 import { IPosition } from '../models/interfaces'
+import { Edge } from '~/models/Edge'
+
+import MenuMixin from '~/mixins/menu'
+import { findParent } from '~/mixins/helpers'
 
 @Component({
   components: {
@@ -84,13 +88,22 @@ export default class IndexPage extends Vue {
   @Mutation('updateVRPosition') mutationUpdateVRPosition
   @Mutation('updateCTPosition') mutationUpdateCTPosition
 
+  @Mutation('addED') mutationAddED
+  @Mutation('deleteED') mutationDeleteED
+  @Mutation('updateEDTarget') mutationUpdateEDTarget
+
   viewBox: any = {
     width: 500,
     height: 350
   }
 
-  isConnecting: Boolean = false
-  mouse: IPosition = {
+  connection: any = {
+    inProcess: false,
+    useCaseId: null,
+    sourceId: null,
+    edgeId: null
+  }
+  cursorPos: IPosition = {
     x: 0,
     y: 0
   }
@@ -161,23 +174,81 @@ export default class IndexPage extends Vue {
     this.viewBox.height = clientHeight - 7
   }
 
-  onMove(evt) {
-    if (this.isConnecting) {
-      // evt.cancelBubble = true
-      this.mouse.x = evt.layerX
-      this.mouse.y = evt.layerY
-      this.$bus.$emit('MovingElement', 'fake')
+  onMoveTarget(evt) {
+    if (this.connection.inProcess) {
+      const cursorPosOffset = this.cursorPosOffset()
+      this.cursorPos.x = evt.layerX - cursorPosOffset.x
+      this.cursorPos.y = evt.layerY - cursorPosOffset.y
+      // this.$nextTick(() => {
+      this.$bus.$emit('MovingElement', 'fake-target')
+      // })
     }
   }
 
-  onMouseup(evt) {
-    this.isConnecting = false
+  onMouseDown(evt) {
+    this.connection.inProcess = true
+    this.findSource(evt)
   }
 
-  createEdge(evt) {
-    this.isConnecting = true
-    // evt.cancelBubble = true
-    this.$bus.$emit('CreateEdge', evt)
+  onMouseUp(evt) {
+    if (!this.connection.inProcess) return
+    this.findTarget(evt)
+    this.connection.inProcess = false
+    this.connection.useCaseId = null
+    this.connection.sourceId = null
+    this.connection.edgeId = null
+  }
+
+  findSource(evt) {
+    const { clientX, clientY } = evt
+    const elem = this.$snap.getElementByPoint(clientX, clientY)
+    const parent = findParent(elem)
+    const type = parent.node.id.substring(0, 2)
+
+    if (type !== 'vr' && type !== 'ct') return
+
+    const mainParent = findParent(parent.parent())
+    const useCaseId = mainParent.node.id.substring(3)
+    this.connection.useCaseId = useCaseId
+
+    const sourceId = parent.node.id.substring(3)
+    this.connection.sourceId = sourceId
+
+    const targetId = 'fake-target'
+    const edge = new Edge('Edge', sourceId, targetId)
+    this.connection.edgeId = edge.id
+    this.mutationAddED({ useCaseId, edge })
+  }
+
+  findTarget(evt) {
+    const { clientX, clientY } = evt
+    const elem = this.$snap.getElementByPoint(clientX, clientY)
+    const parent = findParent(elem)
+    const type = parent.node.id.substring(0, 2)
+
+    if (type !== 'vr' && type !== 'ct') return
+    const { useCaseId, sourceId, edgeId } = this.connection
+
+    const parentId = parent.node.id.substring(3)
+    const mainParent = findParent(parent.parent())
+    const mainParentId = mainParent.node.id.substring(3)
+
+    if (useCaseId !== mainParentId) {
+      this.mutationDeleteED({ useCaseId, edgeId })
+    } else {
+      this.mutationUpdateEDTarget({ useCaseId, id: edgeId, targetId: parentId })
+    }
+    this.$nextTick(() => {
+      this.$bus.$emit('MovingElement', parentId)
+    })
+  }
+
+  cursorPosOffset() {
+    const { useCaseId } = this.connection
+    if (!useCaseId) return { x: 0, y: 0 }
+    const useCase = this.vuexProgramState.useCases.find(x => x.id === useCaseId)
+    if (!useCase) return { x: 0, y: 0 }
+    return useCase.position
   }
 }
 </script>

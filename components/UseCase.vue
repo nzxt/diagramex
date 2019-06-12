@@ -27,11 +27,6 @@
       ry='5'
       :style='UCBodyStyle'
     )
-    //- text.uc-text(
-    //-   x='5'
-    //-   y='18'
-    //-   :style='UCTextStyle'
-    //- ) {{ useCase.identifier }}
     foreignObject.uc-text(
       x="5"
       y="2"
@@ -53,6 +48,7 @@
             v-on="on"
           ) mdi-select-drag
         span Lorem ipsum dolor
+
     g.uc-body-box
       Variable(
         v-for='item in useCase.variables'
@@ -77,6 +73,7 @@ import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import { Mutation } from 'vuex-class'
 
 import { IUseCase, IPosition } from '~/models/interfaces'
+
 import { onMove, onStart, onEnd } from '~/mixins/draggable'
 
 @Component({
@@ -89,6 +86,7 @@ import { onMove, onStart, onEnd } from '~/mixins/draggable'
 export default class UseCaseComponent extends Vue {
   @Mutation('resizeUC') mutationResizeUC
   @Mutation('updateUCIdentifier') mutationUpdateUCIdentifier
+
   @Prop({
     default: () => {},
     type: Object as () => IUseCase
@@ -168,7 +166,7 @@ export default class UseCaseComponent extends Vue {
   /* eslint-disable */
   resizeBodyBox(ucId) {
     if (this.useCase.id !== ucId) return
-    
+
     const body = this.$snap(`#uc-${this.useCase.id} .uc-body`)
     const bodyBox = this.$snap(`#uc-${this.useCase.id} .uc-body-box`)
     const bbBb = bodyBox.getBBox()
@@ -179,7 +177,7 @@ export default class UseCaseComponent extends Vue {
       const dx = bbX1 - 10
       const dy = bbY1 - 10 - 27
       this.mutationResizeUC({ dx, dy, id: this.useCase.id })
-      
+
       this.$nextTick(() => {
         this.$bus.$emit('UseCaseResized', this.useCase.id)
       })
