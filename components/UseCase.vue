@@ -115,7 +115,7 @@ export default class UseCaseComponent extends Vue {
     fontSize: '14px'
   }
   UCBodyStyle: any = {
-    fill: '#81D4FA',
+    fill: '#ececec',
     stroke: '#01579B',
     strokeWidth: 1
     // opacity: 0.75

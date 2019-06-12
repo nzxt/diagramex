@@ -12,9 +12,6 @@
           width='100%'
           height='100%'
         )
-          //- @mousedown.ctrl='createEdge'
-          //- @mouseup='onMouseup'
-          //- @mousemove='onMove'
           //- @dragstart='() => false'
 
           //- :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
@@ -22,7 +19,7 @@
           //- :width='viewBox.width'
           //- :height='viewBox.height'
           circle#fake-target(
-            :cx='cursorPos.x' :cy='cursorPos.y' r='5' fill='orange'
+            :cx='cursorPos.x' :cy='cursorPos.y' r='0' fill='orange'
           )
           g
             UseCase(
@@ -175,14 +172,12 @@ export default class IndexPage extends Vue {
   }
 
   onMoveTarget(evt) {
-    if (this.connection.inProcess) {
-      const cursorPosOffset = this.cursorPosOffset()
-      this.cursorPos.x = evt.layerX - cursorPosOffset.x
-      this.cursorPos.y = evt.layerY - cursorPosOffset.y
-      // this.$nextTick(() => {
-      this.$bus.$emit('MovingElement', 'fake-target')
-      // })
-    }
+    // if (this.connection.inProcess) {
+    const cursorPosOffset = this.cursorPosOffset()
+    this.cursorPos.x = evt.layerX - cursorPosOffset.x
+    this.cursorPos.y = evt.layerY - cursorPosOffset.y
+    this.$bus.$emit('MovingElement', 'fake-target')
+    // }
   }
 
   onMouseDown(evt) {
@@ -191,8 +186,11 @@ export default class IndexPage extends Vue {
   }
 
   onMouseUp(evt) {
-    if (!this.connection.inProcess) return
-    this.findTarget(evt)
+    if (
+      this.connection.inProcess &&
+      this.connection.useCaseId
+    ) this.findTarget(evt)
+
     this.connection.inProcess = false
     this.connection.useCaseId = null
     this.connection.sourceId = null
@@ -224,23 +222,33 @@ export default class IndexPage extends Vue {
     const { clientX, clientY } = evt
     const elem = this.$snap.getElementByPoint(clientX, clientY)
     const parent = findParent(elem)
+    const targetId = parent.node.id.substring(3)
     const type = parent.node.id.substring(0, 2)
-
-    if (type !== 'vr' && type !== 'ct') return
+    const mainParent = findParent(parent.parent())
     const { useCaseId, sourceId, edgeId } = this.connection
 
-    const parentId = parent.node.id.substring(3)
-    const mainParent = findParent(parent.parent())
-    const mainParentId = mainParent.node.id.substring(3)
-
-    if (useCaseId !== mainParentId) {
+    if (
+      !mainParent ||
+      useCaseId !== mainParent.node.id.substring(3) ||
+      (type !== 'vr' && type !== 'ct') ||
+      this.findDuplicatedEdge(useCaseId, sourceId, targetId)
+    ) {
       this.mutationDeleteED({ useCaseId, edgeId })
     } else {
-      this.mutationUpdateEDTarget({ useCaseId, id: edgeId, targetId: parentId })
+      this.mutationUpdateEDTarget({ useCaseId, id: edgeId, targetId })
     }
-    this.$nextTick(() => {
-      this.$bus.$emit('MovingElement', parentId)
-    })
+
+    // this.$nextTick(() => {
+    this.$bus.$emit('MovingElement', targetId)
+    // })
+  }
+
+  findDuplicatedEdge(useCaseId, sourceId, targetId) {
+    const useCase = this.vuexProgramState.useCases.find(x => x.id === useCaseId)
+    return useCase.edges.some(x =>
+      (x.sourceId === sourceId && x.targetId === targetId) ||
+      (x.sourceId === targetId && x.targetId === sourceId)
+    )
   }
 
   cursorPosOffset() {
