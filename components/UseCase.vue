@@ -3,16 +3,21 @@
     :id='`uc-${useCase.id}`'
     :transform='`translate(${useCase.position.x},${useCase.position.y})`'
   )
-    text.uc-pos(
-      :x='identifierWidth + 10'
-      y='18'
-      fill='#ccc'
-      font-size='12px'
-    ) x:{{ useCase.position.x.toFixed() }} y:{{ useCase.position.y.toFixed() }}
+    //- text.uc-pos(
+    //-   :x='identifierWidth + 20'
+    //-   y='18'
+    //-   fill='#ccc'
+    //-   font-size='12px'
+    //- ) x:{{ useCase.position.x.toFixed() }} y:{{ useCase.position.y.toFixed() }}
+    text.uc-text(
+      x='0'
+      y='17'
+      :style='UCTextStyle'
+    ) {{ useCase.identifier }}
     rect.uc-title(
       x='0'
       y='0'
-      :width='identifierWidth'
+      :width='identifierWidth+10'
       height='38'
       rx='5'
       ry='5'
@@ -27,15 +32,17 @@
       ry='5'
       :style='UCBodyStyle'
     )
-    foreignObject.uc-text(
+    foreignObject(
       x="5"
-      y="2"
-      :width='identifierWidth-8'
+      y="3"
+      :width='identifierWidth'
       height="24"
     )
       v-text-field.pa-0.ma-0(
         dark
+        height='24'
         single-line
+        hide-details
         :rules='textRule'
         @input='updateIdentifier'
         v-model='useCase.identifier'
@@ -54,11 +61,13 @@
         v-for='item in useCase.variables'
         :key='item.id'
         :variable='item'
+        :useCaseId='useCase.id'
       )
       Constant(
         v-for='item in useCase.constants'
         :key='item.id'
         :constant='item'
+        :useCaseId='useCase.id'
       )
       Edge(
         v-for='item in useCase.edges'
@@ -93,9 +102,7 @@ export default class UseCaseComponent extends Vue {
   })
   readonly useCase!: IUseCase
 
-  identifierWidth: number = 50
-
-  disabled: boolean = false
+  identifierWidth: number = 150
 
   textRule: Array<any> = [
     (value) => {
@@ -108,17 +115,17 @@ export default class UseCaseComponent extends Vue {
     fill: '#03A9F4',
     stroke: '#01579B',
     strokeWidth: 1
-    // opacity: 0.5
   }
+
   UCTextStyle: any = {
-    fill: '#FAFAFA',
-    fontSize: '14px'
+    fill: 'transparent',
+    fontSize: '16px'
   }
+
   UCBodyStyle: any = {
     fill: '#ececec',
     stroke: '#01579B',
     strokeWidth: 1
-    // opacity: 0.75
   }
 
   unsubscribe: Function | null = null
@@ -159,7 +166,9 @@ export default class UseCaseComponent extends Vue {
   onIdentifierChange(value: string): void {
     if (!value.length) return
     this.$nextTick(() => {
-      this.identifierWidth = value.length * 9 + 10
+      const text = this.$snap.select(`#uc-${this.useCase.id} .uc-text`)
+      const textBBox = text.getBBox()
+      this.identifierWidth = textBBox.width
     })
   }
 
@@ -183,10 +192,15 @@ export default class UseCaseComponent extends Vue {
       })
     }
 
-    body.stop().animate({
+    body.attr({
       width: bbW ? bbW + 20 : 250,
       height: bbH ? bbH + 20 : 150
-    }, 680, mina.elastic)
+    })
+
+    // body.stop().animate({
+    //   width: bbW ? bbW + 20 : 250,
+    //   height: bbH ? bbH + 20 : 150
+    // }, 680, mina.elastic)
   }
 
   updateIdentifier(identifier) {

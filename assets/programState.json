@@ -11,31 +11,31 @@
       "id": "stringWithId01",
       "identifier": "Variable #1",
       "position": {
-        "x": 220,
-        "y": 20
+        "x": 340,
+        "y": 50
       }
-    }, 
+    },
     {
       "id": "stringWithId02",
       "identifier": "Variable #2",
       "position": {
-        "x": 20,
-        "y": 100
+        "x": 40,
+        "y": 140
       }
     },
     {
       "id": "stringWithId03",
       "identifier": "Variable #3",
       "position": {
-        "x": 250,
-        "y": 100
+        "x": 480,
+        "y": 130
       }
     }, {
       "id": "stringWithId04",
       "identifier": "Variable #4",
       "position": {
         "x": 120,
-        "y": 160
+        "y": 250
       }
     }
   ],
@@ -43,26 +43,26 @@
       "id": "stringDelimiterId1",
       "identifier": "{#@)}",
       "position": {
-        "x": 20,
+        "x": 30,
         "y": 60
       }
     }],
 
     "edges": [{
       "id": "arrowLine01",
-    	"identifier": "arrowIdentifier",
+    	"identifier": "Arrow Identifier",
       "comment": "arrow markdown comment",
       "sourceId": "stringWithId01",
       "targetId": "stringWithId02"
     },
     {
       "id": "arrowLine02",
-    	"identifier": "arrowIdentifier",
+    	"identifier": "Arrow Identifier",
       "comment": "arrow markdown comment",
       "sourceId": "stringWithId03",
       "targetId": "stringWithId04"
     }
-  
+
   ]
   }]
 }

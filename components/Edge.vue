@@ -9,30 +9,32 @@
       stroke='grey'
       :d="path"
     )
-    //- rect.ed-body(
-    //-   :x='x'
-    //-   :y='y'
-    //-   width='50'
-    //-   height='30'
-    //-   rx='5'
-    //-   ry='5'
-    //-   fill='blue'
-    //- )
-    foreignObject.identifier(
-      :x='x'
-      :y='y'
-      :width='identifierWidth+8'
-      height="24"
+    rect.ed-body(
+      :x='x-identifierWidth/2'
+      :y='y-12'
+      :width='identifierWidth+10'
+      height='24'
+      rx='5'
+      ry='5'
+      :style='EDBodyStyle'
     )
-      v-text-field.pa-0.ma-0(
-        :id='`${edge.id}`'
-        x='5'
+    text.ed-text(
+      :x='x-identifierWidth/2'
+      :y='y-12'
+      :style='EDTextStyle'
+    ) {{ edge.identifier }}
+    foreignObject(
+      :x='x-identifierWidth/2+5'
+      :y='y-12'
+      :width='identifierWidth'
+      height="22"
+    )
+      v-text-field.pa-0.ma-0.text-field(
         dark
         hide-details
         single-line
         height='24'
-        background-color='#00897B'
-        @input='updateEDIdentifier'
+        @input='updateIdentifier'
         v-model='edge.identifier'
       )
         //- :rules='textRule'
@@ -64,10 +66,21 @@ export default class EdgeComponent extends Vue {
 
   x: any = null
   y: any = null
-  identifierWidth: any = 100
-  currentEdgeId: string = ''
+
+  identifierWidth: any = 150
 
   path: string = ''
+
+  EDTextStyle: any = {
+    fill: 'transparent',
+    fontSize: '16px'
+  }
+
+  EDBodyStyle: any = {
+    fill: '#aeaeae',
+    stroke: '#aaa',
+    strokeWidth: 1
+  }
 
   created() {
     this.$bus.$on('MovingElement', this.onElementMove)
@@ -80,14 +93,18 @@ export default class EdgeComponent extends Vue {
   }
 
   mounted(): void {
-    this.drawConnection()
+    this.$nextTick(() => {
+      this.drawConnection()
+    })
   }
 
   @Watch('edge.identifier', { immediate: true, deep: false })
   onIdentifierChange(value: string): void {
     if (!value.length) return
     this.$nextTick(() => {
-      this.identifierWidth = value.length * 9 + 10
+      const text = this.$snap.select(`#ed-${this.edge.id} .ed-text`)
+      const textBBox = text.getBBox()
+      this.identifierWidth = textBBox.width
     })
   }
 
@@ -166,21 +183,21 @@ export default class EdgeComponent extends Vue {
     const y2 = [y1 - dy, y1 + dy, y1, y1][res[0]].toFixed(3)
     const x3 = [0, 0, 0, 0, x4, x4, x4 - dx, x4 + dx][res[1]].toFixed(3)
     const y3 = [0, 0, 0, 0, y1 + dy, y1 - dy, y4, y4][res[1]].toFixed(3)
+
     this.path = 'M' + x1.toFixed(3) + ',' + y1.toFixed(3) + 'C' + [x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join()
+
     this.$nextTick(() => {
-      const paper = this.$snap('#canvas')
-      const path = paper.select(`#ed-${this.edge.id} .edge`)
+      const path = this.$snap.select(`#ed-${this.edge.id} .edge`)
       const parentTransform = path.parent().transform()
       const length = path.getTotalLength()
       const coords = path.getPointAtLength(length / 2)
-      const { x, y } = coords
-      this.x = x - 50
-      this.y = y - 12
+      this.x = coords.x
+      this.y = coords.y
     })
   }
 
-  updateEDIdentifier() {
-    this.mutationUpdateEDIdentifier({ useCaseId: this.useCaseId, id: this.edge.id, identifier: this.edge.identifier })
+  updateIdentifier(identifier) {
+    this.mutationUpdateEDIdentifier({ useCaseId: this.useCaseId, id: this.edge.id, identifier })
   }
 }
 </script>

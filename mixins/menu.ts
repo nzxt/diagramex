@@ -20,6 +20,7 @@ export default class MenuMixin extends Vue {
   menuType: string = 'cn'
   menuX: number = 0
   menuY: number = 0
+
   nodeParentId: string = ''
   mainNodeParentId: string = ''
 
@@ -58,11 +59,11 @@ export default class MenuMixin extends Vue {
     const { clientX, clientY } = evt
     const { layerX, layerY } = evt
 
-    const elem = this.$snap.getElementByPoint(clientX, clientY)
-    const parent = findParent(elem)
-    const mainParent = parent.parent().parent()
+    const target = this.$snap.getElementByPoint(clientX, clientY)
+    const element = findParent(target)
+    const mainParent = element.parent().parent()
 
-    const { id: nodeParentId } = parent.node
+    const { id: nodeParentId } = element.node
     const { id: mainParentId } = mainParent.node
 
     let type = nodeParentId.substring(0, 2)
@@ -80,22 +81,19 @@ export default class MenuMixin extends Vue {
 
     if (type === 'cn') {
       const canvas = this.$snap('#canvas')
-      const { e, f } = canvas.paper.node.children[1].transform.baseVal[0].matrix
-      // const { e, f } = elem.node.children[1].transform.baseVal[0].matrix
+      const { e, f } = canvas.paper.node.lastChild.transform.baseVal[0].matrix
       this.e = e
       this.f = f
     }
 
     if (type === 'uc') {
       // TODO!
-      // const paper = this.$snap('#canvas')
-      // const matrixZPD = paper.zpd('save') // eslint-disable-line
-      const { e, f } = mainParent.transform().totalMatrix
-      const { e: e1, f: f1 } = parent.transform().totalMatrix // parent.matrix
-      this.e = e + e1
-      this.f = f + f1
-      // this.e = e + matrixZPD.e
-      // this.f = f + matrixZPD.f
+      // const { e, f } = mainParent.node.transform.baseVal[0].matrix
+      const { e: e1, f: f1 } = element.transform().totalMatrix
+      // this.e = e + e1
+      // this.f = f + f1
+      this.e = e1
+      this.f = f1
     }
 
     this.$nextTick(() => {
