@@ -11,7 +11,7 @@
       "id": "stringWithId01",
       "identifier": "Variable #1",
       "position": {
-        "x": 120,
+        "x": 220,
         "y": 20
       }
     }, 
@@ -27,7 +27,7 @@
       "id": "stringWithId03",
       "identifier": "Variable #3",
       "position": {
-        "x": 150,
+        "x": 250,
         "y": 100
       }
     }, {
@@ -61,6 +61,8 @@
       "comment": "arrow markdown comment",
       "sourceId": "stringWithId03",
       "targetId": "stringWithId04"
-    }]
+    }
+  
+  ]
   }]
 }

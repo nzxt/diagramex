@@ -5,6 +5,8 @@ import { UseCase } from '~/models/UseCase'
 import { Variable } from '~/models/Variable'
 import { Constant } from '~/models/Constant'
 
+import { findParent } from '~/mixins/helpers'
+
 @Component
 export default class MenuMixin extends Vue {
   @Mutation('addUC') mutationAddUC
@@ -57,7 +59,7 @@ export default class MenuMixin extends Vue {
     const { layerX, layerY } = evt
 
     const elem = this.$snap.getElementByPoint(clientX, clientY)
-    const parent = elem.parent()
+    const parent = findParent(elem)
     const mainParent = parent.parent().parent()
 
     const { id: nodeParentId } = parent.node
@@ -77,7 +79,9 @@ export default class MenuMixin extends Vue {
     this.canvasY = layerY
 
     if (type === 'cn') {
-      const { e, f } = elem.node.children[1].transform.baseVal[0].matrix
+      const canvas = this.$snap('#canvas')
+      const { e, f } = canvas.paper.node.children[1].transform.baseVal[0].matrix
+      // const { e, f } = elem.node.children[1].transform.baseVal[0].matrix
       this.e = e
       this.f = f
     }

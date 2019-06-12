@@ -8,7 +8,7 @@ export interface IUseCase {
   position: IPosition,
   variables: IVariable[],
   constants: IConstant[],
-  edges?: Array<any>
+  edges: IEdge[]
 }
 
 export interface IVariable {

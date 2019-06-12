@@ -6,21 +6,30 @@
           xmlns="http://www.w3.org/2000/svg"
           preserveAspectRatio='xMidYMid meet'
           @contextmenu.stop.prevent='onContextMenu'
-          class='bordered'
+          @mousedown.ctrl='createEdge'
+          @mouseup='onMouseup'
+          @mousemove='onMove'
           width='100%'
           height='100%'
         )
+          //- :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
+          //- @dragstart='() => false'
           //- @click="newArrow"
           //- xmlns:xlink="http://www.w3.org/1999/xlink"
-          //- :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
           //- :width='viewBox.width'
           //- :height='viewBox.height'
+          circle#fake(
+            :cx='mouse.x' :cy='mouse.y' r='5'
+          )
+
           g
             UseCase(
               v-for='item in vuexProgramState.useCases'
               :key='item.id'
               :useCase='item'
             )
+
+            //- :transform='`translate(${0-useCase.position.x},${0-useCase.position.y})`'
           defs
             marker#arrow(
               orient="auto"
@@ -61,6 +70,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { State, Mutation } from 'vuex-class'
 
 import MenuMixin from '~/mixins/menu'
+import { IPosition } from '../models/interfaces'
 
 @Component({
   components: {
@@ -79,6 +89,12 @@ export default class IndexPage extends Vue {
     height: 350
   }
 
+  isConnecting: Boolean = false
+  mouse: IPosition = {
+    x: 0,
+    y: 0
+  }
+
   mounted() {
     this.$nextTick(() => {
       this.calcStageSize()
@@ -86,21 +102,21 @@ export default class IndexPage extends Vue {
 
     const paper = this.$snap('#canvas')
 
-    const spz = svgPanZoom('#canvas', {
-      panEnabled: true,
-      controlIconsEnabled: false,
-      zoomEnabled: true,
-      dblClickZoomEnabled: false,
-      mouseWheelZoomEnabled: true,
-      preventMouseEventsDefault: true,
-      zoomScaleSensitivity: 0.2,
-      minZoom: 0.5,
-      maxZoom: 10,
-      fit: false,
-      contain: false,
-      center: false,
-      refreshRate: 'auto'
-    })
+    // const spz = svgPanZoom('#canvas', {
+    //   panEnabled: true,
+    //   controlIconsEnabled: false,
+    //   zoomEnabled: true,
+    //   dblClickZoomEnabled: false,
+    //   mouseWheelZoomEnabled: true,
+    //   preventMouseEventsDefault: true,
+    //   zoomScaleSensitivity: 0.2,
+    //   minZoom: 0.5,
+    //   maxZoom: 10,
+    //   fit: false,
+    //   contain: false,
+    //   center: false,
+    //   refreshRate: 'auto'
+    // })
 
     // thumbnailViewer({
     //   mainViewId: 'canvas',
@@ -145,10 +161,24 @@ export default class IndexPage extends Vue {
     this.viewBox.height = clientHeight - 7
   }
 
-  // newArrow(evt) {
-  //   const { clientX, clientY } = evt
-  //   const elem = this.$snap.getElementByPoint(clientX, clientY)
-  // }
+  onMove(evt) {
+    if (this.isConnecting) {
+      // evt.cancelBubble = true
+      this.mouse.x = evt.layerX
+      this.mouse.y = evt.layerY
+      this.$bus.$emit('MovingElement', 'fake')
+    }
+  }
+
+  onMouseup(evt) {
+    this.isConnecting = false
+  }
+
+  createEdge(evt) {
+    this.isConnecting = true
+    // evt.cancelBubble = true
+    this.$bus.$emit('CreateEdge', evt)
+  }
 }
 </script>
 

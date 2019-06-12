@@ -26,17 +26,15 @@
     )
       v-text-field.pa-0.ma-0(
         :id='`${edge.id}`'
-        dense
+        x='5'
         dark
         hide-details
-        clear
         single-line
         height='24'
         background-color='#00897B'
         @input='updateEDIdentifier'
         v-model='edge.identifier'
       )
-        span {{}}
         //- :rules='textRule'
         //- @input='updateIdentifier'
         //- @dblclick.stop.prevent='onDblClickIdentifier'
@@ -46,10 +44,16 @@
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import { IEdge } from '~/models/interfaces'
 import { Mutation } from 'vuex-class'
+import { onMove, onStart, onEnd } from '~/mixins/draggable'
+import { findParent } from '~/mixins/helpers'
+import { Edge } from '~/models/Edge'
 
 @Component({})
 export default class EdgeComponent extends Vue {
+  @Mutation('addED') mutationAddED
+  @Mutation('addEDTarget') mutationAddEDTarget
   @Mutation('updateEDIdentifier') mutationUpdateEDIdentifier
+
   @Prop({
     default: '',
     type: String
@@ -62,29 +66,34 @@ export default class EdgeComponent extends Vue {
   })
   readonly edge!: IEdge
 
-  x: any = undefined
-  y: any = undefined
+  x: any = null
+  y: any = null
   identifierWidth: any = 100
+  currentEdgeId: string = ''
 
   path: string = ''
 
   created() {
     this.$bus.$on('MovingElement', this.onElementMove)
+    // this.$bus.$on('CircleEndDrag', this.connectTargetToEdge)
     this.$bus.$on('UseCaseResized', this.onUseCaseResized)
+    this.$bus.$on('CreateEdge', this.createEdge)
   }
 
   beforeDestroy() {
     this.$bus.$off('MovingElement')
+    // this.$bus.$off('CircleEndDrag')
     this.$bus.$off('UseCaseResized')
+    this.$bus.$off('CreateEdge')
   }
 
   mounted(): void {
     this.drawConnection()
-    const paper = this.$snap('#canvas')
-    const path = paper.select(`#ed-${this.edge.id} .edge`)
-    path.click((evt) => {
-      // this.createdEdgeIdentifier()
-    })
+    // const paper = this.$snap('#canvas')
+    // const path = paper.select(`#ed-${this.edge.id} .edge`)
+    // path.click((evt) => {
+    // this.createdEdgeIdentifier()
+    // })
   }
 
   @Watch('edge.identifier', { immediate: true, deep: false })
@@ -111,6 +120,24 @@ export default class EdgeComponent extends Vue {
       const elem2 = paper.select(`[id$="${targetId}"]`)
       this.calculatePath(elem1, elem2, 'grey')
     }
+  }
+
+  connectTargetToEdge(evt) {
+    const { clientX, clientY } = evt
+    const elem = this.$snap.getElementByPoint(clientX, clientY)
+
+    const parent = findParent(elem)
+    const type = parent.node.id.substring(0, 2)
+    if (type !== 'vr' && type !== 'ct') return
+
+    const targetId = parent.node.id.substring(3)
+    this.mutationAddEDTarget({ useCaseId: this.useCaseId, id: this.currentEdgeId, targetId })
+
+    const paper = this.$snap('#canvas')
+    const { sourceId } = this.edge
+    const elem1 = paper.select(`[id$="${sourceId}"]`)
+    const elem2 = paper.select(`[id$="${targetId}"]`)
+    this.calculatePath(elem1, elem2, 'grey')
   }
 
   onUseCaseResized(useCaseId) {
@@ -185,6 +212,23 @@ export default class EdgeComponent extends Vue {
 
   updateEDIdentifier() {
     this.mutationUpdateEDIdentifier({ useCaseId: this.useCaseId, id: this.edge.id, identifier: this.edge.identifier })
+  }
+
+  createEdge(evt) {
+    const { clientX, clientY } = evt
+    const elem = this.$snap.getElementByPoint(clientX, clientY)
+    const parent = findParent(elem)
+    const type = parent.node.id.substring(0, 2)
+    if (type !== 'vr' && type !== 'ct') return
+
+    const paper = this.$snap('#canvas')
+    const fakeCircle = paper.select(`[id="fake"]`)
+    debugger
+    this.calculatePath(parent, fakeCircle, 'grey')
+    const sourceId = parent.node.id.substring(3)
+    const targetId = 'fake'
+    const edge = new Edge('Edge', sourceId, targetId)
+    this.mutationAddED({ useCaseId: this.useCaseId, edge })
   }
 }
 </script>
