@@ -3,12 +3,12 @@
     :id='`uc-${useCase.id}`'
     :transform='`translate(${useCase.position.x},${useCase.position.y})`'
   )
-    //- text.uc-pos(
-    //-   :x='identifierWidth + 20'
-    //-   y='18'
-    //-   fill='#ccc'
-    //-   font-size='12px'
-    //- ) x:{{ useCase.position.x.toFixed() }} y:{{ useCase.position.y.toFixed() }}
+    text.uc-pos(
+      :x='identifierWidth + 20'
+      y='18'
+      fill='#ccc'
+      font-size='12px'
+    ) x:{{ useCase.position.x.toFixed() }} y:{{ useCase.position.y.toFixed() }}
     text.uc-text(
       x='0'
       y='17'
@@ -46,6 +46,7 @@
         :rules='textRule'
         @input='updateIdentifier'
         v-model='useCase.identifier'
+        browser-autocomplete='off'
       )
       v-tooltip(top)
         template(v-slot:activator="{ on }")

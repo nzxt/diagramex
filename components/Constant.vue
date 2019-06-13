@@ -37,6 +37,7 @@
         single-line
         @input='updateIdentifier'
         v-model='constant.identifier'
+        browser-autocomplete='off'
       )
 </template>
 

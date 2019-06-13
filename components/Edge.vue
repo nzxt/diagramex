@@ -38,6 +38,7 @@
         height='24'
         @input='updateIdentifier'
         v-model='edge.identifier'
+        browser-autocomplete='off'
       )
         //- :rules='textRule'
         //- @input='updateIdentifier'

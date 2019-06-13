@@ -37,6 +37,7 @@
         :rules='textRule'
         @input='updateIdentifier'
         v-model='variable.identifier'
+        browser-autocomplete='off'
       )
 </template>
 
