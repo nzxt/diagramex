@@ -150,7 +150,6 @@ export default class UseCaseComponent extends Vue {
     this.unsubscribe && this.unsubscribe()
   }
 
-  /* eslint-disable */
   mounted(): void {
     const uc = this.$snap.select(`#uc-${this.useCase.id}`)
     uc.drag(onMove, onStart, onEnd)
@@ -158,9 +157,8 @@ export default class UseCaseComponent extends Vue {
     // TODO!
     setTimeout(() => {
       this.resizeBodyBox(this.useCase.id)
-    }, 680)
+    }, 100)
   }
-  /* eslint-enable */
 
   @Watch('useCase.identifier', { immediate: true, deep: false })
   onIdentifierChange(value: string): void {
@@ -169,11 +167,10 @@ export default class UseCaseComponent extends Vue {
       const text = this.$snap.select(`#uc-${this.useCase.id} .uc-text`)
       const textBBox = text.getBBox()
       this.identifierWidth = textBBox.width
-      this.resizeBodyWidth()
+      this.resizeBody()
     })
   }
 
-  /* eslint-disable */
   resizeBodyBox(ucId) {
     if (this.useCase.id !== ucId) return
 
@@ -183,7 +180,7 @@ export default class UseCaseComponent extends Vue {
     const { x: bbX1, y: bbY1, w: bbW, h: bbH } = bbBb
 
     // 10 = padding from side borders // 27 = title height + 10 padding from border
-    if(bbX1-10 || bbY1-10-27) {
+    if (bbX1 - 10 || bbY1 - 10 - 27) {
       const dx = bbX1 - 10
       const dy = bbY1 - 10 - 27
       this.mutationResizeUC({ dx, dy, id: this.useCase.id })
@@ -193,29 +190,26 @@ export default class UseCaseComponent extends Vue {
       })
     }
 
-    this.resizeBodyWidth()
+    this.resizeBody()
   }
 
-  resizeBodyWidth() {
+  resizeBody() {
     const body = this.$snap(`#uc-${this.useCase.id} .uc-body`)
     const bodyBox = this.$snap(`#uc-${this.useCase.id} .uc-body-box`)
     const { width, height } = bodyBox.getBBox()
+
     const titleWidth = this.identifierWidth + 10
+    const bodyWidth = (width && width + 20 > titleWidth) ? width + 20 : titleWidth
+    const bodyHeight = (height && height + 20 > 150) ? height + 20 : 150
 
     body.attr({
-      width: (width && width+20 > titleWidth) ? width + 20 : titleWidth,
-      height: height ? height + 20 : 150
+      width: bodyWidth > 250 ? bodyWidth : 250,
+      height: bodyHeight
     })
-
-    // body.stop().animate({
-    //   width: bbW ? bbW + 20 : 250,
-    //   height: bbH ? bbH + 20 : 150
-    // }, 680, mina.elastic)
   }
 
   updateIdentifier(identifier) {
-    this.mutationUpdateUCIdentifier({id: this.useCase.id, identifier})
+    this.mutationUpdateUCIdentifier({ id: this.useCase.id, identifier })
   }
-  /* eslint-enable */
 }
 </script>
