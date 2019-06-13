@@ -26,6 +26,7 @@ export default class MenuMixin extends Vue {
 
   canvasX: number = 0
   canvasY: number = 0
+
   e: number = 0
   f: number = 0
 
@@ -81,19 +82,15 @@ export default class MenuMixin extends Vue {
 
     if (type === 'cn') {
       const canvas = this.$snap('#canvas')
-      const { e, f } = canvas.paper.node.lastChild.transform.baseVal[0].matrix
+      const { x: e, y: f } = this.$refs.editor.spz.getPan()
       this.e = e
       this.f = f
     }
 
     if (type === 'uc') {
-      // TODO!
-      // const { e, f } = mainParent.node.transform.baseVal[0].matrix
-      const { e: e1, f: f1 } = element.transform().totalMatrix
-      // this.e = e + e1
-      // this.f = f + f1
-      this.e = e1
-      this.f = f1
+      const { e, f } = element.transform().totalMatrix
+      this.e = e
+      this.f = f
     }
 
     this.$nextTick(() => {
