@@ -94,11 +94,8 @@ export default class ConnectionMixin extends Vue {
       this.mutationDeleteED({ useCaseId, edgeId })
     } else {
       this.mutationUpdateEDTarget({ useCaseId, id: edgeId, targetId })
+      this.$bus.$emit('MovingElement', targetId)
     }
-
-    // this.$nextTick(() => {
-    this.$bus.$emit('MovingElement', targetId)
-    // })
   }
 
   findDuplicatedEdge(useCaseId, sourceId, targetId) {

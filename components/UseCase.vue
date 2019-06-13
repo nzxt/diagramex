@@ -145,8 +145,8 @@ export default class UseCaseComponent extends Vue {
   }
 
   beforeDestroy() {
-    this.$bus.$off('ChildDragEnded')
-    this.$bus.$off('IdentifierUpdated')
+    this.$bus.$off('ChildDragEnded', this.resizeBodyBox)
+    this.$bus.$off('IdentifierUpdated', this.resizeBodyBox)
     this.unsubscribe && this.unsubscribe()
   }
 

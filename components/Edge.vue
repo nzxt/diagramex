@@ -88,8 +88,8 @@ export default class EdgeComponent extends Vue {
   }
 
   beforeDestroy() {
-    this.$bus.$off('MovingElement')
-    this.$bus.$off('UseCaseResized')
+    this.$bus.$off('MovingElement', this.onElementMove)
+    this.$bus.$off('UseCaseResized', this.onUseCaseResized)
   }
 
   mounted(): void {
@@ -109,19 +109,17 @@ export default class EdgeComponent extends Vue {
   }
 
   drawConnection() {
-    const paper = this.$snap('#canvas')
     const { sourceId, targetId } = this.edge
-    const elem1 = paper.select(`[id$="${sourceId}"]`)
-    const elem2 = paper.select(`[id$="${targetId}"]`)
+    const elem1 = this.$snap.select(`[id$="${sourceId}"]`)
+    const elem2 = this.$snap.select(`[id$="${targetId}"]`)
     this.calculatePath(elem1, elem2, 'grey')
   }
 
   onElementMove(elementId) {
-    const paper = this.$snap('#canvas')
     const { sourceId, targetId } = this.edge
     if (sourceId === elementId || targetId === elementId) {
-      const elem1 = paper.select(`[id$="${sourceId}"]`)
-      const elem2 = paper.select(`[id$="${targetId}"]`)
+      const elem1 = this.$snap.select(`[id$="${sourceId}"]`)
+      const elem2 = this.$snap.select(`[id$="${targetId}"]`)
       this.calculatePath(elem1, elem2, 'grey')
     }
   }
