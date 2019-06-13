@@ -112,8 +112,8 @@ export default class UseCaseComponent extends Vue {
   ]
 
   UCTitleStyle: any = {
-    fill: '#03A9F4',
-    stroke: '#01579B',
+    fill: '#4CC5D5',
+    stroke: '#0078D7',
     strokeWidth: 1
   }
 
@@ -123,8 +123,8 @@ export default class UseCaseComponent extends Vue {
   }
 
   UCBodyStyle: any = {
-    fill: '#ececec',
-    stroke: '#01579B',
+    fill: '#BEDAF9',
+    stroke: '#0078D7',
     strokeWidth: 1
   }
 

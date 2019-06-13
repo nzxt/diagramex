@@ -6,7 +6,7 @@
           id='editor-pane'
           splitpanes-min="60"
           splitpanes-max="80"
-          splitpanes-size="70"
+          splitpanes-size="80"
         )
           v-card#editor.fill-height(
             @contextmenu.stop.prevent='onContextMenu'
@@ -21,15 +21,15 @@
           id='text-pane'
           splitpanes-min="20"
           splitpanes-max="40"
-          splitpanes-size="30"
+          splitpanes-size="20"
         )
           v-textarea.ma-2(
-            fill-height
             flat
             no-resize
-            hide-details
             row-height='24'
-            label='Markdown comment'
+            label='Comment'
+            hint='This field will keep your comments'
+            persistent-hint
           )
 
     v-menu(
@@ -71,11 +71,11 @@ export default class IndexPage extends Vue {
     height: 350
   }
 
-  mounted() {
-    // this.$nextTick(() => {
-    //   this.calcStageSize()
-    // })
-  }
+  // mounted() {
+  // this.$nextTick(() => {
+  //   this.calcStageSize()
+  // })
+  // }
 
   calcStageSize() {
     const editor = document.getElementById('editor')

@@ -29,13 +29,13 @@ export default class ConnectionMixin extends Vue {
   }
 
   onMoveTarget(evt) {
-    // if (this.connection.inProcess) {
-    const canvasOffset = this.spz.getPan()
-    const cursorPosOffset = this.cursorPosOffset()
-    this.cursorPos.x = evt.layerX - cursorPosOffset.x - canvasOffset.x
-    this.cursorPos.y = evt.layerY - cursorPosOffset.y - canvasOffset.y
-    this.$bus.$emit('MovingElement', 'fake-target')
-    // }
+    if (this.connection.inProcess) {
+      const canvasOffset = this.spz.getPan()
+      const cursorPosOffset = this.cursorPosOffset()
+      this.cursorPos.x = evt.layerX - cursorPosOffset.x - canvasOffset.x
+      this.cursorPos.y = evt.layerY - cursorPosOffset.y - canvasOffset.y
+      this.$bus.$emit('MovingElement', 'fake-target')
+    }
   }
 
   onMouseDown(evt) {

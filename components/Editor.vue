@@ -71,9 +71,9 @@ export default class EditorComponent extends Vue {
   }
 
   initSPZ() {
-    this.spz = svgPanZoom('#canvas', {
+    const options: any = {
       panEnabled: true,
-      controlIconsEnabled: false,
+      controlIconsEnabled: true,
       zoomEnabled: true,
       dblClickZoomEnabled: false,
       mouseWheelZoomEnabled: true,
@@ -81,11 +81,13 @@ export default class EditorComponent extends Vue {
       zoomScaleSensitivity: 0.2,
       minZoom: 0.2,
       maxZoom: 5,
-      fit: false,
+      fit: true,
       contain: false,
       center: false,
       refreshRate: 'auto'
-    })
+    }
+
+    this.spz = svgPanZoom('#canvas', options)
   }
 
   created() {
