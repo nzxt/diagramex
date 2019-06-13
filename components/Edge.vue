@@ -80,8 +80,8 @@ export default class EdgeComponent extends Vue {
   }
 
   EDBodyStyle: any = {
-    fill: '#B14AB3',
-    stroke: '#8491C0',
+    fill: '#CE93D8',
+    stroke: '#BA68C8',
     strokeWidth: 1
   }
 

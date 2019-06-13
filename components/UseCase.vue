@@ -158,7 +158,7 @@ export default class UseCaseComponent extends Vue {
     // TODO!
     setTimeout(() => {
       this.resizeBodyBox(this.useCase.id)
-    }, 100)
+    }, 200)
   }
 
   @Watch('useCase.identifier', { immediate: true, deep: false })

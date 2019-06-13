@@ -41,7 +41,7 @@
   ],
     "constants": [{
       "id": "stringDelimiterId1",
-      "identifier": "{#@)}",
+      "identifier": "Constant #1",
       "position": {
         "x": 30,
         "y": 60
@@ -50,14 +50,14 @@
 
     "edges": [{
       "id": "arrowLine01",
-    	"identifier": "Arrow Identifier",
+    	"identifier": "Arrow Identifier #1",
       "comment": "arrow markdown comment",
       "sourceId": "stringWithId01",
       "targetId": "stringWithId02"
     },
     {
       "id": "arrowLine02",
-    	"identifier": "Arrow Identifier",
+    	"identifier": "Arrow Identifier #2",
       "comment": "arrow markdown comment",
       "sourceId": "stringWithId03",
       "targetId": "stringWithId04"

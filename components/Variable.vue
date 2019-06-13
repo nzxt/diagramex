@@ -74,7 +74,7 @@ export default class VariableComponent extends Vue {
 
   VRBodyStyle: any = {
     fill: '#35C8A7',
-    stroke: '#49ACBC',
+    stroke: '#00BFA5',
     strokeWidth: 1,
     opacity: 0.75
   }
