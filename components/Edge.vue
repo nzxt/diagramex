@@ -123,7 +123,9 @@ export default class EdgeComponent extends Vue {
     if (sourceId === elementId || targetId === elementId) {
       const elem1 = this.$snap.select(`[id$="${sourceId}"]`)
       const elem2 = this.$snap.select(`[id$="${targetId}"]`)
-      this.calculatePath(elem1, elem2, 'grey')
+      this.$nextTick(() => {
+        this.calculatePath(elem1, elem2, 'grey')
+      })
     }
   }
 

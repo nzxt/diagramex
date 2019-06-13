@@ -90,6 +90,8 @@ export default class ConstantComponent extends Vue {
       const text = this.$snap.select(`#ct-${this.constant.id} .ct-text`)
       const textBBox = text.getBBox()
       this.identifierWidth = textBBox.width
+
+      this.$bus.$emit('MovingElement', this.constant.id)
     })
   }
 

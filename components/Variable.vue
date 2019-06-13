@@ -98,6 +98,8 @@ export default class VariableComponent extends Vue {
       const text = this.$snap.select(`#vr-${this.variable.id} .vr-text`)
       const textBBox = text.getBBox()
       this.identifierWidth = textBBox.width
+
+      this.$bus.$emit('MovingElement', this.variable.id)
     })
   }
 
