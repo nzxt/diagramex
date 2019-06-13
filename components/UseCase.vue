@@ -169,6 +169,7 @@ export default class UseCaseComponent extends Vue {
       const text = this.$snap.select(`#uc-${this.useCase.id} .uc-text`)
       const textBBox = text.getBBox()
       this.identifierWidth = textBBox.width
+      this.resizeBodyWidth()
     })
   }
 
@@ -192,9 +193,18 @@ export default class UseCaseComponent extends Vue {
       })
     }
 
+    this.resizeBodyWidth()
+  }
+
+  resizeBodyWidth() {
+    const body = this.$snap(`#uc-${this.useCase.id} .uc-body`)
+    const bodyBox = this.$snap(`#uc-${this.useCase.id} .uc-body-box`)
+    const { width, height } = bodyBox.getBBox()
+    const titleWidth = this.identifierWidth + 10
+
     body.attr({
-      width: bbW ? bbW + 20 : 250,
-      height: bbH ? bbH + 20 : 150
+      width: (width && width+20 > titleWidth) ? width + 20 : titleWidth,
+      height: height ? height + 20 : 150
     })
 
     // body.stop().animate({

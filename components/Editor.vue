@@ -7,10 +7,6 @@
     width='100%'
     height='100%'
   )
-    //- preserveAspectRatio='xMidYMin slice'
-    //- :viewBox='`0 0 ${viewBox.width} ${viewBox.height}`'
-    //- :width='viewBox.width'
-    //- :height='viewBox.height'
     circle#fake-target(
       :cx='cursorPos.x' :cy='cursorPos.y' r='0' fill='orange'
     )
@@ -54,12 +50,6 @@ export default class EditorComponent extends Vue {
   })
   readonly programState!: IProgramState
 
-  @Prop({
-    default: () => {},
-    type: Object as () => any
-  })
-  readonly viewBox!: any
-
   @Mutation('updateUCPosition') mutationUpdateUCPosition
   @Mutation('updateVRPosition') mutationUpdateVRPosition
   @Mutation('updateCTPosition') mutationUpdateCTPosition
@@ -81,7 +71,7 @@ export default class EditorComponent extends Vue {
       zoomScaleSensitivity: 0.2,
       minZoom: 0.2,
       maxZoom: 5,
-      fit: true,
+      fit: false,
       contain: false,
       center: false,
       refreshRate: 'auto'

@@ -10,12 +10,10 @@
         )
           v-card#editor.fill-height(
             @contextmenu.stop.prevent='onContextMenu'
-            v-resize='calcStageSize'
           )
             Editor#canvas(
               ref='editor'
               :programState='vuexProgramState'
-              :viewBox='viewBox'
             )
         span(
           id='text-pane'
@@ -65,24 +63,6 @@ import MenuMixin from '~/mixins/menu'
 })
 export default class IndexPage extends Vue {
   @State('programState') vuexProgramState
-
-  viewBox: any = {
-    width: 500,
-    height: 350
-  }
-
-  // mounted() {
-  // this.$nextTick(() => {
-  //   this.calcStageSize()
-  // })
-  // }
-
-  calcStageSize() {
-    const editor = document.getElementById('editor')
-    const { clientWidth, clientHeight } = editor as any
-    this.viewBox.width = clientWidth
-    this.viewBox.height = clientHeight - 7
-  }
 }
 </script>
 

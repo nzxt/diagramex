@@ -10,6 +10,7 @@
       :d="path"
     )
     rect.ed-body(
+      v-if='!isConnection'
       :x='x-identifierWidth/2'
       :y='y-12'
       :width='identifierWidth+10'
@@ -24,6 +25,7 @@
       :style='EDTextStyle'
     ) {{ edge.identifier }}
     foreignObject(
+      v-if='!isConnection'
       :x='x-identifierWidth/2+5'
       :y='y-12'
       :width='identifierWidth'
@@ -185,17 +187,25 @@ export default class EdgeComponent extends Vue {
     this.path = 'M' + x1.toFixed(3) + ',' + y1.toFixed(3) + 'C' + [x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join()
 
     this.$nextTick(() => {
-      const path = this.$snap.select(`#ed-${this.edge.id} .edge`)
-      const parentTransform = path.parent().transform()
-      const length = path.getTotalLength()
-      const coords = path.getPointAtLength(length / 2)
-      this.x = coords.x
-      this.y = coords.y
+      this.getIdentifierCoords()
     })
+  }
+
+  getIdentifierCoords() {
+    const path = this.$snap.select(`#ed-${this.edge.id} .edge`)
+    const parentTransform = path.parent().transform()
+    const length = path.getTotalLength()
+    const coords = path.getPointAtLength(length / 2)
+    this.x = coords.x
+    this.y = coords.y
   }
 
   updateIdentifier(identifier) {
     this.mutationUpdateEDIdentifier({ useCaseId: this.useCaseId, id: this.edge.id, identifier })
+  }
+
+  get isConnection(): Boolean {
+    return this.edge.targetId === 'fake-target'
   }
 }
 </script>
