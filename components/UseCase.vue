@@ -113,7 +113,7 @@ export default class UseCaseComponent extends Vue {
   ]
 
   UCTitleStyle: any = {
-    fill: '#4CC5D5',
+    fill: '#039BE5',
     stroke: '#0078D7',
     strokeWidth: 1
   }

@@ -72,8 +72,8 @@ export default class ConstantComponent extends Vue {
   }
 
   CTBodyStyle: any = {
-    fill: '#E8AB53',
-    stroke: '#827717',
+    fill: '#00B8D4',
+    stroke: '#26C6DA',
     strokeWidth: 1,
     opacity: 0.75
   }
