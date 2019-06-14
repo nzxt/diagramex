@@ -103,6 +103,11 @@ export const mutations: MutationTree<IState> = {
   deleteVR: (state, value: any) => {
     const { useCaseId, variableId } = value
     const index = state.programState.useCases.findIndex(x => x.id === useCaseId)
+    let indexED: any = null
+    do {
+      indexED = state.programState.useCases[index].edges.findIndex(x => x.targetId === variableId || x.sourceId === variableId)
+      state.programState.useCases[index].edges.splice(indexED, 1)
+    } while (indexED !== -1)
     const indexVR = state.programState.useCases[index].variables.findIndex(x => x.id === variableId)
     state.programState.useCases[index].variables.splice(indexVR, 1)
   },
@@ -110,6 +115,11 @@ export const mutations: MutationTree<IState> = {
   deleteCT: (state, value: any) => {
     const { useCaseId, constantId } = value
     const index = state.programState.useCases.findIndex(x => x.id === useCaseId)
+    let indexED: any = null
+    do {
+      indexED = state.programState.useCases[index].edges.findIndex(x => x.targetId === constantId || x.sourceId === constantId)
+      state.programState.useCases[index].edges.splice(indexED, 1)
+    } while (indexED !== -1)
     const indexCT = state.programState.useCases[index].constants.findIndex(x => x.id === constantId)
     state.programState.useCases[index].constants.splice(indexCT, 1)
   },
