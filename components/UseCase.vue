@@ -132,8 +132,7 @@ export default class UseCaseComponent extends Vue {
   unsubscribe: Function | null = null
 
   created() {
-    this.$bus.$on('ChildDragEnded', this.resizeBodyBox)
-    this.$bus.$on('IdentifierUpdated', this.resizeBodyBox)
+    this.$bus.$on('MovingChildElement', this.resizeBodyBox)
 
     this.unsubscribe = this.$store.subscribe((mutation) => {
       const { useCaseId } = mutation.payload
@@ -146,8 +145,7 @@ export default class UseCaseComponent extends Vue {
   }
 
   beforeDestroy() {
-    this.$bus.$off('ChildDragEnded', this.resizeBodyBox)
-    this.$bus.$off('IdentifierUpdated', this.resizeBodyBox)
+    this.$bus.$off('MovingChildElement', this.resizeBodyBox)
     this.unsubscribe && this.unsubscribe()
   }
 
@@ -187,7 +185,7 @@ export default class UseCaseComponent extends Vue {
       this.mutationResizeUC({ dx, dy, id: this.useCase.id })
 
       this.$nextTick(() => {
-        this.$bus.$emit('UseCaseResized', this.useCase.id)
+        this.$bus.$emit('UseCaseResized', this.useCase.id) // Re-draw edges
       })
     }
 

@@ -92,12 +92,12 @@ export default class ConstantComponent extends Vue {
       this.identifierWidth = textBBox.width
 
       this.$bus.$emit('MovingElement', this.constant.id)
+      this.$bus.$emit('MovingChildElement', this.useCaseId)
     })
   }
 
   updateIdentifier(identifier) {
     this.mutationUpdateCTIdentifier({ useCaseId: this.useCaseId, id: this.constant.id, identifier })
-    this.$bus.$emit('IdentifierUpdated', this.useCaseId)
   }
 }
 </script>
