@@ -15,6 +15,7 @@ export default class MenuMixin extends Vue {
   @Mutation('deleteUC') mutationDeleteUC
   @Mutation('deleteVR') mutationDeleteVR
   @Mutation('deleteCT') mutationDeleteCT
+  @Mutation('deleteED') mutationDeleteED
 
   showMenu: boolean = false
   menuType: string = 'cn'
@@ -50,6 +51,10 @@ export default class MenuMixin extends Vue {
     ct: [
       { text: 'Delete Constant', value: 'deleteConstant' }
     ],
+    // Edge
+    ed: [
+      { text: 'Delete Edge', value: 'deleteEdge' }
+    ],
     // Tuple
     tp: [
       { text: 'Delete Tuple', value: 'deleteTuple' }
@@ -63,7 +68,6 @@ export default class MenuMixin extends Vue {
     const target = this.$snap.getElementByPoint(clientX, clientY)
     const element = findParent(target)
     const mainParent = element.parent().parent()
-
     const { id: nodeParentId } = element.node
     const { id: mainParentId } = mainParent.node
 
@@ -138,5 +142,9 @@ export default class MenuMixin extends Vue {
 
   deleteConstant() {
     this.mutationDeleteCT({ useCaseId: this.mainNodeParentId, constantId: this.nodeParentId })
+  }
+
+  deleteEdge() {
+    this.mutationDeleteED({ useCaseId: this.mainNodeParentId, edgeId: this.nodeParentId })
   }
 }
