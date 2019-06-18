@@ -100,12 +100,12 @@ export default class VariableComponent extends Vue {
       this.identifierWidth = textBBox.width
 
       this.$bus.$emit('MovingElement', this.variable.id)
+      this.$bus.$emit('MovingChildElement', this.useCaseId)
     })
   }
 
   updateIdentifier(identifier) {
     this.mutationUpdateVRIdentifier({ useCaseId: this.useCaseId, id: this.variable.id, identifier })
-    this.$bus.$emit('IdentifierUpdated', this.useCaseId)
   }
 }
 </script>
