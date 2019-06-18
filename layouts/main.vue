@@ -1,43 +1,8 @@
 <template lang="pug">
   v-app
-    v-navigation-drawer(
-      v-model='drawer'
-      :clipped='clipped'
-      stateless
-      fixed
-      app
-    )
-      v-toolbar.transparent(flat)
-        v-list.pa-0
-          v-list-tile(avatar)
-            v-list-tile-avatar
-              img(src='https://randomuser.me/api/portraits/men/85.jpg')
-            v-list-tile-content
-              v-list-tile-title.subheading.blue-grey--text John Leider
-      v-data-table(
-          hide-actions
-          hide-headers
-          :items='items'
-          class='ma-1'
-        )
-        template(v-slot:items='props')
-          td.blue-grey--text
-            span.body-2 {{ props.item.title }}
-          td(text-xs-right)
-            v-btn(
-              icon
-            )
-              v-icon(mdi-18px color='red lighten-3') mdi-trash-can-outline
-    v-toolbar.blue-grey(
-      :clipped-left='clipped'
-      fixed
-      app
-    )
-      v-toolbar-side-icon.white--text.font-weight-thin(
-        @click='drawer = !drawer'
-      )
+    v-toolbar.blue-grey(fixed app)
       v-toolbar-title.white--text
-        .headline.font-weight-thin {{ title }}
+        .display-1.font-weight-thin {{ title }}
       v-spacer
       v-btn(
         flat
@@ -79,11 +44,11 @@
         @click='authorized=!authorized'
       ).body-1.white--text.font-weight-medium {{logout}}
     v-content
-      v-container(fluid fill-height)
+      v-container(fluid fill-height white)
         nuxt
     v-footer.justify-center.grey--text(:inset='fixed' app)
       span.caption.font-weight-bold {{ title }} © 2019.
-      span.ml-1.caption.font-weight-thin {{ powered }}
+      span.caption.font-weight-thin {{ powered }}
 </template>
 
 <script lang="ts">
@@ -91,8 +56,6 @@ import { Component, Vue } from 'vue-property-decorator'
 @Component({})
 export default class DefaultLayout extends Vue {
 fixed: boolean = true
-clipped: boolean = true
-drawer: boolean = true
 title: string = 'Viete.io'
 projects: string = 'All projects'
 create: string = 'Create project'
@@ -101,11 +64,5 @@ logout: string = 'Logout'
 powered: string = 'powered by molfarDevs'
 myName: string = 'Uliana'
 authorized: boolean = true
-items: Array<any> = [
-  { title: 'Diagram 1' },
-  { title: 'Diagram 2' },
-  { title: 'Diagram 3' },
-  { title: 'Diagram 4' }
-]
 }
 </script>

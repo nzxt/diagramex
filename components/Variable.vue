@@ -73,10 +73,10 @@ export default class VariableComponent extends Vue {
   }
 
   VRBodyStyle: any = {
-    fill: '#4CAF50',
-    stroke: '#43A047',
+    fill: '#43A047',
+    stroke: '#66BB6A',
     strokeWidth: 1,
-    opacity: 0.75
+    opacity: 1
   }
 
   textRule: Array<any> = [
