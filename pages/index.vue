@@ -16,20 +16,31 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { Action } from 'vuex-class'
 @Component({
   layout: 'main'
 })
 export default class IndexPage extends Vue {
-  projects: Array<any> = [
-    { projectName: 'Payment system', athor: 'StasK', description: 'A Vue.js 2.0 single page application with Laravel 5.3 ' },
-    { projectName: 'Framework', athor: 'Chopin', description: 'The Vue.js Framework' },
-    { projectName: 'Payment system', athor: 'StasK', description: 'A Vue.js 2.0 single page application with Laravel 5.3 ' },
-    { projectName: 'Framework', athor: 'Chopin', description: 'The Vue.js Framework' },
-    { projectName: 'Payment system', athor: 'StasK', description: 'A Vue.js 2.0 single page application with Laravel 5.3 ' },
-    { projectName: 'Framework', athor: 'Chopin', description: 'The Vue.js Framework' },
-    { projectName: 'Payment system', athor: 'StasK', description: 'A Vue.js 2.0 single page application with Laravel 5.3 ' },
-    { projectName: 'Framework', athor: 'Chopin', description: 'The Vue.js Framework' },
-    { projectName: 'Translator', athor: 'David', description: 'Vue component for isotope filter & sort magical ' }
-  ]
+  // projects: Array<any> = [
+  //   { projectName: 'Payment system', athor: 'StasK', description: 'A Vue.js 2.0 single page application with Laravel 5.3 ' },
+  //   { projectName: 'Framework', athor: 'Chopin', description: 'The Vue.js Framework' },
+  //   { projectName: 'Payment system', athor: 'StasK', description: 'A Vue.js 2.0 single page application with Laravel 5.3 ' },
+  //   { projectName: 'Framework', athor: 'Chopin', description: 'The Vue.js Framework' },
+  //   { projectName: 'Payment system', athor: 'StasK', description: 'A Vue.js 2.0 single page application with Laravel 5.3 ' },
+  //   { projectName: 'Framework', athor: 'Chopin', description: 'The Vue.js Framework' },
+  //   { projectName: 'Payment system', athor: 'StasK', description: 'A Vue.js 2.0 single page application with Laravel 5.3 ' },
+  //   { projectName: 'Framework', athor: 'Chopin', description: 'The Vue.js Framework' },
+  //   { projectName: 'Translator', athor: 'David', description: 'Vue component for isotope filter & sort magical ' }
+  // ]
+
+  @Action('fetchProjects')actionGetAllProjects
+
+  created() {
+    this.actionGetAllProjects()
+  }
+
+  get projects() {
+    return this.$store.state.projects
+  }
 }
 </script>
