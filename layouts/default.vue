@@ -14,6 +14,16 @@
               img(src='https://randomuser.me/api/portraits/men/85.jpg')
             v-list-tile-content
               v-list-tile-title.subheading.blue-grey--text John Leider
+      v-text-field(
+        :dark='true'
+        label='Project name'
+        class='mx-4 blue-grey--text'
+        background-color='blue-grey'
+        box
+        single-line
+        hide-details
+        dense
+      )
       v-data-table(
           hide-actions
           hide-headers
