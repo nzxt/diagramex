@@ -12,7 +12,8 @@
       ).body-1.white--text.font-weight-medium {{projects}}
       v-btn(
         flat
-        to='/my_project'
+        to='/new'
+        @click='newProject'
         router
         exact
         v-if="!authorized"
@@ -29,6 +30,7 @@
           exact
           depressed
           round
+          @click='userProjects'
         )
           v-avatar
             img(src='https://avatars0.githubusercontent.com/u/9064066?v=4&s=460')
@@ -53,16 +55,28 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { Action } from 'vuex-class'
 @Component({})
 export default class DefaultLayout extends Vue {
-fixed: boolean = true
-title: string = 'Viete.io'
-projects: string = 'All projects'
-create: string = 'Create project'
-login: string = 'Login'
-logout: string = 'Logout'
-powered: string = 'powered by molfarDevs'
-myName: string = 'Uliana'
-authorized: boolean = true
+  fixed: boolean = true
+  title: string = 'Viete.io'
+  projects: string = 'All projects'
+  create: string = 'Create project'
+  login: string = 'Login'
+  logout: string = 'Logout'
+  powered: string = 'powered by molfarDevs'
+  myName: string = 'Uliana'
+  authorized: boolean = true
+
+  @Action('fetchUserProjects')actionGetAllUserProjects
+
+  newProject() {
+    this.$router.push('new')
+  }
+
+  userProjects() {
+    this.$router.push('/projects')
+    this.actionGetAllUserProjects()
+  }
 }
 </script>

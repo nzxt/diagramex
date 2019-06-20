@@ -52,7 +52,7 @@
           v-if="!mini"
           hide-actions
           hide-headers
-          :items='items'
+          :items='allUserPrograms'
           class='ma-1 elevation-1'
         )
         template(v-slot:items='props')
@@ -82,10 +82,11 @@
       ).body-1.white--text.font-weight-medium {{projects}}
       v-btn(
         flat
-        to='/my_project'
+        to='/new'
         router
         exact
         v-if="!authorized"
+        @click='newProject'
       ).body-1.white--text.font-weight-medium {{create}}
       v-chip(
         dark
@@ -99,6 +100,7 @@
           exact
           depressed
           round
+          @click='userProjects'
         )
           v-avatar
             img(src='https://avatars0.githubusercontent.com/u/9064066?v=4&s=460')
@@ -123,26 +125,42 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { Action, State } from 'vuex-class'
 @Component({})
 export default class DefaultLayout extends Vue {
-fixed: boolean = true
-clipped: boolean = true
-drawer: boolean = true
-mini: boolean = true
-right: any = null
-title: string = 'Viete.io'
-projects: string = 'All projects'
-create: string = 'Create project'
-login: string = 'Login'
-logout: string = 'Logout'
-powered: string = 'powered by molfarDevs'
-myName: string = 'Uliana'
-authorized: boolean = true
-items: Array<any> = [
-  { title: 'Diagram 1' },
-  { title: 'Diagram 2' },
-  { title: 'Diagram 3' },
-  { title: 'Diagram 4' }
-]
+  fixed: boolean = true
+  clipped: boolean = true
+  drawer: boolean = true
+  mini: boolean = true
+  right: any = null
+  title: string = 'Viete.io'
+  projects: string = 'All projects'
+  create: string = 'Create project'
+  login: string = 'Login'
+  logout: string = 'Logout'
+  powered: string = 'powered by molfarDevs'
+  myName: string = 'Uliana'
+  authorized: boolean = true
+  items: Array<any> = [
+    { title: 'Diagram 1' },
+    { title: 'Diagram 2' },
+    { title: 'Diagram 3' },
+    { title: 'Diagram 4' }
+  ]
+  @State('programState') vuexPrograms
+  @Action('fetchUserProjects')actionGetAllUserProjects
+
+  get allUserPrograms() {
+    const { vuexPrograms } = this
+    return vuexPrograms
+  }
+  newProject() {
+    this.$router.push('new')
+  }
+
+  userProjects() {
+    this.$router.push('/projects')
+    this.actionGetAllUserProjects()
+  }
 }
 </script>
