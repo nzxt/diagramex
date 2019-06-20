@@ -10,13 +10,17 @@ export const strict = false
 export interface IRootState {}
 
 export interface IState {
-  programState: {}
+  programState: []
+  program: {}
   projects: Array<any>
+  project: {}
 }
 
 export const state = (): IState => ({
   programState: [],
-  projects: []
+  program: {},
+  projects: [],
+  project: {}
 })
 
 export const actions: any = {
@@ -40,6 +44,32 @@ export const actions: any = {
       })
   },
 
+  async createProject({ commit }, value: any) {
+    const req = {
+      value
+    }
+    await this.$axios.post(backendServer + '/project', { body: JSON.stringify(req) })
+      .then((data) => {
+        commit('setProject', data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+
+  async createProgram({ commit }, value: any) {
+    const req = {
+      value
+    }
+    await this.$axios.post(backendServer + '/program', { body: JSON.stringify(req) })
+      .then((data) => {
+        commit('setProgram', data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+
   async fetchProjectPrograms({ commit }) {
     await this.$axios.get(backendServer + '/programs')
       .then((data) => {
@@ -56,8 +86,16 @@ export const mutations: MutationTree<IState> = {
     state.projects = value
   },
 
+  setProject: (state, value: any) => {
+    state.project = value
+  },
+
   setPrograms: (state, value: any) => {
     state.programState = value
+  },
+
+  setProgram: (state, value: any) => {
+    state.program = value
   },
 
   addUC: (state, value: IUseCase) => {

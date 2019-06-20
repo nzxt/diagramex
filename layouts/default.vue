@@ -47,6 +47,7 @@
               single-line
               hide-details
               dense
+              v-model='currentProject.projectName'
             )
       v-data-table(
           v-if="!mini"
@@ -125,6 +126,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { Project } from '~/models/Project'
 import { Action, State } from 'vuex-class'
 @Component({})
 export default class DefaultLayout extends Vue {
@@ -147,14 +149,23 @@ export default class DefaultLayout extends Vue {
     { title: 'Diagram 3' },
     { title: 'Diagram 4' }
   ]
+  @State('project') vuexProject
   @State('programState') vuexPrograms
   @Action('fetchUserProjects')actionGetAllUserProjects
+  @Action('createProject')actionCreateProject
+
+  get currentProject() {
+    const { vuexProject } = this
+    return vuexProject
+  }
 
   get allUserPrograms() {
     const { vuexPrograms } = this
     return vuexPrograms
   }
   newProject() {
+    const project = new Project('ProjectName', 'userId', [])
+    this.actionCreateProject(project)
     this.$router.push('new')
   }
 
