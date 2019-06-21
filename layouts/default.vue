@@ -41,17 +41,18 @@
               single-line
               hide-details
               dense
+              v-model='vuexProject.projectName'
             )
       v-data-table(
         v-if="!mini"
         hide-actions
         hide-headers
-        :items='items'
+        :items='vuexPrograms'
         class='ma-1'
         )
           template(v-slot:items='props')
             td.blue-grey--text
-              span.body-2 {{ props.item.title }}
+              span.body-2 {{ props.item.programName }}
             td(text-xs-right)
               v-btn(
                 icon
@@ -114,25 +115,29 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 @Component({})
 export default class DefaultLayout extends Vue {
-fixed: boolean = true
-clipped: boolean = true
-drawer: boolean = true
-mini: boolean = true
-title: string = 'Viete.io'
-projects: string = 'All projects'
-create: string = 'Create project'
-login: string = 'Login'
-logout: string = 'Logout'
-powered: string = 'powered by molfarDevs'
-myName: string = 'Uliana'
-authorized: boolean = true
-items: Array<any> = [
-  { title: 'Diagram 1' },
-  { title: 'Diagram 2' },
-  { title: 'Diagram 3' },
-  { title: 'Diagram 4' }
-]
+  fixed: boolean = true
+  clipped: boolean = true
+  drawer: boolean = true
+  mini: boolean = true
+  title: string = 'Viete.io'
+  projects: string = 'All projects'
+  create: string = 'Create project'
+  login: string = 'Login'
+  logout: string = 'Logout'
+  powered: string = 'powered by molfarDevs'
+  myName: string = 'Uliana'
+  authorized: boolean = true
+  items: Array<any> = [
+    { title: 'Diagram 1' },
+    { title: 'Diagram 2' },
+    { title: 'Diagram 3' },
+    { title: 'Diagram 4' }
+  ]
+
+  @State('project') vuexProject
+  @State('programs') vuexPrograms
 }
 </script>

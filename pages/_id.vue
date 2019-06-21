@@ -63,6 +63,8 @@ import MenuMixin from '~/mixins/menu'
 })
 export default class MyProgectPage extends Vue {
   @State('programState') vuexProgramState
+  @State('project') vuexProject
+  @State('programs') vuexPrograms
 }
 </script>
 
