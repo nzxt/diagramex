@@ -3,9 +3,7 @@ const uuidv4 = require('uuid/v4')
 
 export class Project implements IProject {
   constructor(
-    projectName: string,
-    userId: string,
-    programs: IProgramState[]
+    projectName: string
   ) {
     this.id = uuidv4()
     this.projectName = projectName

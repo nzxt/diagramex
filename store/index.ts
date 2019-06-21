@@ -38,6 +38,26 @@ export const actions: any = {
       .catch(function (error) {
         console.log(error)
       })
+  },
+
+  async createProject({ commit }, project, program) {
+    let data = project
+    await this.$axios.post(BaseURL + `/project`, data)
+      .then(({ data }) => {
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+    data = program
+    await this.$axios.post(BaseURL + `/program`, data)
+      .then(({ data }) => {
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+    await this.getProjectById({ commit }, project.id)
   }
 }
 
