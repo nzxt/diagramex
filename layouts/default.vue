@@ -2,52 +2,68 @@
   v-app
     v-navigation-drawer(
       v-model='drawer'
+      :mini-variant.sync="mini"
       :clipped='clipped'
       stateless
       fixed
       app
     )
-      v-toolbar.transparent(flat)
+      v-toolbar.transparent(flat v-if="!mini")
         v-list.pa-0
           v-list-tile(avatar)
             v-list-tile-avatar
               img(src='https://randomuser.me/api/portraits/men/85.jpg')
             v-list-tile-content
               v-list-tile-title.subheading.blue-grey--text John Leider
-      v-text-field(
-        :dark='true'
-        label='Project name'
-        class='mx-4 blue-grey--text'
-        background-color='blue-grey'
-        box
-        single-line
-        hide-details
-        dense
-      )
-      v-data-table(
-          hide-actions
-          hide-headers
-          :items='items'
-          class='ma-1'
-        )
-        template(v-slot:items='props')
-          td.blue-grey--text
-            span.body-2 {{ props.item.title }}
-          td(text-xs-right)
-            v-btn(
-              icon
+            v-list-tile-action
+              v-btn(
+                icon
+                @click.stop='mini = !mini'
+              )
+                v-icon(color='blue-grey') chevron_left
+      v-list.pt-0
+        v-list-tile
+          v-list-tile-action(v-if="mini")
+            v-tooltip(right color='blue-grey')
+              template(v-slot:activator='{ on }')
+                v-icon(
+                  v-on="on"
+                  color='blue-grey'
+                ) mdi-settings-outline
+              span Settings
+          v-list-tile-content
+            v-text-field(
+              :dark='true'
+              label='Project name'
+              class='mx-4 blue-grey--text'
+              background-color='blue-grey'
+              box
+              single-line
+              hide-details
+              dense
             )
-              v-icon(mdi-18px color='red lighten-3') mdi-trash-can-outline
+      v-data-table(
+        v-if="!mini"
+        hide-actions
+        hide-headers
+        :items='items'
+        class='ma-1'
+        )
+          template(v-slot:items='props')
+            td.blue-grey--text
+              span.body-2 {{ props.item.title }}
+            td(text-xs-right)
+              v-btn(
+                icon
+              )
+                v-icon(mdi-18px color='red lighten-3') mdi-trash-can-outline
     v-toolbar.blue-grey(
       :clipped-left='clipped'
       fixed
       app
     )
-      v-toolbar-side-icon.white--text.font-weight-thin(
-        @click='drawer = !drawer'
-      )
       v-toolbar-title.white--text
-        .headline.font-weight-thin {{ title }}
+        .display-1.font-weight-thin {{ title }}
       v-spacer
       v-btn(
         flat
@@ -103,6 +119,7 @@ export default class DefaultLayout extends Vue {
 fixed: boolean = true
 clipped: boolean = true
 drawer: boolean = true
+mini: boolean = true
 title: string = 'Viete.io'
 projects: string = 'All projects'
 create: string = 'Create project'
