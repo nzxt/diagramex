@@ -15,6 +15,7 @@
         to='/my_project'
         router
         exact
+
         v-if="!authorized"
       ).body-1.white--text.font-weight-medium {{create}}
       v-chip(

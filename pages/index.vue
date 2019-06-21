@@ -5,7 +5,7 @@
         v-data-table(
           hide-actions
           hide-headers
-          :items='projects'
+          :items='vuexProjects'
           class='ma-1'
         )
           template(v-slot:items='props')
@@ -16,6 +16,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { Action, State } from 'vuex-class'
 @Component({
   layout: 'main'
 })
@@ -31,5 +32,12 @@ export default class IndexPage extends Vue {
     { projectName: 'Framework', athor: 'Chopin', description: 'The Vue.js Framework' },
     { projectName: 'Translator', athor: 'David', description: 'Vue component for isotope filter & sort magical ' }
   ]
+
+  @State('projects') vuexProjects
+  @Action('fetchProjects') actionFetchProjects
+
+  created() {
+    this.actionFetchProjects()
+  }
 }
 </script>

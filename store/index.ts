@@ -2,6 +2,7 @@
 import { MutationTree } from 'vuex'
 import { IProgramState, IUseCase } from '../models/interfaces'
 import programState from '~/assets/programState.json'
+const BaseURL = 'http://127.0.0.1:5000'
 
 export const strict = false
 
@@ -9,13 +10,30 @@ export interface IRootState {}
 
 export interface IState {
   programState: IProgramState;
+  projects: []
 }
 
 export const state = (): IState => ({
   programState: programState || {}
 })
 
+export const actions: any = {
+  async  fetchProjects({ commit }) {
+    await this.$axios.get(BaseURL + '/projects')
+      .then(({ data }) => {
+        commit('setProjects', data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+}
+
 export const mutations: MutationTree<IState> = {
+  setProjects: (state, value: any) => {
+    state.projects = value
+  },
+
   addUC: (state, value: IUseCase) => {
     state.programState.useCases.push(value)
   },
