@@ -72,6 +72,7 @@
             td(text-xs-right)
               v-btn(
                 icon
+                @click='deleteProgram(props.item)'
               )
                 v-icon(mdi-18px color='red lighten-3') mdi-trash-can-outline
     v-toolbar.blue-grey(
@@ -93,6 +94,7 @@
         to='/my_project'
         router
         exact
+        @click='createNewProject'
         v-if="!authorized"
       ).body-1.white--text.font-weight-medium {{create}}
       v-chip(
@@ -132,6 +134,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
+import { Project } from '~/models/Project'
+import { ProgramState } from '~/models/ProgramState'
 @Component({})
 export default class DefaultLayout extends Vue {
   fixed: boolean = true
@@ -159,8 +163,10 @@ export default class DefaultLayout extends Vue {
 
   @State('project') vuexProject
   @State('programs') vuexPrograms
+  @Action('createProject') actionCreateProject
   @Action('putProject') actionPutProject
   @Action('putProgram') actionPutProgram
+  @Action('deleteProgram') actionDeleteProgram
 
   save(item) {
     this.actionPutProgram(item)
@@ -185,8 +191,20 @@ export default class DefaultLayout extends Vue {
     console.log('Dialog closed')
   }
 
+  createNewProject() {
+    const project = new Project('NewProject#1')
+    const { id: projectId } = project
+    const program = new ProgramState('NewProgram#1', projectId)
+    this.actionCreateProject(project, program)
+    this.$router.push(projectId)
+  }
+
   updateProject(item) {
     this.actionPutProject(item)
+  }
+
+  deleteProgram(item) {
+    this.actionDeleteProgram(item)
   }
 }
 </script>

@@ -78,6 +78,16 @@ export const actions: any = {
         console.log(error)
       })
     await this.getProjectById({ commit }, value.projectId)
+  },
+
+  async deleteProgram({ commit }, value: any) {
+    await this.$axios.delete(BaseURL + `/programs/${value.id}`)
+      .then(({ data }) => {
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    await this.getProjectById({ commit }, value.projectId)
   }
 }
 
