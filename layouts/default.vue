@@ -41,6 +41,7 @@
               single-line
               hide-details
               dense
+              @change='updateProject(vuexProject)'
               v-model='vuexProject.projectName'
             )
       v-data-table(
@@ -52,7 +53,22 @@
         )
           template(v-slot:items='props')
             td.blue-grey--text
-              span.body-2 {{ props.item.programName }}
+              v-edit-dialog(
+                :return-value.sync='props.item.programName'
+                lazy
+                @save='save'
+                @cancel='cancel'
+                @open='open'
+                @close='close'
+              ) {{ props.item.programName }}
+                template(v-slot:input)
+                  v-text-field(
+                    v-model='props.item.programName'
+                    :rules='[max25chars]'
+                    label='Edit'
+                    single-line
+                    counter
+                  )
             td(text-xs-right)
               v-btn(
                 icon
@@ -115,7 +131,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Action, State } from 'vuex-class'
 @Component({})
 export default class DefaultLayout extends Vue {
   fixed: boolean = true
@@ -130,6 +146,10 @@ export default class DefaultLayout extends Vue {
   powered: string = 'powered by molfarDevs'
   myName: string = 'Uliana'
   authorized: boolean = true
+  snack: boolean = false
+  snackColor: string = ''
+  snackText: string = ''
+  max25chars: Array<any> = [(v) => { return v.length <= 25 || 'Input too long!' }]
   items: Array<any> = [
     { title: 'Diagram 1' },
     { title: 'Diagram 2' },
@@ -139,5 +159,32 @@ export default class DefaultLayout extends Vue {
 
   @State('project') vuexProject
   @State('programs') vuexPrograms
+  @Action('putProject') actionPutProject
+
+  save() {
+    this.snack = true
+    this.snackColor = 'success'
+    this.snackText = 'Data saved'
+  }
+
+  cancel() {
+    this.snack = true
+    this.snackColor = 'error'
+    this.snackText = 'Canceled'
+  }
+
+  open() {
+    this.snack = true
+    this.snackColor = 'info'
+    this.snackText = 'Dialog opened'
+  }
+
+  close() {
+    console.log('Dialog closed')
+  }
+
+  updateProject(item) {
+    this.actionPutProject(item)
+  }
 }
 </script>

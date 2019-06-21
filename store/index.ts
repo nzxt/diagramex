@@ -58,6 +58,16 @@ export const actions: any = {
       })
 
     await this.getProjectById({ commit }, project.id)
+  },
+
+  async putProject({ commit }, value: any) {
+    await this.$axios.put(BaseURL + `/projects/${value.id}`, value)
+      .then(({ data }) => {
+        commit('setProject', data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
   }
 }
 
