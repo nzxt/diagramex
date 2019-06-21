@@ -1,4 +1,13 @@
+export interface IProject {
+  id?: string,
+  projectName: string,
+  userId: string,
+  programs: IProgramState[]
+}
+
 export interface IProgramState {
+  id?: string,
+  projectId: string,
   useCases: IUseCase[]
 }
 
