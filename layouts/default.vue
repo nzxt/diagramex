@@ -56,7 +56,7 @@
               v-edit-dialog(
                 :return-value.sync='props.item.programName'
                 lazy
-                @save='save'
+                @save='save(props.item)'
                 @cancel='cancel'
                 @open='open'
                 @close='close'
@@ -160,8 +160,10 @@ export default class DefaultLayout extends Vue {
   @State('project') vuexProject
   @State('programs') vuexPrograms
   @Action('putProject') actionPutProject
+  @Action('putProgram') actionPutProgram
 
-  save() {
+  save(item) {
+    this.actionPutProgram(item)
     this.snack = true
     this.snackColor = 'success'
     this.snackText = 'Data saved'
