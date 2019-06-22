@@ -12,10 +12,9 @@
       ).body-1.white--text.font-weight-medium {{projects}}
       v-btn(
         flat
-        to='/my_project'
         router
         exact
-        @click='createNewProject'
+        @click.stop.prevent='createNewProject'
         v-if="!authorized"
       ).body-1.white--text.font-weight-medium {{create}}
       v-chip(
@@ -54,9 +53,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { Action } from 'vuex-class'
+import { Action, State } from 'vuex-class'
 import { Project } from '~/models/Project'
 import { ProgramState } from '~/models/ProgramState'
+
 @Component({})
 export default class DefaultLayout extends Vue {
   fixed: boolean = true
@@ -68,15 +68,14 @@ export default class DefaultLayout extends Vue {
   powered: string = 'powered by molfarDevs'
   myName: string = 'Uliana'
   authorized: boolean = true
-
+  @State('project') vuexProject
   @Action('createProject') actionCreateProject
 
   createNewProject() {
-    const project = new Project('NewProject#1')
-    const { id: projectId } = project
-    const program = new ProgramState('NewProgram#1', projectId)
-    this.actionCreateProject(project, program)
-    this.$router.push(projectId)
+    const project = new Project('NewProject')
+    const program = new ProgramState('NewProgram', '')
+    this.actionCreateProject({ project, program })
+    this.$router.push(this.vuexProject.id)
   }
 }
 </script>

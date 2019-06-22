@@ -40,24 +40,22 @@ export const actions: any = {
       })
   },
 
-  async createProject({ dispatch, commit }, project, program) {
-    let data = project
-    await this.$axios.post(BaseURL + `/project`, data)
+  async createProject({ dispatch, commit }, { project, program }) {
+    await this.$axios.post(BaseURL + `/project`, project)
+      .then(({ data }) => {
+        program.projectId = data.id
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    await this.$axios.post(BaseURL + `/program`, program)
       .then(({ data }) => {
       })
       .catch(function (error) {
         console.log(error)
       })
 
-    data = program
-    await this.$axios.post(BaseURL + `/program`, data)
-      .then(({ data }) => {
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-
-    dispatch('getProjectById', data.id)
+    dispatch('getProjectById', program.projectId)
   },
 
   async putProject({ commit }, value: any) {
@@ -71,7 +69,6 @@ export const actions: any = {
   },
 
   async putProgram({ dispatch, commit }, value: any) {
-    debugger
     await this.$axios.put(BaseURL + `/programs/${value.id}`, value)
       .then(({ data }) => {
       })

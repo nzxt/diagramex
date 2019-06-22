@@ -6,12 +6,10 @@ export class ProgramState implements IProgramState {
     programName: string,
     projectId: string
   ) {
-    this.id = uuidv4()
     this.projectId = projectId
     this.programName = 'programName'
     this.useCases = []
   }
-  id: string;
   projectId: string;
   programName: string;
   useCases: IUseCase[];
