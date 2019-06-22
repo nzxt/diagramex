@@ -1,5 +1,5 @@
 // import { MutationTree, ActionContext, ActionTree } from 'vuex'
-import { MutationTree } from 'vuex'
+import { MutationTree, Store } from 'vuex'
 import { IProgramState, IUseCase, IProject } from '../models/interfaces'
 import programState from '~/assets/programState.json'
 const BaseURL = 'http://127.0.0.1:5000'
@@ -40,7 +40,7 @@ export const actions: any = {
       })
   },
 
-  async createProject({ commit }, project, program) {
+  async createProject({ dispatch, commit }, project, program) {
     let data = project
     await this.$axios.post(BaseURL + `/project`, data)
       .then(({ data }) => {
@@ -57,7 +57,7 @@ export const actions: any = {
         console.log(error)
       })
 
-    await this.getProjectById({ commit }, project.id)
+    dispatch('getProjectById', data.id)
   },
 
   async putProject({ commit }, value: any) {
@@ -70,24 +70,25 @@ export const actions: any = {
       })
   },
 
-  async putProgram({ commit }, value: any) {
+  async putProgram({ dispatch, commit }, value: any) {
+    debugger
     await this.$axios.put(BaseURL + `/programs/${value.id}`, value)
       .then(({ data }) => {
       })
       .catch(function (error) {
         console.log(error)
       })
-    await this.getProjectById({ commit }, value.projectId)
+    dispatch('getProjectById', value.projectId)
   },
 
-  async deleteProgram({ commit }, value: any) {
+  async deleteProgram({ dispatch, commit }, value: any) {
     await this.$axios.delete(BaseURL + `/programs/${value.id}`)
       .then(({ data }) => {
       })
       .catch(function (error) {
         console.log(error)
       })
-    await this.getProjectById({ commit }, value.projectId)
+    dispatch('getProjectById', value.projectId)
   }
 }
 
