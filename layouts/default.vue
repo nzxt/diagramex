@@ -75,6 +75,14 @@
                 @click='deleteProgram(props.item)'
               )
                 v-icon(mdi-18px color='red lighten-3') mdi-trash-can-outline
+      v-flex(text-xs-center)
+        v-btn(
+          dark
+          small
+          color='blue-grey'
+          v-if="!mini"
+          @click.stop.prevent='addProgram'
+        ) Add program
     v-toolbar.blue-grey(
       :clipped-left='clipped'
       fixed
@@ -163,6 +171,7 @@ export default class DefaultLayout extends Vue {
   @State('project') vuexProject
   @State('programs') vuexPrograms
   @Action('createProject') actionCreateProject
+  @Action('createProgram') actionCreateProgram
   @Action('putProject') actionPutProject
   @Action('putProgram') actionPutProgram
   @Action('deleteProgram') actionDeleteProgram
@@ -203,6 +212,11 @@ export default class DefaultLayout extends Vue {
 
   deleteProgram(item) {
     this.actionDeleteProgram(item)
+  }
+  addProgram() {
+    const projectId = this.$route.params.id
+    const program = new ProgramState('NewProgram', projectId)
+    this.actionCreateProgram(program)
   }
 }
 </script>

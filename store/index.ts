@@ -58,6 +58,17 @@ export const actions: any = {
     dispatch('getProjectById', program.projectId)
   },
 
+  async createProgram({ dispatch }, program) {
+    await this.$axios.post(BaseURL + `/program`, program)
+      .then(({ data }) => {
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+    dispatch('getProjectById', program.projectId)
+  },
+
   async putProject({ commit }, value: any) {
     await this.$axios.put(BaseURL + `/projects/${value.id}`, value)
       .then(({ data }) => {
