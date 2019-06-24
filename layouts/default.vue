@@ -76,8 +76,10 @@
               v-text-field(
                 v-model='props.item.programName'
                 dense
-                :rules='[max25chars]'
-                label='Edit'
+                :readonly='readonly'
+                @dblclick.stop.prevent='readonly=!readonly'
+                @change='updateProgram(props.item)'
+                :rules='[...max25chars]'
                 single-line
                 counter
               )
@@ -162,6 +164,7 @@ export default class DefaultLayout extends Vue {
   drawer: boolean = true
   mini: boolean = true
   dialog: boolean = false
+  readonly: boolean = true
   title: string = 'Viete.io'
   projects: string = 'All projects'
   create: string = 'Create project'
@@ -200,6 +203,11 @@ export default class DefaultLayout extends Vue {
   updateProject(item) {
     this.actionPutProject(item)
   }
+
+  updateProgram(item) {
+    this.actionPutProgram(item)
+  }
+
   deleteProject(id) {
     this.dialog = false
     this.actionDeleteProject(id)
