@@ -32,18 +32,30 @@
                 ) mdi-settings-outline
               span Settings
           v-list-tile-content
-            v-text-field(
-              :dark='true'
-              label='Project name'
-              class='mx-4 blue-grey--text'
-              background-color='blue-grey'
-              box
-              single-line
-              hide-details
-              dense
-              @change='updateProject(vuexProject)'
-              v-model='vuexProject.projectName'
-            )
+            v-layout(row)
+              v-flex.xs8
+                v-text-field(
+                  :dark='true'
+                  label='Project name'
+                  class='blue-grey--text'
+                  background-color='blue-grey'
+                  box
+                  single-line
+                  hide-details
+                  dense
+                  @change='updateProject(vuexProject)'
+                  v-model='vuexProject.projectName'
+                )
+              v-flex.xs4(text-xs-center)
+                v-btn(
+                  icon
+                  flat
+                  @click='deleteProject(vuexProject.id)'
+                  )
+                  v-icon(
+                    mdi-18px
+                    color='red lighten-3'
+                  ) mdi-window-close
       v-data-table(
         v-if="!mini"
         hide-actions
@@ -53,28 +65,20 @@
         )
           template(v-slot:items='props')
             td.blue-grey--text
-              v-edit-dialog(
-                :return-value.sync='props.item.programName'
-                lazy
-                @save='save(props.item)'
-                @cancel='cancel'
-                @open='open'
-                @close='close'
-              ) {{ props.item.programName }}
-                template(v-slot:input)
-                  v-text-field(
-                    v-model='props.item.programName'
-                    :rules='[max25chars]'
-                    label='Edit'
-                    single-line
-                    counter
-                  )
+              v-text-field(
+                v-model='props.item.programName'
+                dense
+                :rules='[max25chars]'
+                label='Edit'
+                single-line
+                counter
+              )
             td(text-xs-right)
               v-btn(
                 icon
                 @click='deleteProgram(props.item)'
               )
-                v-icon(mdi-18px color='red lighten-3') mdi-trash-can-outline
+                v-icon(mdi-18px color='red lighten-3') mdi-window-close
       v-flex(text-xs-center)
         v-btn(
           dark
@@ -174,30 +178,8 @@ export default class DefaultLayout extends Vue {
   @Action('createProgram') actionCreateProgram
   @Action('putProject') actionPutProject
   @Action('putProgram') actionPutProgram
+  @Action('deleteProject') actionDeleteProject
   @Action('deleteProgram') actionDeleteProgram
-
-  save(item) {
-    this.actionPutProgram(item)
-    this.snack = true
-    this.snackColor = 'success'
-    this.snackText = 'Data saved'
-  }
-
-  cancel() {
-    this.snack = true
-    this.snackColor = 'error'
-    this.snackText = 'Canceled'
-  }
-
-  open() {
-    this.snack = true
-    this.snackColor = 'info'
-    this.snackText = 'Dialog opened'
-  }
-
-  close() {
-    console.log('Dialog closed')
-  }
 
   createNewProject() {
     const project = new Project('NewProject')
@@ -208,6 +190,10 @@ export default class DefaultLayout extends Vue {
 
   updateProject(item) {
     this.actionPutProject(item)
+  }
+  deleteProject(id) {
+    this.actionDeleteProject(id)
+    this.$router.push('/')
   }
 
   deleteProgram(item) {

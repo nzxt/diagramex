@@ -87,6 +87,15 @@ export const actions: any = {
     dispatch('getProjectById', value.projectId)
   },
 
+  async deleteProject(value: any) {
+    await this.$axios.delete(BaseURL + `/projects/${value}`)
+      .then(({ data }) => {
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+
   async deleteProgram({ dispatch, commit }, value: any) {
     await this.$axios.delete(BaseURL + `/programs/${value.id}`)
       .then(({ data }) => {
