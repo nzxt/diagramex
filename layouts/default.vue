@@ -43,6 +43,8 @@
                   single-line
                   hide-details
                   dense
+                  :readonly='readonlyProjectName'
+                  @dblclick.stop.prevent='readonlyProjectName=!readonlyProjectName'
                   @change='updateProject(vuexProject)'
                   v-model='vuexProject.projectName'
                 )
@@ -165,6 +167,7 @@ export default class DefaultLayout extends Vue {
   mini: boolean = true
   dialog: boolean = false
   readonly: boolean = true
+  ProjectName: boolean = true
   title: string = 'Viete.io'
   projects: string = 'All projects'
   create: string = 'Create project'
