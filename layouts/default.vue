@@ -2,103 +2,87 @@
   v-app
     v-navigation-drawer(
       v-model='drawer'
-      :mini-variant.sync="mini"
       :clipped='clipped'
       stateless
       fixed
       app
     )
-      v-toolbar.transparent(flat v-if="!mini")
-        v-list.pa-0
-          v-list-tile(avatar)
-            v-list-tile-avatar
-              img(src='https://randomuser.me/api/portraits/men/85.jpg')
-            v-list-tile-content
-              v-list-tile-title.subheading.blue-grey--text John Leider
-            v-list-tile-action
-              v-btn(
-                icon
-                @click.stop='mini = !mini'
-              )
-                v-icon(color='blue-grey') chevron_left
-      v-list.pt-0(v-if='vuexProject')
-        v-list-tile
-          v-list-tile-action(v-if="mini")
-            v-tooltip(right color='blue-grey')
+      v-card
+        v-layout(row wrap align-center pt-2 pl-2)
+          v-flex.xs8(class='ma-0 pa-0')
+            v-text-field(
+              v-if='vuexProject'
+              dark='true'
+              single-line
+              dense
+              outline
+              class='ma-0 pa-0'
+              background-color='blue-grey'
+              color='blue-grey'
+              :readonly='readonlyProjectName'
+              @dblclick.stop.prevent='readonlyProjectName=!readonlyProjectName'
+              @change='updateProject(vuexProject)'
+              v-model='vuexProject.projectName'
+            )
+          v-flex.xs4(text-xs-center)
+            v-dialog(v-model='dialog' persistent max-width='290')
               template(v-slot:activator='{ on }')
-                v-icon(
+                v-btn(
+                  icon
+                  flat
                   v-on="on"
-                  color='blue-grey'
-                ) mdi-settings-outline
-              span Settings
-          v-list-tile-content
-            v-layout(row)
-              v-flex.xs8
-                v-text-field(
-                  :dark='true'
-                  label='Project name'
-                  class='blue-grey--text'
-                  background-color='blue-grey'
-                  box
-                  single-line
-                  hide-details
-                  dense
-                  :readonly='readonlyProjectName'
-                  @dblclick.stop.prevent='readonlyProjectName=!readonlyProjectName'
-                  @change='updateProject(vuexProject)'
-                  v-model='vuexProject.projectName'
-                )
-              v-flex.xs4(text-xs-center)
-                v-dialog(v-model='dialog' persistent max-width='290')
-                  template(v-slot:activator='{ on }')
-                    v-btn(
-                      icon
-                      flat
-                      v-on="on"
+                  )
+                  v-icon(
+                    mdi-18px
+                    color='blue-grey'
+                  ) mdi-window-close
+              v-card
+                v-card-text Are you really want to delete this project?
+                v-card-actions
+                  v-spacer
+                  v-btn(color='blue-grey' flat @click='dialog = false') Disagree
+                  v-btn(color='blue-grey' flat @click='deleteProject(vuexProject.id)') Agree
+        v-layout(row wrap align-center pl-2)
+          v-flex.xs8
+            .title(class='blue-grey--text') Diagrams
+          v-flex.xs4(text-xs-center)
+            v-btn(
+              icon
+              v-if="drawer"
+              @click.stop.prevent='addProgram'
+            )
+              v-icon(
+                flat
+                mdi-18px
+                color='blue-grey'
+              ) mdi-plus
+        v-layout(row wrap align-center pl-2)
+          v-flex.xs12
+            v-data-table(
+              v-if="drawer"
+              hide-actions
+              hide-headers
+              :items='vuexPrograms'
+              )
+                template(v-slot:items='props')
+                  tr(@click='openDiagram(props.item)')
+                    td.display-2.px-0(text-xs-left)
+                      v-text-field(
+                        v-model='props.item.programName'
+                        dense
+                        :readonly='readonly'
+                        @dblclick.stop.prevent='readonly=!readonly'
+                        @change='updateProgram(props.item)'
+                        :rules='[...max25chars]'
+                        single-line
+                        class='ma-0 pa-0'
                       )
-                      v-icon(
-                        mdi-18px
-                        color='red lighten-3'
-                      ) mdi-window-close
-                  v-card
-                    v-card-text Are you really want to delete this project?
-                    v-card-actions
-                      v-spacer
-                      v-btn(color='blue-grey' flat @click='dialog = false') Disagree
-                      v-btn(color='blue-grey' flat @click='deleteProject(vuexProject.id)') Agree
-      v-data-table(
-        v-if="!mini"
-        hide-actions
-        hide-headers
-        :items='vuexPrograms'
-        class='ma-1'
-        )
-          template(v-slot:items='props')
-            td.blue-grey--text
-              v-text-field(
-                v-model='props.item.programName'
-                dense
-                :readonly='readonly'
-                @dblclick.stop.prevent='readonly=!readonly'
-                @change='updateProgram(props.item)'
-                :rules='[...max25chars]'
-                single-line
-                counter
-              )
-            td(text-xs-right)
-              v-btn(
-                icon
-                @click='deleteProgram(props.item)'
-              )
-                v-icon(mdi-18px color='red lighten-3') mdi-window-close
-      v-flex(text-xs-center)
-        v-btn(
-          dark
-          small
-          color='blue-grey'
-          v-if="!mini"
-          @click.stop.prevent='addProgram'
-        ) Add program
+                    td(text-xs-right)
+                      v-btn(
+                        icon
+                        @click='deleteProgram(props.item)'
+                      )
+                        v-icon(mdi-18px color='blue-grey') mdi-window-close
     v-toolbar.blue-grey(
       :clipped-left='clipped'
       fixed
@@ -106,6 +90,14 @@
     )
       v-toolbar-title.white--text
         .display-1.font-weight-thin {{ title }}
+      //- v-breadcrumbs(:items='items')
+      //-   template(v-slot:item='props')
+      //-     a(
+      //-       :class='[props.item.disabled && \'disabled\']'
+      //-     ) {{ props.item.text.toUpperCase() }}
+      v-spacer
+      span.body-2.white--text(v-if='vuexProject') {{vuexProject.projectName}}
+      span.body-2.white--text(v-if='vuexProgram') {{'/ '+vuexProgram.programName}}
       v-spacer
       v-btn(
         flat
@@ -152,6 +144,19 @@
     v-footer.justify-center.grey--text(:inset='fixed' app)
       span.caption.font-weight-bold {{ title }} © 2019.
       span.ml-1.caption.font-weight-thin {{ powered }}
+    v-fab-transition(class='mt-5')
+      v-btn(
+        v-model='fab'
+        class='mt-5 ml-0'
+        color='blue-grey'
+        dark
+        fab
+        fixed
+        bottom
+        left
+        @click='drawer=!drawer'
+      )
+        v-icon mdi-menu
 </template>
 
 <script lang="ts">
@@ -163,8 +168,8 @@ import { ProgramState } from '~/models/ProgramState'
 export default class DefaultLayout extends Vue {
   fixed: boolean = true
   clipped: boolean = true
-  drawer: boolean = true
-  mini: boolean = true
+  drawer: boolean = false
+  readonlyProjectName: boolean = true
   dialog: boolean = false
   readonly: boolean = true
   ProjectName: boolean = true
@@ -189,8 +194,10 @@ export default class DefaultLayout extends Vue {
 
   @State('project') vuexProject
   @State('programs') vuexPrograms
+  @State('programState') vuexProgram
   @Action('createProject') actionCreateProject
   @Action('createProgram') actionCreateProgram
+  @Action('getProgramById') actionGetProgramById
   @Action('putProject') actionPutProject
   @Action('putProgram') actionPutProgram
   @Action('deleteProject') actionDeleteProject
@@ -201,6 +208,10 @@ export default class DefaultLayout extends Vue {
     const program = new ProgramState('NewProgram', '')
     this.actionCreateProject({ project, program })
     this.$router.push(this.vuexProject.id)
+  }
+
+  openDiagram(item) {
+    this.actionGetProgramById(item)
   }
 
   updateProject(item) {

@@ -45,6 +45,16 @@ export const actions: any = {
       })
   },
 
+  async getProgramById({ commit }, value: any) {
+    await this.$axios.get(BaseURL + `/programs/${value.id}`)
+      .then(({ data }) => {
+        commit('setProgram', data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+
   createProject({ commit }, project) {
     return this.$axios.post(BaseURL + `/project`, project)
       .then(({ data }) => {
@@ -80,6 +90,7 @@ export const actions: any = {
   async putProgram({ dispatch, commit }, value: any) {
     await this.$axios.put(BaseURL + `/programs/${value.id}`, value)
       .then(({ data }) => {
+        commit('setProgram', data)
       })
       .catch(function (error) {
         console.log(error)
@@ -119,6 +130,10 @@ export const mutations: MutationTree<IState> = {
 
   setPrograms: (state, value: IProgramState[]) => {
     state.programs = value
+  },
+
+  setProgram: (state, value: IProgramState) => {
+    state.programState = value
   },
 
   addUC: (state, value: IUseCase) => {

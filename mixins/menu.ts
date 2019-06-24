@@ -34,26 +34,26 @@ export default class MenuMixin extends Vue {
   menuItems: Object = {
     // Canvas
     cn: [
-      { text: 'Create Usecase', value: 'createUsecase' }
+      { text: 'Create usecase', value: 'createUsecase' }
     ],
     // Usecase
     uc: [
-      { text: 'Create Variable', value: 'createVariable' },
-      { text: 'Create Constant', value: 'createConstant' },
+      { text: 'Create variable/constant', value: 'createVariable' },
+      // { text: 'Create Constant', value: 'createConstant' },
       // { text: 'Create Tuple', value: 'createTuple' },
-      { text: 'Delete Usecase', value: 'deleteUsecase' }
+      { text: 'Delete usecase', value: 'deleteUsecase' }
     ],
     // Variable
     vr: [
-      { text: 'Delete Variable', value: 'deleteVariable' }
+      { text: 'Delete variable', value: 'deleteVariable' }
     ],
     // Constant
-    ct: [
-      { text: 'Delete Constant', value: 'deleteConstant' }
-    ],
+    // ct: [
+    //   { text: 'Delete Constant', value: 'deleteConstant' }
+    // ],
     // Edge
     ed: [
-      { text: 'Delete Edge', value: 'deleteEdge' }
+      { text: 'Delete edge', value: 'deleteEdge' }
     ],
     // Tuple
     tp: [
