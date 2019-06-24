@@ -21,7 +21,7 @@
                 @click.stop='mini = !mini'
               )
                 v-icon(color='blue-grey') chevron_left
-      v-list.pt-0
+      v-list.pt-0(v-if='vuexProject')
         v-list-tile
           v-list-tile-action(v-if="mini")
             v-tooltip(right color='blue-grey')
