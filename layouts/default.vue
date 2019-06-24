@@ -160,7 +160,7 @@ export default class DefaultLayout extends Vue {
   snack: boolean = false
   snackColor: string = ''
   snackText: string = ''
-  max25chars: Array<any> = [(v) => { return v.length <= 25 || 'Input too long!' }]
+  max25chars: Array<Function> = [v => (v.length >= 3 && v.length <= 25) || 'Input must be 3 - 25 chars!']
   items: Array<any> = [
     { title: 'Diagram 1' },
     { title: 'Diagram 2' },

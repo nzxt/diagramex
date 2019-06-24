@@ -6,8 +6,8 @@ export class ProgramState implements IProgramState {
     programName: string,
     projectId: string
   ) {
+    this.programName = programName
     this.projectId = projectId
-    this.programName = 'programName'
     this.useCases = []
   }
   projectId: string;

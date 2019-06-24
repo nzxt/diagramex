@@ -70,11 +70,14 @@ export default class DefaultLayout extends Vue {
   authorized: boolean = true
   @State('project') vuexProject
   @Action('createProject') actionCreateProject
+  @Action('createProgram') actionCreateProgram
 
-  createNewProject() {
+  async createNewProject() {
     const project = new Project('NewProject')
-    const program = new ProgramState('NewProgram', '')
-    this.actionCreateProject({ project, program })
+    const createdProject = await this.actionCreateProject(project)
+    const program = new ProgramState('NewProgram', createdProject.id)
+    await this.actionCreateProgram(program)
+    debugger
     this.$router.push(this.vuexProject.id)
   }
 }

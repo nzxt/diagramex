@@ -9,6 +9,7 @@
           splitpanes-size="80"
         )
           v-card#editor.fill-height(
+            v-if='vuexProgramState'
             @contextmenu.stop.prevent='onContextMenu'
           )
             Editor#canvas(
@@ -60,7 +61,7 @@ import MenuMixin from '~/mixins/menu'
   },
   mixins: [MenuMixin]
 })
-export default class MyProgectPage extends Vue {
+export default class MyProjectPage extends Vue {
   @State('programState') vuexProgramState
   @State('project') vuexProject
   @State('programs') vuexPrograms

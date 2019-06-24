@@ -1,7 +1,7 @@
 // import { MutationTree, ActionContext, ActionTree } from 'vuex'
 import { MutationTree, Store } from 'vuex'
 import { IProgramState, IUseCase, IProject } from '../models/interfaces'
-import programState from '~/assets/programState.json'
+// import programState from '~/assets/programState.json'
 const BaseURL = 'http://127.0.0.1:5000'
 
 export const strict = false
@@ -9,18 +9,22 @@ export const strict = false
 export interface IRootState {}
 
 export interface IState {
-  programState: IProgramState;
-  projects: [];
-  project: IProject;
-  programs: [];
+  projects: IProject[];
+  project: IProject | null;
+  programs: IProgramState[];
+  programState: IProgramState | null;
 }
 
 export const state = (): IState => ({
-  programState: programState || {}
+  projects: [],
+
+  project: null,
+  programs: [],
+  programState: null
 })
 
 export const actions: any = {
-  async  fetchProjects({ commit }) {
+  async fetchProjects({ commit }) {
     await this.$axios.get(BaseURL + '/projects')
       .then(({ data }) => {
         commit('setProjects', data)
@@ -34,39 +38,33 @@ export const actions: any = {
     await this.$axios.get(BaseURL + `/projects/${value}`)
       .then(({ data }) => {
         commit('setProject', data)
+        commit('setPrograms', data.programs)
       })
       .catch(function (error) {
         console.log(error)
       })
   },
 
-  async createProject({ dispatch, commit }, { project, program }) {
-    await this.$axios.post(BaseURL + `/project`, project)
+  createProject({ commit }, project) {
+    return this.$axios.post(BaseURL + `/project`, project)
       .then(({ data }) => {
-        program.projectId = data.id
+        commit('setProject', data)
+        return data
       })
       .catch(function (error) {
         console.log(error)
       })
-    await this.$axios.post(BaseURL + `/program`, program)
-      .then(({ data }) => {
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-
-    dispatch('getProjectById', program.projectId)
   },
 
   async createProgram({ dispatch }, program) {
     await this.$axios.post(BaseURL + `/program`, program)
-      .then(({ data }) => {
-      })
+      // .then(({ data }) => {
+      // })
       .catch(function (error) {
         console.log(error)
       })
 
-    dispatch('getProjectById', program.projectId)
+    await dispatch('getProjectById', program.projectId)
   },
 
   async putProject({ commit }, value: any) {
@@ -101,13 +99,17 @@ export const actions: any = {
 }
 
 export const mutations: MutationTree<IState> = {
-  setProjects: (state, value: any) => {
+  setProjects: (state, value: IProject[]) => {
     state.projects = value
   },
 
-  setProject: (state, value: any) => {
+  setProject: (state, value: IProject) => {
     state.project = value
-    state.programs = value.programs
+    // state.programs = value.programs
+  },
+
+  setPrograms: (state, value: IProgramState[]) => {
+    state.programs = value
   },
 
   addUC: (state, value: IUseCase) => {
