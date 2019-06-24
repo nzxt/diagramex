@@ -25,8 +25,7 @@
             flat
             no-resize
             row-height='24'
-            label='Comment'
-            hint='This field will keep your comments'
+            label='Text markup'
             persistent-hint
           )
 
