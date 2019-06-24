@@ -47,15 +47,23 @@
                   v-model='vuexProject.projectName'
                 )
               v-flex.xs4(text-xs-center)
-                v-btn(
-                  icon
-                  flat
-                  @click='deleteProject(vuexProject.id)'
-                  )
-                  v-icon(
-                    mdi-18px
-                    color='red lighten-3'
-                  ) mdi-window-close
+                v-dialog(v-model='dialog' persistent max-width='290')
+                  template(v-slot:activator='{ on }')
+                    v-btn(
+                      icon
+                      flat
+                      v-on="on"
+                      )
+                      v-icon(
+                        mdi-18px
+                        color='red lighten-3'
+                      ) mdi-window-close
+                  v-card
+                    v-card-text Are you really want to delete this project?
+                    v-card-actions
+                      v-spacer
+                      v-btn(color='blue-grey' flat @click='dialog = false') Disagree
+                      v-btn(color='blue-grey' flat @click='deleteProject(vuexProject.id)') Agree
       v-data-table(
         v-if="!mini"
         hide-actions
@@ -153,6 +161,7 @@ export default class DefaultLayout extends Vue {
   clipped: boolean = true
   drawer: boolean = true
   mini: boolean = true
+  dialog: boolean = false
   title: string = 'Viete.io'
   projects: string = 'All projects'
   create: string = 'Create project'
@@ -192,6 +201,7 @@ export default class DefaultLayout extends Vue {
     this.actionPutProject(item)
   }
   deleteProject(id) {
+    this.dialog = false
     this.actionDeleteProject(id)
     this.$router.push('/')
   }

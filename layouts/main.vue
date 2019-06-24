@@ -77,7 +77,6 @@ export default class DefaultLayout extends Vue {
     const createdProject = await this.actionCreateProject(project)
     const program = new ProgramState('NewProgram', createdProject.id)
     await this.actionCreateProgram(program)
-    debugger
     this.$router.push(this.vuexProject.id)
   }
 }
