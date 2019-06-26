@@ -1,5 +1,5 @@
 {
-  "name": "diagramex",
+  "name": "viete.io",
   "version": "1.0.0",
   "description": "My priceless Nuxt.js project",
   "author": "molfarDevs",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@mdi/font": "^3.6.95",
+    "@nuxtjs/auth": "^4.8.1",
     "@nuxtjs/axios": "^5.5.3",
     "@nuxtjs/pwa": "^2.6.0",
     "cross-env": "^5.2.0",

@@ -18,8 +18,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
+
 @Component({
-  layout: 'main'
+  auth: false
 })
 export default class IndexPage extends Vue {
   @State('projects') vuexProjects
@@ -30,9 +31,9 @@ export default class IndexPage extends Vue {
     this.actionFetchProjects()
   }
 
-  getProjectById(item) {
+  async getProjectById(item) {
     const { id } = item
-    this.actionGetProjectById(id)
+    await this.actionGetProjectById(id)
     this.$router.push(id)
   }
 }

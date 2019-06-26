@@ -11,7 +11,8 @@ declare module 'vue/types/vue' {
   interface Vue {
     $snap: any;
     $bus: any;
-    // $auth: any;
+    $axios: any;
+    $auth: any;
     // $noty: any;
  }
 }
@@ -19,7 +20,7 @@ declare module 'vue/types/vue' {
 declare module 'vue/types/options' {
   interface ComponentOptions<V extends Vue> {
     // This adds the `auth` property to the existing `vue/types/options/ComponentOptions` type
-    // auth?: Boolean | string | string[];
+    auth?: Boolean | string | string[];
   }
 }
 

@@ -2,7 +2,9 @@
 import { MutationTree, Store } from 'vuex'
 import { IProgramState, IUseCase, IProject } from '../models/interfaces'
 // import programState from '~/assets/programState.json'
-const BaseURL = 'http://127.0.0.1:5000'
+
+const BaseURL = 'http://localhost:5000'
+// const BaseURL = 'https://stas-k.org'
 
 export const strict = false
 
@@ -40,9 +42,7 @@ export const actions: any = {
         commit('setProject', data)
         commit('setPrograms', data.programs)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(error => console.warn(error))
   },
 
   async getProgramById({ commit }, value: any) {
@@ -50,29 +50,20 @@ export const actions: any = {
       .then(({ data }) => {
         commit('setProgram', data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(error => console.warn(error))
   },
 
-  createProject({ commit }, project) {
-    return this.$axios.post(BaseURL + `/project`, project)
+  async createProject({ commit }, project) {
+    await this.$axios.post(BaseURL + `/project`, project)
       .then(({ data }) => {
         commit('setProject', data)
-        return data
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(error => console.warn(error))
   },
 
   async createProgram({ dispatch }, program) {
     await this.$axios.post(BaseURL + `/program`, program)
-      // .then(({ data }) => {
-      // })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(error => console.warn(error))
 
     await dispatch('getProjectById', program.projectId)
   },
@@ -82,9 +73,7 @@ export const actions: any = {
       .then(({ data }) => {
         commit('setProject', data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(error => console.warn(error))
   },
 
   async putProgram({ dispatch, commit }, value: any) {
@@ -92,9 +81,8 @@ export const actions: any = {
       .then(({ data }) => {
         commit('setProgram', data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(error => console.warn(error))
+
     dispatch('getProjectById', value.projectId)
   },
 
@@ -102,18 +90,15 @@ export const actions: any = {
     await this.$axios.delete(BaseURL + `/projects/${value}`)
       .then(({ data }) => {
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(error => console.warn(error))
   },
 
   async deleteProgram({ dispatch, commit }, value: any) {
     await this.$axios.delete(BaseURL + `/programs/${value.id}`)
       .then(({ data }) => {
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(error => console.warn(error))
+
     dispatch('getProjectById', value.projectId)
   }
 }

@@ -1,6 +1,7 @@
 <template lang="pug">
   v-app
     v-navigation-drawer(
+      v-if="loggedIn"
       v-model='drawer'
       :clipped='clipped'
       stateless
@@ -12,7 +13,6 @@
           v-flex.xs8(class='ma-0 pa-0')
             v-text-field(
               v-if='vuexProject'
-              dark='true'
               single-line
               dense
               outline
@@ -24,6 +24,7 @@
               @change='updateProject(vuexProject)'
               v-model='vuexProject.projectName'
             )
+
           v-flex.xs4(text-xs-center)
             v-dialog(v-model='dialog' persistent max-width='290')
               template(v-slot:activator='{ on }')
@@ -42,6 +43,7 @@
                   v-spacer
                   v-btn(color='blue-grey' flat @click='dialog = false') Disagree
                   v-btn(color='blue-grey' flat @click='deleteProject(vuexProject.id)') Agree
+
         v-layout(row wrap align-center pl-2)
           v-flex.xs8
             .title(class='blue-grey--text') Diagrams
@@ -56,6 +58,7 @@
                 mdi-18px
                 color='blue-grey'
               ) mdi-plus
+
         v-layout(row wrap align-center pl-2)
           v-flex.xs12
             v-data-table(
@@ -83,6 +86,7 @@
                         @click='deleteProgram(props.item)'
                       )
                         v-icon(mdi-18px color='blue-grey') mdi-window-close
+
     v-toolbar.blue-grey(
       :clipped-left='clipped'
       fixed
@@ -96,57 +100,59 @@
       //-       :class='[props.item.disabled && \'disabled\']'
       //-     ) {{ props.item.text.toUpperCase() }}
       v-spacer
-      span.body-2.white--text(v-if='vuexProject') {{vuexProject.projectName}}
-      span.body-2.white--text(v-if='vuexProgram') {{'/ '+vuexProgram.programName}}
+      //- span.body-2.white--text(v-if='vuexProject') {{vuexProject.projectName}}
+      //- span.body-2.white--text(v-if='vuexProgram') {{'/ '+vuexProgram.programName}}
       v-spacer
       v-btn(
         flat
         to="/"
         router
         exact
-      ).body-1.white--text.font-weight-medium {{projects}}
+      ).body-1.white--text.font-weight-medium {{ projects }}
+
       v-btn(
         flat
         router
         exact
         @click.stop.prevent='createNewProject'
-        v-if="!authorized"
-      ).body-1.white--text.font-weight-medium {{create}}
-      v-chip(
+        v-if="loggedIn"
+      ).body-1.white--text.font-weight-medium {{ create }}
+
+      v-btn.ma-0.pa-0(
+        color='blue-grey darken-1'
+        v-if="loggedIn"
+        @click='$router.push("/projects")'
         dark
-        v-if="!authorized"
-        color="blue-grey darken-1"
+        exact
+        depressed
+        round
       )
-        v-btn.ma-0.pa-0(
-          flat
-          to='/projects'
-          router
-          exact
-          depressed
-          round
-        )
-          v-avatar
-            img(src='https://avatars0.githubusercontent.com/u/9064066?v=4&s=460')
-          span Jon Leider
+        v-avatar(size='32')
+          img(:src='userPic')
+        .ml-2.mr-3 {{ userName }}
+
       v-btn(
         flat
-        v-if="authorized"
-        @click='authorized=!authorized'
-      ).body-1.white--text.font-weight-medium {{login}}
+        v-if="!loggedIn"
+        @click='facebookSignIn'
+      ).body-1.white--text.font-weight-medium {{ login }}
+
       v-btn(
         flat
-        v-if="!authorized"
-        @click='authorized=!authorized'
+        v-if="loggedIn"
+        @click='signOut'
       ).body-1.white--text.font-weight-medium {{logout}}
+
     v-content
       v-container(fluid fill-height)
         nuxt
+
     v-footer.justify-center.grey--text(:inset='fixed' app)
       span.caption.font-weight-bold {{ title }} © 2019.
       span.ml-1.caption.font-weight-thin {{ powered }}
-    v-fab-transition(class='mt-5')
+
+    v-fab-transition.mt-5(v-if="loggedIn")
       v-btn(
-        v-model='fab'
         class='mt-5 ml-0'
         color='blue-grey'
         dark
@@ -164,6 +170,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 import { Project } from '~/models/Project'
 import { ProgramState } from '~/models/ProgramState'
+
 @Component({})
 export default class DefaultLayout extends Vue {
   fixed: boolean = true
@@ -176,11 +183,9 @@ export default class DefaultLayout extends Vue {
   title: string = 'Viete.io'
   projects: string = 'All projects'
   create: string = 'Create project'
-  login: string = 'Login'
-  logout: string = 'Logout'
+  login: string = 'SignIn'
+  logout: string = 'SignOut'
   powered: string = 'powered by molfarDevs'
-  myName: string = 'Uliana'
-  authorized: boolean = true
   snack: boolean = false
   snackColor: string = ''
   snackText: string = ''
@@ -203,10 +208,11 @@ export default class DefaultLayout extends Vue {
   @Action('deleteProject') actionDeleteProject
   @Action('deleteProgram') actionDeleteProgram
 
-  createNewProject() {
-    const project = new Project('NewProject')
-    const program = new ProgramState('NewProgram', '')
-    this.actionCreateProject({ project, program })
+  async createNewProject() {
+    const project = new Project(`NewProject`)
+    await this.actionCreateProject(project)
+    const program = new ProgramState('NewProgram', this.vuexProject.id)
+    await this.actionCreateProgram(program)
     this.$router.push(this.vuexProject.id)
   }
 
@@ -231,10 +237,37 @@ export default class DefaultLayout extends Vue {
   deleteProgram(item) {
     this.actionDeleteProgram(item)
   }
+
   addProgram() {
     const projectId = this.$route.params.id
     const program = new ProgramState('NewProgram', projectId)
     this.actionCreateProgram(program)
+  }
+
+  async facebookSignIn() {
+    await this.$auth.loginWith('facebook')
+      .catch(e => console.warn(e))
+  }
+
+  async signOut() {
+    await this.$auth.logout()
+  }
+
+  get loggedIn(): Boolean {
+    return this.$store.state.auth
+      ? this.$store.state.auth.loggedIn
+      : false
+  }
+
+  get userPic(): string {
+    return this.$auth.user
+      ? this.$auth.user.picture.data.url
+      : 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460'
+  }
+  get userName(): string {
+    return this.$auth.user
+      ? this.$auth.user.name
+      : 'Stas K.'
   }
 }
 </script>
