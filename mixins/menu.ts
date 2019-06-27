@@ -1,5 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { Mutation } from 'vuex-class'
+import { Action, Mutation } from 'vuex-class'
 
 import { UseCase } from '~/models/UseCase'
 import { Variable } from '~/models/Variable'
@@ -9,10 +9,10 @@ import { findParent } from '~/mixins/helpers'
 
 @Component
 export default class MenuMixin extends Vue {
-  @Mutation('addUC') mutationAddUC
+  @Action('addUC') actionAddUC
   @Mutation('addVR') mutationAddVR
   @Mutation('addCT') mutationAddCT
-  @Mutation('deleteUC') mutationDeleteUC
+  @Action('deleteUC') actionDeleteUC
   @Mutation('deleteVR') mutationDeleteVR
   @Mutation('deleteCT') mutationDeleteCT
   @Mutation('deleteED') mutationDeleteED
@@ -113,7 +113,7 @@ export default class MenuMixin extends Vue {
     x -= this.e
     y -= this.f
     const usecase = new UseCase('UseCase', x, y)
-    this.mutationAddUC(usecase)
+    this.actionAddUC(usecase)
   }
 
   createVariable() {
@@ -133,7 +133,7 @@ export default class MenuMixin extends Vue {
   }
 
   deleteUsecase() {
-    this.mutationDeleteUC(this.nodeParentId)
+    this.actionDeleteUC(this.nodeParentId)
   }
 
   deleteVariable() {

@@ -32,7 +32,7 @@ export const actions: any = {
         commit('setProjects', data)
       })
       .catch(function (error) {
-        console.log(error)
+        console.warn(error)
       })
   },
 
@@ -101,6 +101,17 @@ export const actions: any = {
       .catch(error => console.warn(error))
 
     dispatch('getProjectById', value.projectId)
+  },
+
+  addUC({ state, dispatch, commit }, value: IUseCase) {
+    state.programState.useCases.push(value)
+    dispatch('putProgram', state.programState)
+  },
+
+  deleteUC({ state, dispatch, commit }, value: string) {
+    const index = state.programState.useCases.findIndex(x => x.id === value)
+    state.programState.useCases.splice(index, 1)
+    dispatch('putProgram', state.programState)
   }
 }
 
@@ -120,10 +131,6 @@ export const mutations: MutationTree<IState> = {
 
   setProgram: (state, value: IProgramState) => {
     state.programState = value
-  },
-
-  addUC: (state, value: IUseCase) => {
-    state.programState.useCases.push(value)
   },
 
   addVR: (state, value: any) => {
@@ -199,11 +206,6 @@ export const mutations: MutationTree<IState> = {
     const index = state.programState.useCases.findIndex(x => x.id === useCaseId)
     const indexED = state.programState.useCases[index].edges.findIndex(x => x.id === id)
     state.programState.useCases[index].edges[indexED].targetId = targetId
-  },
-
-  deleteUC: (state, value: string) => {
-    const index = state.programState.useCases.findIndex(x => x.id === value)
-    state.programState.useCases.splice(index, 1)
   },
 
   deleteVR: (state, value: any) => {

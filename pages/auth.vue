@@ -17,16 +17,5 @@ export default class AuthPage extends Vue {
   get messageText(): string {
     return this.$store.state.auth.loggedIn ? this.success : this.error
   }
-
-  created() {
-    // const { fullPath, query } = this.$route
-    // if (!Object.keys(query).length) return
-    // const newquery = fullPath.replace('/auth', '')
-    // debugger
-    // this.$axios.post(`https://stas-k.org/login/authorized${newquery}`)
-    // .then(res => {
-    //   debugger
-    // })
-  }
 }
 </script>

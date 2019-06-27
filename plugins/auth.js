@@ -1,5 +1,5 @@
 export default ({ app }) => {
-  const { $auth } = app
+  const { $auth, $axios } = app
 
   $auth.onError((error, name, endpoint) => {
     console.error(endpoint, name, error)
@@ -16,5 +16,12 @@ export default ({ app }) => {
   })
 
   if (!$auth.loggedIn) return
+
   console.info(`[AUTH] Hi, ${$auth.user.name}!`)
+
+  $axios.get(`https://stas-k.org/user`)
+    .then((res) => {
+      console.info(`[${res.status}] BackEnd authorized you too, ${res.data.name}`)
+    })
+    .catch(err => console.warn(`${err.status} ${err.statusText}`))
 }
