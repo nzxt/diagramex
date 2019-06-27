@@ -32,7 +32,7 @@ import svgPanZoom from 'svg-pan-zoom'
 import { thumbnailViewer } from '~/assets/thumbnailViewer'
 
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { State, Mutation } from 'vuex-class'
+import { State, Action, Mutation } from 'vuex-class'
 
 import ConnectionMixin from '~/mixins/connection'
 import { IProgramState } from '../models/interfaces'
@@ -50,8 +50,8 @@ export default class EditorComponent extends Vue {
   })
   readonly programState!: IProgramState
 
-  @Mutation('updateUCPosition') mutationUpdateUCPosition
-  @Mutation('updateVRPosition') mutationUpdateVRPosition
+  @Action('updateUCPosition') actionUpdateUCPosition
+  @Action('updateVRPosition') actionUpdateVRPosition
   @Mutation('updateCTPosition') mutationUpdateCTPosition
 
   spz: any = null
@@ -95,11 +95,11 @@ export default class EditorComponent extends Vue {
 
     switch (type) {
       case 'uc': {
-        this.mutationUpdateUCPosition({ x, y, id })
+        this.actionUpdateUCPosition({ x, y, id })
         break
       }
       case 'vr': {
-        this.mutationUpdateVRPosition({ x, y, id, useCaseId })
+        this.actionUpdateVRPosition({ x, y, id, useCaseId })
         break
       }
       case 'ct': {

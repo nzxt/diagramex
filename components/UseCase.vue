@@ -80,7 +80,7 @@
 
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
-import { Mutation } from 'vuex-class'
+import { Action, Mutation } from 'vuex-class'
 
 import { IUseCase, IPosition } from '~/models/interfaces'
 
@@ -95,7 +95,7 @@ import { onMove, onStart, onEnd } from '~/mixins/draggable'
 })
 export default class UseCaseComponent extends Vue {
   @Mutation('resizeUC') mutationResizeUC
-  @Mutation('updateUCIdentifier') mutationUpdateUCIdentifier
+  @Action('updateUCIdentifier') actionUpdateUCIdentifier
 
   @Prop({
     default: () => {},
@@ -210,7 +210,7 @@ export default class UseCaseComponent extends Vue {
   }
 
   updateIdentifier(identifier) {
-    this.mutationUpdateUCIdentifier({ id: this.useCase.id, identifier })
+    this.actionUpdateUCIdentifier({ id: this.useCase.id, identifier })
   }
 }
 </script>

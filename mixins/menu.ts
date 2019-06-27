@@ -10,12 +10,12 @@ import { findParent } from '~/mixins/helpers'
 @Component
 export default class MenuMixin extends Vue {
   @Action('addUC') actionAddUC
-  @Mutation('addVR') mutationAddVR
+  @Action('addVR') actionAddVR
   @Mutation('addCT') mutationAddCT
   @Action('deleteUC') actionDeleteUC
-  @Mutation('deleteVR') mutationDeleteVR
+  @Action('deleteVR') actionDeleteVR
   @Mutation('deleteCT') mutationDeleteCT
-  @Mutation('deleteED') mutationDeleteED
+  @Action('deleteED') actionDeleteED
 
   showMenu: boolean = false
   menuType: string = 'cn'
@@ -121,7 +121,7 @@ export default class MenuMixin extends Vue {
     x -= this.e
     y -= this.f
     const variable = new Variable('Variable', x, y)
-    this.mutationAddVR({ variable, useCaseId: this.nodeParentId })
+    this.actionAddVR({ variable, useCaseId: this.nodeParentId })
   }
 
   createConstant() {
@@ -137,7 +137,7 @@ export default class MenuMixin extends Vue {
   }
 
   deleteVariable() {
-    this.mutationDeleteVR({ useCaseId: this.mainNodeParentId, variableId: this.nodeParentId })
+    this.actionDeleteVR({ useCaseId: this.mainNodeParentId, variableId: this.nodeParentId })
   }
 
   deleteConstant() {
@@ -145,6 +145,6 @@ export default class MenuMixin extends Vue {
   }
 
   deleteEdge() {
-    this.mutationDeleteED({ useCaseId: this.mainNodeParentId, edgeId: this.nodeParentId })
+    this.actionDeleteED({ useCaseId: this.mainNodeParentId, edgeId: this.nodeParentId })
   }
 }

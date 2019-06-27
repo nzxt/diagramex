@@ -43,7 +43,7 @@
 
 <script lang='ts'>
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
-import { Mutation } from 'vuex-class'
+import { Action, Mutation } from 'vuex-class'
 
 import { IVariable } from '~/models/interfaces'
 
@@ -51,7 +51,7 @@ import { onMove, onStart, onEnd } from '~/mixins/draggable'
 
 @Component({})
 export default class VariableComponent extends Vue {
-  @Mutation('updateVRIdentifier') mutationUpdateVRIdentifier
+  @Action('updateVRIdentifier') actionUpdateVRIdentifier
 
   @Prop({
     default: '',
@@ -105,7 +105,7 @@ export default class VariableComponent extends Vue {
   }
 
   updateIdentifier(identifier) {
-    this.mutationUpdateVRIdentifier({ useCaseId: this.useCaseId, id: this.variable.id, identifier })
+    this.actionUpdateVRIdentifier({ useCaseId: this.useCaseId, id: this.variable.id, identifier })
   }
 }
 </script>

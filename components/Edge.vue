@@ -48,12 +48,12 @@
 <script lang="ts">
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator'
 import { IEdge } from '~/models/interfaces'
-import { Mutation } from 'vuex-class'
+import { Action, Mutation } from 'vuex-class'
 import { onMove, onStart, onEnd } from '~/mixins/draggable'
 
 @Component({})
 export default class EdgeComponent extends Vue {
-  @Mutation('updateEDIdentifier') mutationUpdateEDIdentifier
+  @Action('updateEDIdentifier') actionUpdateEDIdentifier
 
   @Prop({
     default: '',
@@ -205,7 +205,7 @@ export default class EdgeComponent extends Vue {
   }
 
   updateIdentifier(identifier) {
-    this.mutationUpdateEDIdentifier({ useCaseId: this.useCaseId, id: this.edge.id, identifier })
+    this.actionUpdateEDIdentifier({ useCaseId: this.useCaseId, id: this.edge.id, identifier })
   }
 
   get isConnection(): Boolean {

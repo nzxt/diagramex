@@ -1,5 +1,5 @@
 import { Component, Watch, Vue } from 'vue-property-decorator'
-import { State, Mutation } from 'vuex-class'
+import { State, Action, Mutation } from 'vuex-class'
 
 import { Edge } from '~/models/Edge'
 import { IPosition } from '../models/interfaces'
@@ -10,9 +10,9 @@ import { findParent } from '~/mixins/helpers'
 export default class ConnectionMixin extends Vue {
   @State('programState') vuexProgramState
 
-  @Mutation('addED') mutationAddED
-  @Mutation('deleteED') mutationDeleteED
-  @Mutation('updateEDTarget') mutationUpdateEDTarget
+  @Action('addED') actionAddED
+  @Action('deleteED') actionDeleteED
+  @Action('updateEDTarget') actionUpdateEDTarget
 
   spz: any
 
@@ -73,7 +73,7 @@ export default class ConnectionMixin extends Vue {
     const targetId = 'fake-target'
     const edge = new Edge('Edge', sourceId, targetId)
     this.connection.edgeId = edge.id
-    this.mutationAddED({ useCaseId, edge })
+    this.actionAddED({ useCaseId, edge })
   }
 
   findTarget(evt) {
@@ -91,9 +91,9 @@ export default class ConnectionMixin extends Vue {
       (type !== 'vr' && type !== 'ct') ||
       this.findDuplicatedEdge(useCaseId, sourceId, targetId)
     ) {
-      this.mutationDeleteED({ useCaseId, edgeId })
+      this.actionDeleteED({ useCaseId, edgeId })
     } else {
-      this.mutationUpdateEDTarget({ useCaseId, id: edgeId, targetId })
+      this.actionUpdateEDTarget({ useCaseId, id: edgeId, targetId })
       this.$bus.$emit('MovingElement', targetId)
     }
   }
