@@ -9,23 +9,21 @@
       app
     )
       v-card
-        v-layout(row wrap align-center pt-2 pl-2)
-          v-flex.xs8(class='ma-0 pa-0')
+        v-layout.mt-2.ml-2(row nowrap align-top)
+          v-flex#project-name.xs10
             v-text-field(
               v-if='vuexProject'
-              single-line
-              dense
-              outline
-              class='ma-0 pa-0'
-              background-color='blue-grey'
+              clearable
               color='blue-grey'
+              label="Project name"
               :readonly='readonlyProjectName'
-              @dblclick.stop.prevent='readonlyProjectName=!readonlyProjectName'
+              @dblclick.stop.prevent='(e) => { readonlyProjectName = false; e.target.focus() }'
+              @blur='readonlyProjectName = true'
               @change='updateProject(vuexProject)'
               v-model='vuexProject.projectName'
             )
 
-          v-flex.xs4(text-xs-center)
+          v-flex.xs2.pt-1(text-xs-center)
             v-dialog(v-model='dialog' persistent max-width='290')
               template(v-slot:activator='{ on }')
                 v-btn(
@@ -36,7 +34,7 @@
                   v-icon(
                     mdi-18px
                     color='blue-grey'
-                  ) mdi-window-close
+                  ) mdi-delete-forever
               v-card
                 v-card-text Are you really want to delete this project?
                 v-card-actions
@@ -45,9 +43,9 @@
                   v-btn(color='blue-grey' flat @click='deleteProject(vuexProject.id)') Agree
 
         v-layout(row wrap align-center pl-2)
-          v-flex.xs8
+          v-flex.xs10
             .title(class='blue-grey--text') Diagrams
-          v-flex.xs4(text-xs-center)
+          v-flex.xs2(text-xs-center)
             v-btn(
               icon
               v-if="drawer"
@@ -59,33 +57,48 @@
                 color='blue-grey'
               ) mdi-plus
 
-        v-layout(row wrap align-center pl-2)
+        v-layout(row nowrap align-center)
           v-flex.xs12
-            v-data-table(
-              v-if="drawer"
-              hide-actions
-              hide-headers
-              :items='vuexPrograms'
+            v-list(dense)
+              v-list-tile(
+                v-for='item in vuexPrograms'
+                :key='item.id'
+                @click='openDiagram(item)'
               )
-                template(v-slot:items='props')
-                  tr(@click='openDiagram(props.item)')
-                    td.display-2.px-0(text-xs-left)
-                      v-text-field(
-                        v-model='props.item.programName'
-                        dense
-                        :readonly='readonly'
-                        @dblclick.stop.prevent='readonly=!readonly'
-                        @change='updateProgram(props.item)'
-                        :rules='[...max25chars]'
-                        single-line
-                        class='ma-0 pa-0'
-                      )
-                    td(text-xs-right)
-                      v-btn(
-                        icon
-                        @click='deleteProgram(props.item)'
-                      )
-                        v-icon(mdi-18px color='blue-grey') mdi-window-close
+                 v-text-field(
+                    v-model='item.programName'
+                    :readonly='readonly'
+                    @dblclick.stop.prevent='readonly =! readonly'
+                    @change='updateProgram(item)'
+                    :rules='[...max25chars]'
+                    single-line
+                    append-outer-icon='mdi-close'
+                    @click:append-outer='deleteProgram(item)'
+                  )
+            //- v-data-table(
+            //-   hide-actions
+            //-   hide-headers
+            //-   :items='vuexPrograms'
+            //-   )
+            //-     template(v-slot:items='props')
+            //-       tr(@click='openDiagram(props.item)')
+            //-         td.px-2
+            //-           v-text-field(
+            //-             v-model='props.item.programName'
+            //-             :readonly='readonly'
+            //-             @dblclick.stop.prevent='readonly=!readonly'
+            //-             @change='updateProgram(props.item)'
+            //-             :rules='[...max25chars]'
+            //-             single-line
+            //-             append-outer-icon='mdi-close'
+            //-             @click:append-outer='deleteProgram(props.item)'
+            //-           )
+                    //- td(text-xs-right)
+                    //-   v-btn(
+                    //-     icon
+                    //-     @click='deleteProgram(props.item)'
+                    //-   )
+                    //-     v-icon(mdi-18px color='blue-grey') mdi-window-close
 
     v-toolbar.blue-grey(
       :clipped-left='clipped'
@@ -173,20 +186,20 @@ import { ProgramState } from '~/models/ProgramState'
 
 @Component({})
 export default class DefaultLayout extends Vue {
-  fixed: boolean = true
-  clipped: boolean = true
-  drawer: boolean = false
-  readonlyProjectName: boolean = true
-  dialog: boolean = false
-  readonly: boolean = true
-  ProjectName: boolean = true
+  fixed: Boolean = true
+  clipped: Boolean = true
+  drawer: Boolean = false
+  readonlyProjectName: Boolean = true
+  dialog: Boolean = false
+  readonly: Boolean = true
+  ProjectName: Boolean = true
   title: string = 'Viete.io'
   projects: string = 'All projects'
   create: string = 'Create project'
   login: string = 'SignIn'
   logout: string = 'SignOut'
   powered: string = 'powered by molfarDevs'
-  snack: boolean = false
+  snack: Boolean = false
   snackColor: string = ''
   snackText: string = ''
   max25chars: Array<Function> = [v => (v.length >= 3 && v.length <= 25) || 'Input must be 3 - 25 chars!']
@@ -271,3 +284,15 @@ export default class DefaultLayout extends Vue {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+  // .v-text-field
+  //   >>> input#project-name
+  //     padding-top 0
+
+  // #project-name
+  //   >>> .v-text-field--outline
+  //     > .v-input__control
+  //       > .v-input__slot
+  //         min-height 48px !important
+</style>
