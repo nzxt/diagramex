@@ -41,6 +41,7 @@ export const actions: any = {
       .then(({ data }) => {
         commit('setProject', data)
         commit('setPrograms', data.programs)
+        commit('setProgram', data.programs[0])
       })
       .catch(error => console.warn(error))
   },
