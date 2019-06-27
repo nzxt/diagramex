@@ -30,6 +30,8 @@
             persistent-hint
           )
 
+    NavigationDrawer
+
     v-menu(
       v-model='showMenu'
       :position-x='menuX'
@@ -50,13 +52,14 @@
 import 'splitpanes/dist/splitpanes.css'
 
 import { Component, Watch, Vue } from 'vue-property-decorator'
-import { State, Mutation } from 'vuex-class'
+import { State, Action } from 'vuex-class'
 
 import MenuMixin from '~/mixins/menu'
 
 @Component({
   components: {
     Splitpanes: () => import('splitpanes'),
+    NavigationDrawer: () => import('~/components/Navigation.vue'),
     Editor: () => import('~/components/Editor.vue')
   },
   mixins: [MenuMixin]
@@ -65,6 +68,12 @@ export default class ProjectPage extends Vue {
   @State('programState') vuexProgramState
   @State('project') vuexProject
   @State('programs') vuexPrograms
+  @Action('getProjectById') actionGetProjectById
+
+  created() {
+    const { id } = this.$route.params
+    if (!this.vuexProject && id) this.actionGetProjectById(id)
+  }
 }
 </script>
 
