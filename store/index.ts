@@ -3,8 +3,8 @@ import { MutationTree, Store } from 'vuex'
 import { IProgramState, IUseCase, IProject } from '../models/interfaces'
 // import programState from '~/assets/programState.json'
 
-const BaseURL = 'http://localhost:5000'
-// const BaseURL = 'https://stas-k.org'
+// const BaseURL = 'http://localhost:5000'
+const BaseURL = 'https://stas-k.org'
 
 export const strict = false
 
