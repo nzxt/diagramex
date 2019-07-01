@@ -1,12 +1,12 @@
 import { IProject, IProgramState } from './interfaces'
-const uuidv4 = require('uuid/v4')
 
 export class Project implements IProject {
   constructor(
-    projectName: string
+    projectName: string,
+    userId: string
   ) {
     this.projectName = projectName
-    this.userId = uuidv4()
+    this.userId = userId
     this.programs = []
   }
   projectName: string;

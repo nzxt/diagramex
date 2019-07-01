@@ -7,7 +7,7 @@
     )
       v-toolbar-title.white--text
         .display-1.font-weight-thin.mr-1 {{ title }}
-      v-layout(v-if='breadcrums')
+      v-layout(v-if='breadcrumbs')
         v-icon.small.mt-1.font-weight-thin( color='white' v-if='vuexProject') mdi-chevron-right
         span.white--text.headline.font-weight-thin.pt-1(v-if='vuexProject') {{vuexProject.projectName}}
         v-menu(bottom left v-if='vuexProject')
@@ -15,8 +15,8 @@
             v-icon.small.mt-1.font-weight-thin( color='white' v-on='on') mdi-menu-down
           v-list(dense)
             v-list-tile(v-for='(item, i) in items' :key='i' @click)
-              v-list-tile-action
-                v-checkbox(color='blue-grey')
+              //- v-list-tile-action
+              //-   v-checkbox(color='blue-grey')
               v-list-tile-content(@click="action(item.title)")
                 v-list-tile-title.blue-grey--text {{ item.title }}
         v-icon.small.mt-1.font-weight-thin( color='white' v-if='vuexProgram') mdi-chevron-right
@@ -65,10 +65,12 @@
     v-content
       v-container(fluid fill-height)
         nuxt
+
     ProjectNameDialog(
-      v-if='breadcrums'
-      :dialog = 'dialog'
+      v-if='breadcrumbs'
+      :dialog='dialog'
       :project='vuexProject'
+      @close='dialog = false'
     )
     v-dialog(v-model='deleteDialog' persistent max-width='290')
       v-card
@@ -110,7 +112,7 @@ export default class DefaultLayout extends Vue {
   items: Array<any> = [
     { title: 'Rename' },
     { title: 'Import' },
-    { title: 'Allow/diasallow to edit all' },
+    { title: 'Allow/disallow to edit all' },
     { title: 'Fork project' },
     { title: 'Delete' }
   ]
@@ -127,7 +129,8 @@ export default class DefaultLayout extends Vue {
   // @Action('deleteProgram') actionDeleteProgram
 
   async createNewProject() {
-    const project = new Project(`NewProject`)
+    const userId = this.$auth.user.id
+    const project = new Project(`NewProject`, userId)
     await this.actionCreateProject(project)
     const program = new ProgramState('NewProgram', this.vuexProject.id)
     await this.actionCreateProgram(program)
@@ -135,7 +138,6 @@ export default class DefaultLayout extends Vue {
   }
 
   action(title) {
-    debugger
     if (title === 'Rename') {
       this.openDialog()
     }
@@ -163,8 +165,8 @@ export default class DefaultLayout extends Vue {
     await this.$auth.logout()
   }
 
-  get breadcrums() {
-    return !!this.vuexProject
+  get breadcrumbs() {
+    return !!this.vuexProject && this.$route.name === 'id'
   }
 
   get loggedIn(): Boolean {

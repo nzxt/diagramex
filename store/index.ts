@@ -78,10 +78,8 @@ export const actions: any = {
   },
 
   async putProgram({ dispatch, commit }, value: any) {
-    debugger
     await this.$axios.put(BaseURL + `/programs/${value.id}`, value)
       .then(({ data }) => {
-        debugger
         commit('setProgram', data)
       })
       .catch(error => console.warn(error))

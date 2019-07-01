@@ -8,22 +8,6 @@
       app
     )
       v-card(flat)
-        v-layout.mt-2.ml-2(row nowrap align-top)
-          v-flex#project-name.xs10
-            v-text-field(
-              v-if='vuexProject'
-              clearable
-              color='blue-grey'
-              label="Project name"
-              :readonly='readonlyProjectName'
-              @dblclick.stop.prevent='(e) => { readonlyProjectName = false; e.target.focus() }'
-              @blur='readonlyProjectName = true'
-              @change='updateProject(vuexProject)'
-              v-model='vuexProject.projectName'
-            )
-
-          v-flex.xs2.pt-1(text-xs-center)
-
         v-layout(row wrap align-center pl-2)
           v-flex.xs10
             .title(class='blue-grey--text') Diagrams
@@ -45,19 +29,38 @@
               v-list-tile(
                 v-for='item in vuexPrograms'
                 :key='item.id'
-                @click='openDiagram(item)'
               )
-                  v-text-field(
-                    v-model='item.programName'
-                    :readonly='readonly'
-                    @dblclick.stop.prevent='readonly =! readonly'
-                    @change='updateProgram(item)'
-                    :rules='[...max25chars]'
-                    single-line
-                    append-outer-icon='mdi-close'
-                    @click:append-outer='deleteProgram(item)'
-                  )
-
+                v-list-tile-content
+                  v-list-tile-title
+                    .subheading(
+                      @click='openDiagram(item)'
+                      class='blue-grey--text'
+                    ) {{item.programName}}
+                v-list-tile-action
+                  v-menu(bottom left v-if='vuexProject')
+                    template(v-slot:activator='{ on }')
+                      v-icon.small.mt-1.font-weight-thin( color='blue-grey' v-on='on') mdi-menu-down
+                    v-list(dense)
+                      v-list-tile(v-for='(menu, i) in items' :key='i' @click)
+                        //- v-list-tile-action
+                        //-   v-checkbox(color='blue-grey')
+                        v-list-tile-content(@click="action(menu)")
+                          v-list-tile-title.blue-grey--text {{ menu.title }}
+    v-dialog(
+      v-if='vuexProgram'
+      v-model='dialog'
+      max-width='290'
+    )
+      v-card
+        v-card-text
+          v-text-field(
+            label='Program name'
+            v-model='vuexProgram.programName'
+            )
+        v-card-actions
+          v-spacer
+          v-btn(color='green darken-1' flat='flat' @click='dialog = false') Cansel
+          v-btn(color='green darken-1' flat='flat' @click='updateProgram(vuexProgram)') Save
     v-fab-transition.mt-5
       v-btn(
         class='mt-5 ml-0'
@@ -86,6 +89,10 @@ export default class NavigationDrawer extends Vue {
   dialog: Boolean = false
   readonly: Boolean = true
   ProjectName: Boolean = true
+  items: Array<any> = [
+    { title: 'Rename' },
+    { title: 'Delete' }
+  ]
 
   max25chars: Array<Function> = [v => (v.length >= 3 && v.length <= 25) || 'Input must be 3 - 25 chars!']
 
@@ -100,6 +107,16 @@ export default class NavigationDrawer extends Vue {
   @Action('deleteProject') actionDeleteProject
   @Action('deleteProgram') actionDeleteProgram
 
+  action(item) {
+    if (item.title === 'Rename') {
+      this.openDiagram(this.vuexProgram)
+      this.dialog = true
+    }
+    if (item.title === 'Delete') {
+      this.deleteProgram(this.vuexProgram)
+    }
+  }
+
   openDiagram(item) {
     this.actionGetProgramById(item)
   }
@@ -109,14 +126,9 @@ export default class NavigationDrawer extends Vue {
   }
 
   updateProgram(item) {
+    this.dialog = false
     this.actionPutProgram(item)
   }
-
-  // deleteProject(id) {
-  //   this.dialog = false
-  //   this.actionDeleteProject(id)
-  //   this.$router.push('/')
-  // }
 
   deleteProgram(item) {
     this.actionDeleteProgram(item)
