@@ -23,23 +23,6 @@
             )
 
           v-flex.xs2.pt-1(text-xs-center)
-            v-dialog(v-model='dialog' persistent max-width='290')
-              template(v-slot:activator='{ on }')
-                v-btn(
-                  icon
-                  flat
-                  v-on="on"
-                  )
-                  v-icon(
-                    mdi-18px
-                    color='blue-grey'
-                  ) mdi-delete-forever
-              v-card
-                v-card-text Are you really want to delete this project?
-                v-card-actions
-                  v-spacer
-                  v-btn(color='blue-grey' flat @click='dialog = false') Disagree
-                  v-btn(color='blue-grey' flat @click='deleteProject(vuexProject.id)') Agree
 
         v-layout(row wrap align-center pl-2)
           v-flex.xs10
@@ -129,11 +112,11 @@ export default class NavigationDrawer extends Vue {
     this.actionPutProgram(item)
   }
 
-  deleteProject(id) {
-    this.dialog = false
-    this.actionDeleteProject(id)
-    this.$router.push('/')
-  }
+  // deleteProject(id) {
+  //   this.dialog = false
+  //   this.actionDeleteProject(id)
+  //   this.$router.push('/')
+  // }
 
   deleteProgram(item) {
     this.actionDeleteProgram(item)
