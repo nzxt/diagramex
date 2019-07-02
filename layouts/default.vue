@@ -82,12 +82,12 @@
         v-card-actions
           v-spacer
           v-btn(
-            color='blue-grey'
+            color='green darken-1'
             flat
             @click='deleteDialog = false'
           ) Disagree
           v-btn(
-            color='blue-grey'
+            color='green darken-1'
             flat
             @click='deleteProject(vuexProject.id)'
           ) Agree
