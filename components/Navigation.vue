@@ -3,40 +3,55 @@
     v-navigation-drawer(
       v-model='drawer'
       :clipped='clipped'
+      :mini-variant.sync="mini"
       stateless
       fixed
       app
     )
-      v-card(flat)
-        v-layout(row wrap align-center pl-2)
-          v-flex.xs10
-            .title(class='blue-grey--text') Diagrams
-          v-flex.xs2(text-xs-center)
-            v-btn(
-              icon
-              v-if="drawer"
-              @click.stop.prevent='addProgram'
+      v-flex(text-xs-center)
+        v-btn(v-if='mini' icon @click.stop='mini = !mini')
+          v-icon(
+            class='mdi-36px'
+            color='blue-grey'
+          ) mdi-menu
+      v-toolbar.transparent(flat)
+        v-list.pa-0
+          v-list-tile
+            v-list-tile-content
+              .title(class='blue-grey--text') Diagrams
+            v-list-tile-action
+              v-flex(text-xs-center)
+                v-btn(
+                  icon
+                  v-if="drawer"
+                  @click.stop.prevent='addProgram'
+                )
+                  v-icon(
+                    flat
+                    mdi-18px
+                    color='blue-grey'
+                  ) mdi-plus
+            v-list-tile-action
+              v-flex(text-xs-center)
+                v-btn(icon @click.stop='mini = !mini')
+                  v-icon(
+                    color='blue-grey'
+                  ) mdi-chevron-left
+      v-layout(row nowrap align-center v-if='!mini')
+        v-flex.xs12
+          v-list(dense)
+            v-list-tile(
+              v-for='item in vuexPrograms'
+              :key='item.id'
             )
-              v-icon(
-                flat
-                mdi-18px
-                color='blue-grey'
-              ) mdi-plus
-
-        v-layout(row nowrap align-center)
-          v-flex.xs12
-            v-list(dense)
-              v-list-tile(
-                v-for='item in vuexPrograms'
-                :key='item.id'
-              )
-                v-list-tile-content
-                  v-list-tile-title
-                    .subheading(
-                      @click='openDiagram(item)'
-                      class='blue-grey--text'
-                    ) {{item.programName}}
-                v-list-tile-action
+              v-list-tile-content
+                v-list-tile-title
+                  .subheading(
+                    @click='openDiagram(item)'
+                    class='blue-grey--text'
+                  ) {{item.programName}}
+              v-list-tile-action
+                v-flex(text-xs-center)
                   v-menu(bottom left v-if='vuexProject')
                     template(v-slot:activator='{ on }')
                       v-icon.small.mt-1.font-weight-thin( color='blue-grey' v-on='on') mdi-menu-down
@@ -48,6 +63,7 @@
                           v-list-tile-title.blue-grey--text {{ menu.title }}
     v-dialog(
       v-if='vuexProgram'
+      persistent
       v-model='dialog'
       max-width='290'
     )
@@ -61,18 +77,6 @@
           v-spacer
           v-btn(color='green darken-1' flat='flat' @click='dialog = false') Cansel
           v-btn(color='green darken-1' flat='flat' @click='updateProgram(vuexProgram)') Save
-    v-fab-transition.mt-5
-      v-btn(
-        class='mt-5 ml-0'
-        color='blue-grey'
-        dark
-        fab
-        fixed
-        bottom
-        left
-        @click='drawer=!drawer'
-      )
-        v-icon mdi-menu
 </template>
 
 <script lang="ts">
@@ -84,7 +88,8 @@ import { ProgramState } from '~/models/ProgramState'
 @Component({})
 export default class NavigationDrawer extends Vue {
   clipped: Boolean = true
-  drawer: Boolean = false
+  drawer: Boolean = true
+  mini: Boolean = true
   readonlyProjectName: Boolean = true
   dialog: Boolean = false
   readonly: Boolean = true

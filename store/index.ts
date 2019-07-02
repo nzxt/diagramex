@@ -5,6 +5,7 @@ import { IProgramState, IUseCase, IProject } from '../models/interfaces'
 
 // const BaseURL = 'http://localhost:5000'
 const BaseURL = 'https://stas-k.org'
+// const BaseURL = window.location.origin
 
 export const strict = false
 
@@ -97,6 +98,7 @@ export const actions: any = {
   async deleteProgram({ dispatch, commit }, value: any) {
     await this.$axios.delete(BaseURL + `/programs/${value.id}`)
       .then(({ data }) => {
+        debugger
       })
       .catch(error => console.warn(error))
 

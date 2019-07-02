@@ -72,13 +72,25 @@
       :project='vuexProject'
       @close='dialog = false'
     )
-    v-dialog(v-model='deleteDialog' persistent max-width='290')
+    v-dialog(
+      v-model='deleteDialog'
+      persistent
+      max-width='290'
+    )
       v-card
         v-card-text Are you really want to delete this project?
         v-card-actions
           v-spacer
-          v-btn(color='blue-grey' flat @click='deleteDialog = false') Disagree
-          v-btn(color='blue-grey' flat @click='deleteProject(vuexProject.id)') Agree
+          v-btn(
+            color='blue-grey'
+            flat
+            @click='deleteDialog = false'
+          ) Disagree
+          v-btn(
+            color='blue-grey'
+            flat
+            @click='deleteProject(vuexProject.id)'
+          ) Agree
     v-footer.justify-center.grey--text(:inset='fixed' app)
       span.caption.font-weight-bold {{ title }} © 2019.
       span.ml-1.caption.font-weight-thin {{ powered }}
@@ -111,6 +123,7 @@ export default class DefaultLayout extends Vue {
 
   items: Array<any> = [
     { title: 'Rename' },
+    { title: 'Export' },
     { title: 'Import' },
     { title: 'Allow/disallow to edit all' },
     { title: 'Fork project' },

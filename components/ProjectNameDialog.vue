@@ -1,6 +1,10 @@
 <template lang="pug">
   v-layout(row justify-center)
-    v-dialog(:value='dialog' max-width='290')
+    v-dialog(
+      :value='dialog'
+      max-width='290'
+      persistent
+      )
       v-card
         v-card-text
           v-text-field(
