@@ -8,8 +8,8 @@
       fixed
       app
     )
-      v-flex(text-xs-center)
-        v-btn(v-if='mini' icon @click.stop='mini = !mini')
+      v-flex.pt-2(text-xs-center v-if='mini')
+        v-btn(icon @click.stop='mini = !mini')
           v-icon(
             class='mdi-36px'
             color='blue-grey'

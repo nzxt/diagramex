@@ -5,22 +5,22 @@
       fixed
       app
     )
-      v-toolbar-title.white--text
+      v-toolbar-title(@click='$router.push("/")' style='cursor: pointer').white--text
         .display-1.font-weight-thin.mr-1 {{ title }}
       v-layout(v-if='breadcrumbs')
-        v-icon.small.mt-1.font-weight-thin( color='white' v-if='vuexProject') mdi-chevron-right
-        span.white--text.headline.font-weight-thin.pt-1(v-if='vuexProject') {{vuexProject.projectName}}
+        v-icon.small.pt-2.font-weight-thin( color='white' v-if='vuexProject') mdi-chevron-right
+        span.white--text.title.font-weight-thin.pt-2(v-if='vuexProject') {{vuexProject.projectName}}
         v-menu(bottom left v-if='vuexProject')
           template(v-slot:activator='{ on }')
-            v-icon.small.mt-1.font-weight-thin( color='white' v-on='on') mdi-menu-down
+            v-icon.small.pt-2.font-weight-thin( color='white' v-on='on') mdi-menu-down
           v-list(dense)
             v-list-tile(v-for='(item, i) in items' :key='i' @click)
               //- v-list-tile-action
               //-   v-checkbox(color='blue-grey')
               v-list-tile-content(@click="action(item.title)")
                 v-list-tile-title.blue-grey--text {{ item.title }}
-        v-icon.small.mt-1.font-weight-thin( color='white' v-if='vuexProgram') mdi-chevron-right
-        span.white--text.headline.font-weight-thin.pt-1(v-if='vuexProgram') {{vuexProgram.programName}}
+        v-icon.small.pt-2.font-weight-thin( color='white' v-if='vuexProgram') mdi-chevron-right
+        span.white--text.title.font-weight-thin.pt-2(v-if='vuexProgram') {{vuexProgram.programName}}
       v-spacer
       v-btn(
         flat
