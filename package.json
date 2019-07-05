@@ -25,6 +25,8 @@
     "@nuxtjs/axios": "^5.5.3",
     "@nuxtjs/pwa": "^2.6.0",
     "cross-env": "^5.2.0",
+    "file-saver": "^2.0.2",
+    "jszip": "^3.2.2",
     "node-uuid": "^1.4.8",
     "nuxt": "^2.8.0",
     "snapsvg-cjs": "^0.0.6",

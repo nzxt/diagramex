@@ -101,6 +101,8 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Action, State } from 'vuex-class'
 import { Project } from '~/models/Project'
 import { ProgramState } from '~/models/ProgramState'
+import JSZip from 'jszip'
+import { saveAs } from 'file-saver'
 
 @Component({
   components: {
@@ -132,7 +134,7 @@ export default class DefaultLayout extends Vue {
 
   @State('project') vuexProject
   @State('programState') vuexProgram
-  // @State('programState') vuexProgram
+  @State('programs') vuexPrograms
   @Action('createProject') actionCreateProject
   @Action('createProgram') actionCreateProgram
   // @Action('getProgramById') actionGetProgramById
@@ -154,6 +156,9 @@ export default class DefaultLayout extends Vue {
     if (title === 'Rename') {
       this.openDialog()
     }
+    if (title === 'Export') {
+      this.downloadFile()
+    }
     if (title === 'Delete') {
       this.deleteDialog = true
     }
@@ -161,6 +166,22 @@ export default class DefaultLayout extends Vue {
 
   openDialog() {
     this.dialog = true
+  }
+
+  downloadFile() {
+    const zip = new JSZip()
+    const self = this
+    this.vuexPrograms.forEach((x) => {
+      const file = JSON.stringify(x)
+      zip.file(`${x.programName}.json`, file)
+    })
+    zip.generateAsync({ type: 'blob' })
+      .then(
+        function (blob) { // 1) generate the zip file
+          saveAs(blob, `${self.vuexProject.projectName}.zip`) // 2) trigger the download
+        },
+        function (err) { alert(`${err}`) }
+      )
   }
 
   deleteProject(id) {
