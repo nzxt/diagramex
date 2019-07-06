@@ -72,6 +72,10 @@
       :project='vuexProject'
       @close='dialog = false'
     )
+    ImportDialog(
+      :dialog='importDialog'
+      @close::ImportDialog='importDialog = false'
+    )
     v-dialog(
       v-model='deleteDialog'
       persistent
@@ -106,13 +110,15 @@ import { saveAs } from 'file-saver'
 
 @Component({
   components: {
-    ProjectNameDialog: () => import('~/components/ProjectNameDialog.vue')
+    ProjectNameDialog: () => import('~/components/ProjectNameDialog.vue'),
+    ImportDialog: () => import('~/components/ImportDialog.vue')
   }
 })
 export default class DefaultLayout extends Vue {
   fixed: Boolean = true
   clipped: Boolean = true
   dialog: Boolean = false
+  importDialog: Boolean = false
   deleteDialog: Boolean = false
   title: string = 'Viete.io'
   projects: string = 'All projects'
@@ -159,6 +165,9 @@ export default class DefaultLayout extends Vue {
     if (title === 'Export') {
       this.downloadFile()
     }
+    if (title === 'Import') {
+      this.openImportDialog()
+    }
     if (title === 'Delete') {
       this.deleteDialog = true
     }
@@ -166,6 +175,10 @@ export default class DefaultLayout extends Vue {
 
   openDialog() {
     this.dialog = true
+  }
+
+  openImportDialog() {
+    this.importDialog = true
   }
 
   downloadFile() {
