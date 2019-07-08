@@ -24,7 +24,13 @@ import { Action, State } from 'vuex-class'
 })
 export default class IndexPage extends Vue {
   @State('projects') vuexProjects
+  @State('userId') vuexUserId
+  @Action('fetchMyProjects') actionFetchMyProjects
   @Action('getProjectById') actionGetProjectById
+
+  created() {
+    this.actionFetchMyProjects(this.vuexUserId)
+  }
 
   async getProjectById(item) {
     const { id } = item
