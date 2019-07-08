@@ -12,6 +12,7 @@ export const strict = false
 export interface IRootState {}
 
 export interface IState {
+  userId: String;
   projects: IProject[];
   project: IProject | null;
   programs: IProgramState[];
@@ -19,8 +20,8 @@ export interface IState {
 }
 
 export const state = (): IState => ({
+  userId: '',
   projects: [],
-
   project: null,
   programs: [],
   programState: null
@@ -29,6 +30,16 @@ export const state = (): IState => ({
 export const actions: any = {
   async fetchProjects({ commit }) {
     await this.$axios.get(BaseURL + '/projects')
+      .then(({ data }) => {
+        commit('setProjects', data)
+      })
+      .catch(function (error) {
+        console.warn(error)
+      })
+  },
+
+  async fetchMyProjects({ commit }, value: string) {
+    await this.$axios.get(BaseURL + `/projects?userId=${value}`)
       .then(({ data }) => {
         commit('setProjects', data)
       })
@@ -198,6 +209,10 @@ export const actions: any = {
 }
 
 export const mutations: MutationTree<IState> = {
+  setUserId: (state, value: string) => {
+    state.userId = value
+  },
+
   setProjects: (state, value: IProject[]) => {
     state.projects = value
   },

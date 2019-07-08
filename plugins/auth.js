@@ -1,5 +1,5 @@
 export default ({ app }) => {
-  const { $auth, $axios } = app
+  const { store, $auth, $axios } = app
 
   $auth.onError((error, name, endpoint) => {
     console.error(endpoint, name, error)
@@ -22,6 +22,7 @@ export default ({ app }) => {
   $axios.get(`https://stas-k.org/user`)
     .then((res) => {
       console.info(`[${res.status}] BackEnd authorized you too, ${res.data.name}`)
+      store.commit('setUserId', res.data.uid)
     })
     .catch(err => console.warn(`${err.status} ${err.statusText}`))
 }

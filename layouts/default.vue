@@ -15,12 +15,11 @@
             v-icon.small.pt-2.font-weight-thin( color='white' v-on='on') mdi-menu-down
           v-list(dense)
             v-list-tile(v-for='(item, i) in items' :key='i' @click)
-              //- v-list-tile-action
-              //-   v-checkbox(color='blue-grey')
               v-list-tile-content(@click="action(item.title)")
                 v-list-tile-title.blue-grey--text {{ item.title }}
         v-icon.small.pt-2.font-weight-thin( color='white' v-if='vuexProgram') mdi-chevron-right
         span.white--text.title.font-weight-thin.pt-2(v-if='vuexProgram') {{vuexProgram.programName}}
+        span.white--text.title.font-weight-thin.pt-2(v-if='vuexProject') {{'&nbspby '+vuexProject.userName}}
       v-spacer
       v-btn(
         flat
@@ -40,7 +39,7 @@
       v-btn.ma-0.pa-0(
         color='blue-grey darken-1'
         v-if="loggedIn"
-        @click='$router.push("/projects")'
+        @click='getMyProjects'
         dark
         exact
         depressed
@@ -142,6 +141,8 @@ export default class DefaultLayout extends Vue {
   @State('project') vuexProject
   @State('programState') vuexProgram
   @State('programs') vuexPrograms
+  @State('userId') vuexUserId
+  @Action('fetchMyProjects') actionFetchMyProjects
   @Action('createProject') actionCreateProject
   @Action('createProgram') actionCreateProgram
   // @Action('getProgramById') actionGetProgramById
@@ -196,6 +197,11 @@ export default class DefaultLayout extends Vue {
         },
         function (err) { alert(`${err}`) }
       )
+  }
+
+  getMyProjects() {
+    this.actionFetchMyProjects(this.vuexUserId)
+    this.$router.push('user_projects')
   }
 
   deleteProject(id) {
