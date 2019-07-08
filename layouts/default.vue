@@ -109,6 +109,7 @@ import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 
 @Component({
+  auth: false,
   components: {
     ProjectNameDialog: () => import('~/components/ProjectNameDialog.vue'),
     ImportDialog: () => import('~/components/ImportDialog.vue')

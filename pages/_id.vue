@@ -28,6 +28,7 @@
             row-height='24'
             label='Text markup'
             persistent-hint
+            :value='programJson'
           )
 
     NavigationDrawer
@@ -57,6 +58,7 @@ import { State, Action } from 'vuex-class'
 import MenuMixin from '~/mixins/menu'
 
 @Component({
+  auth: false,
   components: {
     Splitpanes: () => import('splitpanes'),
     NavigationDrawer: () => import('~/components/Navigation.vue'),
@@ -73,6 +75,12 @@ export default class ProjectPage extends Vue {
   created() {
     const { id } = this.$route.params
     if (!this.vuexProject && id) this.actionGetProjectById(id)
+  }
+
+  get programJson() {
+    debugger
+    if (!this.vuexProgramState) return
+    return JSON.stringify(this.vuexProgramState, undefined, 3)
   }
 }
 </script>
