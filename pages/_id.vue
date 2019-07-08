@@ -78,7 +78,6 @@ export default class ProjectPage extends Vue {
   }
 
   get programJson() {
-    debugger
     if (!this.vuexProgramState) return
     return JSON.stringify(this.vuexProgramState, undefined, 3)
   }
